@@ -17,7 +17,7 @@ class Note(Multitext, Extensible):
     def __init__(self):
         super().__init__()
         # attributes
-        self.n_type: Optional[Key] = None
+        self.type: Optional[Key] = None
 
 
 class Phonetic(Multitext, Extensible):
@@ -50,7 +50,7 @@ class Reversal(Multitext):
     def __init__(self):
         super().__init__()
         # attributes
-        self.r_type: Optional[Key] = None
+        self.type: Optional[Key] = None
         # elements
         self.main: Optional[str] = None  # Type should be 'Reversal'
         self.grammatical_info: Optional[GrammaticalInfo] = None
@@ -60,7 +60,7 @@ class Translation(Multitext):
     def __init__(self):
         super().__init__()
         # attributes
-        self.t_type: Optional[Key] = None
+        self.type: Optional[Key] = None
 
 
 class Example(Multitext, Extensible):
