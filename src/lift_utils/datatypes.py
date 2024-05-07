@@ -1,28 +1,34 @@
 # Datatypes
 
 class PCData(str):
-    pass
+    def __init__(self):
+        super().__init__()
 
 
 class DateTime(str):
     # format (str): YYYY-MM-DDTHH:MM:SSZZZZZZ
     # ZZZZZZ: +/-, H, H, :, M, M (offset from GMT)
-    pass
+    def __init__(self):
+        super().__init__()
 
 
 class Key(str):
-    pass
+    def __init__(self):
+        super().__init__()
 
 
 class Lang(str):
     # format (str): ISO[-SCRIPT[-x-PRIVATE]]
-    pass
+    def __init__(self):
+        super().__init__()
 
 
 class RefId(str):
     # format (HEX GUID): xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    pass
+    def __init__(self):
+        super().__init__()
 
 
 class URL(str):
-    pass
+    def __init__(self):
+        super().__init__()

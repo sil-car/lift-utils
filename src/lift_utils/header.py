@@ -1,21 +1,20 @@
 from typing import Optional
 
-from datatypes import Key
-from base import Multitext
+from .datatypes import Key
+from .base import Multitext
 
-
-# Header elements
 
 class FieldDefinitions:
-    # attributes
-    name: Key = ''
-    fd_class: Optional[str] = None
-    fd_type: Optional[str] = None
-    option_range: Optional[Key] = None
-    writing_system: Optional[str] = None
-    # elements
-    label: Optional[Multitext] = None
-    description: Optional[Multitext] = None
+    def __init__(self):
+        # attributes
+        self.name: Key = ''
+        self.fd_class: Optional[str] = None
+        self.type: Optional[str] = None
+        self.option_range: Optional[Key] = None
+        self.writing_system: Optional[str] = None
+        # elements
+        self.label: Optional[Multitext] = None
+        self.description: Optional[Multitext] = None
 
 
 class Range:
@@ -31,7 +30,8 @@ class Fields(list):
 
 
 class Header:
-    # elements
-    description: Optional[Multitext] = None
-    ranges: Optional[Ranges] = None
-    fields: Optional[Fields] = None
+    def __init__(self):
+        # elements
+        self.description: Optional[Multitext] = None
+        self.ranges: Optional[Ranges] = None
+        self.fields: Optional[Fields] = None

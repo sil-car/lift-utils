@@ -1,82 +1,93 @@
 from typing import List
 from typing import Optional
 
-from datatypes import DateTime
-from datatypes import Key
-from datatypes import Lang
-from datatypes import URL
+from .datatypes import DateTime
+from .datatypes import Key
+from .datatypes import Lang
+from .datatypes import URL
 
-
-# Base elements
 
 class Span:
-    # attributes
-    lang: Optional[Lang] = None
-    href: Optional[URL] = None
-    style_class: Optional[str] = None
-    # elements
-    pcdata = ''
-    spans: Optional[List[str]] = None  # Type should be 'Span', but not allowed
+    def __init__(self):
+        # attributes
+        self.lang: Optional[Lang] = None
+        self.href: Optional[URL] = None
+        self.style_class: Optional[str] = None
+        # elements
+        self.pcdata = ''
+        self.spans: Optional[List[str]] = None  # Type should be 'Span'
 
 
 class Text:
-    pcdata: str = ''
-    spans: Optional[List[Span]] = None
+    def __init__(self):
+        self.pcdata: str = ''
+        self.spans: Optional[List[Span]] = None
 
 
 class Trait:
-    name: Key = ''
-    value: Key = ''
-    trait_id: Optional[Key] = None
+    def __init__(self):
+        self.name: Key = ''
+        self.value: Key = ''
+        self.trait_id: Optional[Key] = None
 
 
 class Form:
-    # attributes
-    lang: Lang = ''
-    # elements
-    text: Text = ''
-    annotations: Optional[List] = None
+    def __init__(self):
+        # attributes
+        self.lang: Lang = ''
+        # elements
+        self.text: Text = ''
+        self.annotations: Optional[List] = None
 
 
 class Multitext:
-    forms: Optional[List] = None
-    text: Optional[str] = None  # deprecated
+    def __init__(self):
+        self.forms: Optional[List] = None
+        self.text: Optional[str] = None  # deprecated
 
 
 class Gloss(Form):
-    # elements
-    traits: Optional[List[Trait]] = None
+    def __init__(self):
+        super().__init__()
+        # elements
+        self.traits: Optional[List[Trait]] = None
 
 
 class URLRef:
-    # attributes
-    href: URL = ''
-    # elements
-    label: Optional[Multitext] = None
+    def __init__(self):
+        # attributes
+        self.href: URL = ''
+        # elements
+        self.label: Optional[Multitext] = None
 
 
 class Annotation(Multitext):
-    name: Key = ''
-    value: Key = ''
-    who: Optional[Key] = None
-    when: Optional[DateTime] = None
+    def __init__(self):
+        super().__init__()
+        self.name: Key = ''
+        self.value: Key = ''
+        self.who: Optional[Key] = None
+        self.when: Optional[DateTime] = None
 
 
 class Field(Multitext):
-    # attributes
-    name: str = ''
-    date_created: Optional[DateTime] = None
-    date_modified: Optional[DateTime] = None
-    # elements
-    traits: Optional[List[Trait]] = None
-    annotations: Optional[List[Annotation]] = None
+    def __init__(self):
+        super().__init__()
+        # attributes
+        self.name: str = ''
+        self.date_created: Optional[DateTime] = None
+        self.date_modified: Optional[DateTime] = None
+        # elements
+        self.traits: Optional[List[Trait]] = None
+        self.annotations: Optional[List[Annotation]] = None
 
 
 class Extensible:
-    # annotations
-    date_created: Optional[DateTime] = None
-    date_modified: Optional[DateTime] = None
-    # elements
-    fields: Optional[List[Field]] = None
-    traits: Optional[List[Trait]] = None
-    annotations: Optional[List[Annotation]] = None
+    def __init__(self):
+        # annotations
+        self.date_created: Optional[DateTime] = None
+        self.date_modified: Optional[DateTime] = None
+        # elements
+        self.fields: Optional[List[Field]] = None
+        self.traits: Optional[List[Trait]] = None
+        self.annotations: Optional[List[Annotation]] = None
