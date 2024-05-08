@@ -9,20 +9,53 @@ from .datatypes import URL
 
 
 class Span:
-    def __init__(self):
+    _attrib_req = []
+    _attrib_opt = ['lang', 'href', 'class']
+    _elem_req = ['pcdata']
+    _elem_opt = ['spans']
+
+    def __init__(self, xml_data=None):
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
         self.style_class: Optional[str] = None
         # elements
-        self.pcdata = ''
+        self.pcdata = None
         self.spans: Optional[List[str]] = None  # Type should be 'Span'
+
+        if xml_data is not None:
+            self.update_from_xml(xml_data)
+
+    def update_from_xml(self, xml_data):
+        for k, v in xml_data.attrib.items():
+            if k == 'lang':
+                self.lang = Lang(k)
+            elif k == 'href':
+                self.href = URL(v)
+            elif k == 'class':
+                self.style_class = v
+
+        if xml_data.text is not None:
+            self.pcdata = PCData(xml_data.text)
+
+        for c in xml_data.getchildren():
+            if c.tag == 'span':
+                s = Span(c)
+                if not self.spans:
+                    self.spans = [s]
+                else:
+                    self.spans.append(s)
 
 
 class Text:
-    def __init__(self, text):
+    _attrib_req = []
+    _attrib_opt = []
+    _elem_req = ['pcdata']
+    _elem_opt = ['spans']
+
+    def __init__(self, text=None):
         self.pcdata: str = None
-        if text:
+        if text is not None:
             self.pcdata = PCData(text)
         self.spans: Optional[List[Span]] = None
 
@@ -31,24 +64,46 @@ class Text:
 
 
 class Trait:
-    def __init__(self):
-        self.name: Key = ''
-        self.value: Key = ''
+    _attrib_req = ['name', 'value']
+    _attrib_opt = ['id']
+    _elem_req = []
+    _elem_opt = ['annotations']
+
+    def __init__(self, xml_tree=None):
+        # attributes
+        self.name: Key = None
+        self.value: Key = None
         self.id: Optional[Key] = None
+        # elements
+        self.annotations: Optional[List[Annotation]] = None
+
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_tree):
-        name = xml_tree.attrib.get('name')
-        if name:
-            self.name = name
-        value = xml_tree.attrib.get('value')
-        if value:
-            self.value = value
-        trait_id = xml_tree.attrib.get('trait-id')
-        if trait_id:
-            self.id = trait_id
+        for k, v in xml_tree.attrib.items():
+            if k == 'name':
+                self.name = Key(v)
+            elif k == 'value':
+                self.value = Key(v)
+            elif k == 'id':
+                self.id = Key(v)
+
+        for c in xml_tree.getchildren():
+            if c.tag == 'annotation':
+                a = Annotation(c)
+                if not self.annotations:
+                    self.annotations = [a]
+                else:
+                    self.annotations.append(a)
 
 
 class Form:
+    _attrib_req = ['lang']
+    _attrib_opt = []
+    _elem_req = ['text']
+    _elem_opt = ['annotations']
+
     def __init__(self, xml_tree=None):
         # attributes
         self.lang: Lang = None
@@ -60,12 +115,19 @@ class Form:
             self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_tree):
-        lg = xml_tree.attrib.get('lang')
-        if lg:
-            self.lang = Lang(lg)
-        for c in xml_tree:
+        for k, v in xml_tree.attrib.items():
+            if k == 'lang':
+                self.lang = Lang(v)
+
+        for c in xml_tree.getchildren():
             if c.tag == 'text':
                 self.text = Text(c.text)
+            elif c.tag == 'annotation':
+                a = Annotation(c)
+                if not self.annotations:
+                    self.annotations = [a]
+                else:
+                    self.annotations.append(a)
 
     def update_other_from_self(self, other):
         other.lang = self.lang
@@ -74,8 +136,14 @@ class Form:
 
 
 class Multitext:
+    _attrib_req = []
+    _attrib_opt = []
+    _elem_req = []
+    _elem_opt = ['forms', 'text']
+
     def __init__(self, xml_tree=None):
         super().__init__()  # needed because listed 1st in multiple interitance
+        # elements
         self.forms = None
         self.text = None  # deprecated
 
@@ -107,6 +175,11 @@ class Multitext:
 
 
 class Gloss(Form):
+    _attrib_req = []
+    _attrib_opt = []
+    _elem_req = []
+    _elem_opt = ['traits']
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # elements
@@ -127,35 +200,115 @@ class Gloss(Form):
 
 
 class URLRef:
-    def __init__(self):
+    _attrib_req = ['href']
+    _attrib_opt = []
+    _elem_req = []
+    _elem_opt = ['label']
+
+    def __init__(self, xml_tree=None):
         # attributes
-        self.href: URL = ''
+        self.href: URL = None
         # elements
         self.label: Optional[Multitext] = None
 
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
+
+    def update_from_xml(self, xml_tree):
+        for k, v in xml_tree.attrib.items():
+            if k == 'href':
+                self.href = URL(v)
+
+        for c in xml_tree.getchildren():
+            if c.tag == 'label':
+                self.label = Multitext(c)
+
 
 class Annotation(Multitext):
-    def __init__(self):
+    _attrib_req = ['name', 'value']
+    _attrib_opt = ['who', 'when']
+    _elem_req = []
+    _elem_opt = []
+
+    def __init__(self, xml_tree=None):
         super().__init__()
-        self.name: Key = ''
-        self.value: Key = ''
+        self.name: Key = None
+        self.value: Key = None
         self.who: Optional[Key] = None
         self.when: Optional[DateTime] = None
 
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
+
+    def update_from_xml(self, xml_tree):
+        mul = Multitext(xml_tree)
+        mul.update_other_from_self(self)
+        del mul
+
+        for k, v in xml_tree.attrib.items():
+            if k == 'name':
+                self.name = Key(v)
+            elif k == 'value':
+                self.value = Key(v)
+            elif k == 'who':
+                self.who = Key(v)
+            elif k == 'when':
+                self.when = DateTime(v)
+
 
 class Field(Multitext):
-    def __init__(self):
+    _attrib_req = ['name']
+    _attrib_opt = ['date_created', 'date_modified']
+    _elem_req = []
+    _elem_opt = ['traits', 'annotations']
+
+    def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
-        self.name: str = ''
+        self.name: str = None
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
         # elements
         self.traits: Optional[List[Trait]] = None
         self.annotations: Optional[List[Annotation]] = None
 
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
+
+    def update_from_xml(self, xml_tree):
+        mul = Multitext(xml_tree)
+        mul.update_other_from_self(self)
+        del mul
+
+        for k, v in xml_tree.attrib.items():
+            if k == 'name':
+                self.name = v
+            elif k == 'dateCreated':
+                self.date_created = DateTime(v)
+            elif k == 'dateModified':
+                self.date_modified = DateTime(v)
+
+        for c in xml_tree.getchildren():
+            if c.tag == 'trait':
+                t = Trait(c)
+                if not self.traits:
+                    self.traits = [t]
+                else:
+                    self.traits.append(t)
+            elif c.tag == 'annotation':
+                a = Annotation(c)
+                if not self.annotations:
+                    self.annotations = [a]
+                else:
+                    self.annotations.append(a)
+
 
 class Extensible:
+    _attrib_req = []
+    _attrib_opt = ['date_created', 'date_modified']
+    _elem_req = []
+    _elem_opt = ['fields', 'traits', 'annotations']
+
     def __init__(self, xml_tree=None):
         # attributes
         self.date_created: Optional[DateTime] = None
@@ -177,22 +330,19 @@ class Extensible:
 
         for c in xml_tree.getchildren():
             if c.tag == 'field':
-                f = Field()
-                f.update_from_xml(c)
+                f = Field(c)
                 if not self.fields:
                     self.fields = [f]
                 else:
                     self.fields.append(f)
             elif c.tag == 'trait':
-                t = Trait()
-                t.update_from_xml(c)
+                t = Trait(c)
                 if not self.traits:
                     self.traits = [t]
                 else:
                     self.traits.append(t)
             elif c.tag == 'annotation':
-                a = Annotation()
-                a.update_from_xml(c)
+                a = Annotation(c)
                 if not self.annotations:
                     self.annotations = [a]
                 else:
