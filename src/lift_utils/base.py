@@ -80,6 +80,9 @@ class Trait:
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
+    def __str__(self):
+        return f"{self.name}: {self.value}"
+
     def update_from_xml(self, xml_tree):
         for k, v in xml_tree.attrib.items():
             if k == 'name':
@@ -151,13 +154,14 @@ class Multitext:
             self.update_from_xml(xml_tree)
 
     def __str__(self):
+        s = 'multitext'
         if self.forms:
             self.forms.sort()
-            s = f"{self.forms[0].lang}: {self.forms[0].text}"
+            s = f"{self.forms[0].text} ({self.forms[0].lang})"
             ct = len(self.forms)
             if ct > 1:
                 s = f"{s} ({ct} forms)"
-            return s
+        return s
 
     def update_from_xml(self, xml_tree):
         for c in xml_tree.getchildren():
@@ -184,6 +188,12 @@ class Gloss(Form):
         super().__init__()
         # elements
         self.traits: Optional[List[Trait]] = None
+
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
+
+    def __str__(self):
+        return f"{self.text} ({self.lang})"
 
     def update_from_xml(self, xml_tree):
         form = Form(xml_tree)

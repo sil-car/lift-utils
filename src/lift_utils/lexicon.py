@@ -2,6 +2,7 @@ import logging
 from typing import List
 from typing import Optional
 
+from . import utils
 from .base import Extensible
 from .base import Form
 from .base import Gloss
@@ -22,6 +23,9 @@ class Note(Multitext, Extensible):
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
+
+    def __str__(self):
+        return super().__str__()
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
@@ -46,6 +50,9 @@ class Phonetic(Multitext, Extensible):
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
+    def __str__(self):
+        return super().__str__()
+
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
         ext.update_other_from_self(self)
@@ -69,14 +76,17 @@ class Etymology(Extensible):
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
-        self.type: Key = ''
-        self.source: str = ''
+        self.type: Key = None
+        self.source: str = None
         # elements
         self.glosses: Optional[List[Gloss]] = None
         self.form: Optional[Form] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
+
+    def __str__(self):
+        return f"{self.type} ({self.source})"
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
@@ -103,12 +113,15 @@ class Etymology(Extensible):
 class GrammaticalInfo:
     def __init__(self, xml_tree=None):
         # attributes
-        self.value: Key = ''
+        self.value: Key = None
         # elements
         self.traits: Optional[List[Trait]] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
+
+    def __str__(self):
+        return self.value
 
     def update_from_xml(self, xml_tree):
         for k, v in xml_tree.attrib.items():
@@ -222,6 +235,9 @@ class Relation(Extensible):
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
+    def __str__(self):
+        return f"{self.type}: {self.ref}"
+
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
         ext.update_other_from_self(self)
@@ -303,7 +319,15 @@ class Sense(Extensible):
             self.update_from_xml(xml_tree)
 
     def __str__(self):
-        return self.id if self.id else 'sense'
+        s = 'sense'
+        if self.glosses:
+            s = '; '.join([str(g) for g in self.glosses])
+        elif self.id:
+            s = self.id
+        return s
+
+    def show(self):
+        print(self.__str__())
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
@@ -388,13 +412,59 @@ class Entry(Extensible):
             self.update_from_xml(xml_tree)
 
     def __str__(self):
-        return self.id if self.id else 'entry'
+        return self.get_summary_line()
 
     def get_senses_ct(self):
         ct = 0
         if self.senses:
             ct = len(self.senses)
         return ct
+
+    def get_summary_line(self, lang='en'):
+        lu = utils.ellipsize(str(self.lexical_unit), 20)
+        gl = self.get_gloss(lang=lang)
+        gi = self.get_grammatical_info()
+        return f"{lu:20}\t{gl:30}\t{gi}"
+
+    def get_grammatical_info(self, sense_idx=0):
+        grammatical_info = ''
+        if self.senses:
+            grammatical_info = str(self.senses[sense_idx].grammatical_info)
+        return grammatical_info
+
+    def get_gloss(self, sense_idx=0, lang='en'):
+        gloss = ''
+        if self.senses and self.senses[sense_idx].glosses:
+            # Choose 1st gloss if preferred language not found.
+            gloss = str(self.senses[sense_idx].glosses[0])
+            for g in self.senses[sense_idx].glosses:
+                if g.lang == lang:
+                    # Choose preferred language gloss.
+                    gloss = str(g)
+        return gloss
+
+    def show(self):
+        # Add header.
+        text = ['\nEntry\n============']
+        # Add overview line.
+        if self.lexical_unit:
+            text.append(f"{self.lexical_unit}; {self.get_grammatical_info()}; {self.get_gloss()}")  # noqa: E501
+        # Add traits.
+        if self.traits:
+            text.append('; '.join([str(t) for t in self.traits]))
+        # Add senses.
+        if self.senses:
+            text.append('\n'.join([f"sense: {str(s)}" for s in self.senses]))
+        # Add variants.
+        if self.variants:
+            text.append('; '.join(str(v) for v in self.variants))
+        # Add notes.
+        if self.notes:
+            text.append('; '.join(str(n) for n in self.notes))
+        # Add etymologies.
+        if self.etymologies:
+            text.append('; '.join(str(e) for e in self.etymologies))
+        print('\n'.join(text))
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
@@ -455,22 +525,28 @@ class Entry(Extensible):
 
 
 class LIFTLexicon:
-    def __init__(
-        self,
-        producer: Optional[str] = None,
-        header: Optional[Header] = None,
-        entries: Optional[List[Entry]] = None,
-        version: int = None
-    ):
+    def __init__(self, xml_tree=None):
         # attributes
-        self.version = version
-        self.producer = producer
+        self.version = None
+        self.producer = None
         # elements
-        self.header = header
-        self.entries = entries
+        self.header = None
+        self.entries = None
+
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
 
     def __str__(self):
         return 'LIFT-lexicon'
+
+    def show(self):
+        text = "No entries."
+        if self.entries:
+            summary_lines = [e.get_summary_line('en') for e in self.entries]
+            slist = utils.unicode_sort(summary_lines)
+            nl = '\n'
+            text = nl.join(slist)
+        print(text)
 
     def update_from_xml(self, xml_tree):
         for elem in xml_tree.getchildren():
@@ -484,4 +560,4 @@ class LIFTLexicon:
                 else:
                     self.entries.append(entry)
             else:
-                logging.warning(f"Unhandled tag while parsing root children: {elem.tag}")  # noqa: E501
+                logging.warning(f"{__class__}: Unhandled XML tag: {elem.tag}")
