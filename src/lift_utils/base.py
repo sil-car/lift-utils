@@ -9,10 +9,16 @@ from .datatypes import URL
 
 
 class Span:
-    _attrib_req = []
-    _attrib_opt = ['lang', 'href', 'class']
-    _elem_req = ['pcdata']
-    _elem_opt = ['spans']
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['lang', 'href', 'class'],
+        },
+        'elements': {
+            'required': ['pcdata'],
+            'optional': ['spans'],
+        },
+    }
 
     def __init__(self, xml_data=None):
         # attributes
@@ -48,10 +54,16 @@ class Span:
 
 
 class Text:
-    _attrib_req = []
-    _attrib_opt = []
-    _elem_req = ['pcdata']
-    _elem_opt = ['spans']
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': ['pcdata'],
+            'optional': ['spans'],
+        },
+    }
 
     def __init__(self, text=None):
         self.pcdata: str = None
@@ -64,10 +76,16 @@ class Text:
 
 
 class Trait:
-    _attrib_req = ['name', 'value']
-    _attrib_opt = ['id']
-    _elem_req = []
-    _elem_opt = ['annotations']
+    props = {
+        'attributes': {
+            'required': ['name', 'value'],
+            'optional': ['id'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['annotations'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         # attributes
@@ -102,10 +120,16 @@ class Trait:
 
 
 class Form:
-    _attrib_req = ['lang']
-    _attrib_opt = []
-    _elem_req = ['text']
-    _elem_opt = ['annotations']
+    props = {
+        'attributes': {
+            'required': ['lang'],
+            'optional': [],
+        },
+        'elements': {
+            'required': ['text'],
+            'optional': ['annotations'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         # attributes
@@ -139,10 +163,16 @@ class Form:
 
 
 class Multitext:
-    _attrib_req = []
-    _attrib_opt = []
-    _elem_req = []
-    _elem_opt = ['forms', 'text']
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['forms', 'text'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         super().__init__()  # needed because listed 1st in multiple interitance
@@ -179,10 +209,16 @@ class Multitext:
 
 
 class Gloss(Form):
-    _attrib_req = []
-    _attrib_opt = []
-    _elem_req = []
-    _elem_opt = ['traits']
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['traits'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         super().__init__()
@@ -210,10 +246,16 @@ class Gloss(Form):
 
 
 class URLRef:
-    _attrib_req = ['href']
-    _attrib_opt = []
-    _elem_req = []
-    _elem_opt = ['label']
+    props = {
+        'attributes': {
+            'required': ['href'],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['label'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         # attributes
@@ -235,10 +277,16 @@ class URLRef:
 
 
 class Annotation(Multitext):
-    _attrib_req = ['name', 'value']
-    _attrib_opt = ['who', 'when']
-    _elem_req = []
-    _elem_opt = []
+    props = {
+        'attributes': {
+            'required': ['name', 'value'],
+            'optional': ['who', 'when'],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         super().__init__()
@@ -267,10 +315,16 @@ class Annotation(Multitext):
 
 
 class Field(Multitext):
-    _attrib_req = ['name']
-    _attrib_opt = ['date_created', 'date_modified']
-    _elem_req = []
-    _elem_opt = ['traits', 'annotations']
+    props = {
+        'attributes': {
+            'required': ['name'],
+            'optional': ['date_created', 'date_modified'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['traits', 'annotations'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         super().__init__()
@@ -314,10 +368,16 @@ class Field(Multitext):
 
 
 class Extensible:
-    _attrib_req = []
-    _attrib_opt = ['date_created', 'date_modified']
-    _elem_req = []
-    _elem_opt = ['fields', 'traits', 'annotations']
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['date_created', 'date_modified'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['fields', 'traits', 'annotations'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         # attributes

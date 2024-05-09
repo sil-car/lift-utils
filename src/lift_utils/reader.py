@@ -1,8 +1,6 @@
 from lxml import etree
 from pathlib import Path
 
-from .lexicon import LIFTLexicon
-
 
 class LIFTFile:
     def __init__(self, path=None):
@@ -18,7 +16,7 @@ class LIFTFile:
         # Don't auto-parse XML in order to conserve memory?
         # Remove existing line breaks to allow pretty_print to work properly.
         parser = etree.XMLParser(remove_blank_text=True)
-        return etree.parse(str(self.path), parser)
+        return etree.parse(str(self.path), parser).getroot()
 
     def show_xml_tree(self):
         print(
@@ -29,11 +27,3 @@ class LIFTFile:
                 xml_declaration=True
             ).decode().rstrip()
         )
-
-    def xml_to_lexicon(self):
-        lexicon = LIFTLexicon()
-        lexicon.update_from_xml(self.get_xml_tree().getroot())
-        return lexicon
-
-    def lexicon_to_xml(self):
-        pass

@@ -16,6 +16,17 @@ from .header import Header
 
 
 class Note(Multitext, Extensible):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['type'],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -42,6 +53,17 @@ class Note(Multitext, Extensible):
 
 
 class Phonetic(Multitext, Extensible):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['media'],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # elements
@@ -73,6 +95,17 @@ class Phonetic(Multitext, Extensible):
 
 
 class Etymology(Extensible):
+    props = {
+        'attributes': {
+            'required': ['type', 'source'],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['glosses', 'form'],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -111,6 +144,17 @@ class Etymology(Extensible):
 
 
 class GrammaticalInfo:
+    props = {
+        'attributes': {
+            'required': ['value'],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['trait'],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         # attributes
         self.value: Key = None
@@ -139,6 +183,17 @@ class GrammaticalInfo:
 
 
 class Reversal(Multitext):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['type'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['main', 'grammatical_info'],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -167,6 +222,17 @@ class Reversal(Multitext):
 
 
 class Translation(Multitext):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['type'],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -186,6 +252,17 @@ class Translation(Multitext):
 
 
 class Example(Multitext, Extensible):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['source'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['translation', 'note'],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -224,6 +301,17 @@ class Example(Multitext, Extensible):
 
 
 class Relation(Extensible):
+    props = {
+        'attributes': {
+            'required': ['type', 'ref'],
+            'optional': ['order', 'usage'],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -256,6 +344,17 @@ class Relation(Extensible):
 
 
 class Variant(Multitext, Extensible):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['ref'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['pronunciations', 'relations'],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -299,6 +398,27 @@ class Variant(Multitext, Extensible):
 
 
 class Sense(Extensible):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['id', 'order'],
+        },
+        'elements': {
+            'required': [],
+            'optional': [
+                'grammatical_info',
+                'glosses',
+                'definition',
+                'relations',
+                'notes',
+                'examples',
+                'reversals',
+                'illustrations',
+                'subsenses',
+            ],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -391,6 +511,26 @@ class Sense(Extensible):
 
 
 class Entry(Extensible):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': ['id', 'guid', 'order', 'date_deleted'],
+        },
+        'elements': {
+            'required': [],
+            'optional': [
+                'lexical_unit',
+                'citation',
+                'pronunciations',
+                'variants',
+                'senses',
+                'notes',
+                'relations',
+                'etymologies'
+            ],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # attributes
@@ -524,20 +664,37 @@ class Entry(Extensible):
                     self.etymologies.append(e)
 
 
-class LIFTLexicon:
+class LIFT:
+    props = {
+        'attributes': {
+            'required': ['version'],
+            'optional': ['producer'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['header', 'entry'],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         # attributes
-        self.version = None
-        self.producer = None
+        self.version: str = None
+        self.producer: Optional[str] = None
         # elements
-        self.header = None
-        self.entries = None
+        self.header: Optional[Header] = None
+        self.entries: Optional[List[Entry]] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
     def __str__(self):
-        return 'LIFT-lexicon'
+        s = f"LIFT lexicon v{self.version}"
+        if self.producer:
+            s += f"; produced by {self.producer}"
+        return s
+
+    def as_xml(self):
+        logging.warning(f"{__class__}: \"as_xml\" not yet implemented.")
 
     def show(self):
         text = "No entries."
@@ -549,10 +706,17 @@ class LIFTLexicon:
         print(text)
 
     def update_from_xml(self, xml_tree):
+        for k, v in xml_tree.attrib.items():
+            if k == 'version':
+                self.version = v
+            elif k == 'producer':
+                self.producer = v
+
         for elem in xml_tree.getchildren():
             if elem.tag == 'header':
                 # TODO: Add Header
                 logging.warning(f"{__class__}: Unhandled XML tag: {elem.tag}")
+                self.header = Header(elem)
             elif elem.tag == 'entry':
                 entry = Entry(elem)
                 if not self.entries:

@@ -127,4 +127,3 @@ class Header:
 
     def update_from_xml(self, xml_tree):
         pass
-    
