@@ -114,11 +114,12 @@ class Fields(list):
     def update_from_xml(self, xml_tree):
         pass
 
+
 class Header:
     def __init__(self, xml_tree=None):
         # elements
         self.description: Optional[Multitext] = None
-        self.ranges: Optional[Ranges[Range]] = None
+        self.ranges: Optional[LiftRanges[Range]] = None
         self.fields: Optional[Fields[FieldDefinition]] = None
 
         if xml_tree is not None:
@@ -126,3 +127,4 @@ class Header:
 
     def update_from_xml(self, xml_tree):
         pass
+    
