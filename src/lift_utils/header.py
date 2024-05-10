@@ -8,10 +8,16 @@ from .datatypes import URL
 
 
 class FieldDefinition:
-    _attrib_req = ['name']
-    _attrib_opt = ['fd_class', 'type', 'option_range', 'writing_system']
-    _elem_req = []
-    _elem_opt = ['label', 'description']
+    props = {
+        'attributes': {
+            'required': ['name'],
+            'optional': ['fd_class', 'type', 'option_range', 'writing_system'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['label', 'description'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         # attributes
@@ -28,14 +34,38 @@ class FieldDefinition:
             self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_tree):
-        pass
+        from lxml import etree
+        print(etree.tostring(xml_tree, pretty_print=True).decode())
+        for k, v in xml_tree.attrib.items():
+            if k == 'name':
+                self.name = Key(v)
+            elif k == 'class':
+                self.fd_class = v
+            elif k == 'type':
+                self.type = v
+            elif k == 'option-range':
+                self.option_range = Key(v)
+            elif k == 'writing-system':
+                self.writing_system = v
+
+        for c in xml_tree.getchildren():
+            if c.tag == 'label':
+                self.label = Multitext(c)
+            elif c.tag == 'description':
+                self.description = Multitext(c)
 
 
 class RangeElement(Extensible):
-    _attrib_req = ['id']
-    _attrib_opt = ['parent', 'guid']
-    _elem_req = []
-    _elem_opt = ['description', 'label', 'abbrev']
+    props = {
+        'attributes': {
+            'required': ['id'],
+            'optional': ['parent', 'guid'],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['description', 'label', 'abbrev'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         super().__init__()
@@ -58,10 +88,16 @@ class RangeElement(Extensible):
 
 
 class Range(Extensible):
-    _attrib_req = ['key']
-    _attrib_opt = ['guid', 'href']
-    _elem_req = ['range_element']
-    _elem_opt = ['description', 'label', 'abbrev']
+    props = {
+        'attributes': {
+            'required': ['key'],
+            'optional': ['guid', 'href'],
+        },
+        'elements': {
+            'required': ['range_element'],
+            'optional': ['description', 'label', 'abbrev'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         super().__init__()
@@ -85,6 +121,17 @@ class Range(Extensible):
 
 
 class LiftRanges(list):
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         super().__init__()
         # elements
@@ -98,24 +145,46 @@ class LiftRanges(list):
 
 
 class Fields(list):
-    _attrib_req = []
-    _attrib_opt = []
-    _elem_req = []
-    _elem_opt = ['field_definition']
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': ['field_definitions'],
+        },
+    }
 
     def __init__(self, xml_tree=None):
         super().__init__()
         # elements
-        self.field_definition: Optional[List[FieldDefinition]] = None
+        self.field_definitions: Optional[List[FieldDefinition]] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_tree):
-        pass
+        for c in xml_tree.getchildren():
+            f = FieldDefinition(c)
+            if not self.field_definitions:
+                self.field_definitions = [f]
+            else:
+                self.field_definitions.append(f)
 
 
 class Header:
+    props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
+
     def __init__(self, xml_tree=None):
         # elements
         self.description: Optional[Multitext] = None
@@ -126,4 +195,10 @@ class Header:
             self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_tree):
-        pass
+        for c in xml_tree.getchildren():
+            if c.tag == 'description':
+                self.description = Multitext(c)
+            elif c.tag == 'ranges':
+                self.ranges = LiftRanges(c)
+            elif c.tag == 'fields':
+                self.fields = Fields(c)
