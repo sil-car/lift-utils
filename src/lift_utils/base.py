@@ -1,6 +1,10 @@
+"""Manipulate base linguistic elements."""
+
+from lxml import etree
 from typing import List
 from typing import Optional
 
+from . import config
 from .datatypes import PCData
 from .datatypes import DateTime
 from .datatypes import Key
@@ -9,7 +13,11 @@ from .datatypes import URL
 
 
 class Span:
-    props = {
+    """A span is a Unicode string that is marked according to its language and
+    formatting information.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['lang', 'href', 'class'],
@@ -20,7 +28,10 @@ class Span:
         },
     }
 
-    def __init__(self, xml_data=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
@@ -29,8 +40,8 @@ class Span:
         self.pcdata = None
         self.spans: Optional[List[str]] = None  # Type should be 'Span'
 
-        if xml_data is not None:
-            self.update_from_xml(xml_data)
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_data):
         for k, v in xml_data.attrib.items():
@@ -53,30 +64,12 @@ class Span:
                     self.spans.append(s)
 
 
-class Text:
-    props = {
-        'attributes': {
-            'required': [],
-            'optional': [],
-        },
-        'elements': {
-            'required': ['pcdata'],
-            'optional': ['spans'],
-        },
-    }
-
-    def __init__(self, text=None):
-        self.pcdata: str = None
-        if text is not None:
-            self.pcdata = PCData(text)
-        self.spans: Optional[List[Span]] = None
-
-    def __str__(self):
-        return self.pcdata
-
-
 class Trait:
-    props = {
+    """A trait is an important mechanism for giving type information to an
+    object or adding binary constraints.
+    """
+
+    _props = {
         'attributes': {
             'required': ['name', 'value'],
             'optional': ['id'],
@@ -87,7 +80,10 @@ class Trait:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -119,8 +115,27 @@ class Trait:
                     self.annotations.append(a)
 
 
+class Flag(Trait):
+    """A trait is an important mechanism for giving type information to an
+    object or adding binary constraints.
+
+    .. note:: Used by LIFT 0.13 (FieldWorks). Mentioned in specification but
+        not defined; assumed to be equivalent to ``Trait``.
+    """
+
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
+        super().__init__(xml_tree=xml_tree)
+
+
 class Form:
-    props = {
+    """A ``Form`` is a representation of a string in a particular language and
+    script as specified by the ``lang`` attribute.
+    """
+
+    _props = {
         'attributes': {
             'required': ['lang'],
             'optional': [],
@@ -131,7 +146,10 @@ class Form:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.lang: Lang = None
         # elements
@@ -140,6 +158,9 @@ class Form:
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
+
+    def __str__(self):
+        return str(self.text)
 
     def update_from_xml(self, xml_tree):
         for k, v in xml_tree.attrib.items():
@@ -156,14 +177,58 @@ class Form:
                 else:
                     self.annotations.append(a)
 
-    def update_other_from_self(self, other):
+    def _update_other_from_self(self, other):
         other.lang = self.lang
         other.text = self.text
         other.annotations = self.annotations
 
 
-class Multitext:
-    props = {
+class Text(Form):
+    """This is a mixed content element containing textual data mixed with
+    ``span`` elements only.
+
+    .. note:: It only inherits from ``Form`` in LIFT v0.13 (FieldWorks).
+    """
+
+    _props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': ['pcdata'],
+            'optional': ['spans'],
+        },
+    }
+
+    def __init__(
+        self,
+        text=None,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
+        self.pcdata: str = None
+        if text is not None:
+            self.pcdata = PCData(text)
+        self.spans: Optional[List[Span]] = None
+        if xml_tree is not None:
+            f = Form(xml_tree)
+            f._update_other_from_self(self)
+            del f
+
+    def __str__(self):
+        return str(self.pcdata)
+
+    def _update_other_from_self(self, other):
+        other.pcdata = self.pcdata
+        other.spans = self.spans
+
+
+class Multitext(Text):
+    """This element allows for different representations of the same
+    information in a given language, or in multiple languages.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': [],
@@ -174,11 +239,14 @@ class Multitext:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()  # needed because listed 1st in multiple interitance
         # elements
         self.forms = None
-        self.text = None  # deprecated
+        self.text = None  # deprecated in v0.15
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
@@ -194,22 +262,33 @@ class Multitext:
         return s
 
     def update_from_xml(self, xml_tree):
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            txt = Text(xml_tree)
+            txt._update_other_from_self(self)
+            del txt
+
         for c in xml_tree.getchildren():
             if c.tag == 'form':
-                form = Form()
-                form.update_from_xml(c)
+                f = Form(c)
                 if not self.forms:
-                    self.forms = [form]
+                    self.forms = [f]
                 else:
-                    self.forms.append(form)
+                    self.forms.append(f)
+            elif c.tag == 'text':
+                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                    self.text = c.text
 
-    def update_other_from_self(self, other):
+    def _update_other_from_self(self, other):
         other.forms = self.forms
         other.text = self.text
 
 
 class Gloss(Form):
-    props = {
+    """A ``Gloss`` is a representation of a sense's gloss in a particular
+    language and script as specified by the ``lang`` attribute.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': [],
@@ -220,7 +299,10 @@ class Gloss(Form):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # elements
         self.traits: Optional[List[Trait]] = None
@@ -233,7 +315,7 @@ class Gloss(Form):
 
     def update_from_xml(self, xml_tree):
         form = Form(xml_tree)
-        form.update_other_from_self(self)
+        form._update_other_from_self(self)
         del form
 
         for c in xml_tree.getchildren():
@@ -246,7 +328,10 @@ class Gloss(Form):
 
 
 class URLRef:
-    props = {
+    """This is a URL with a caption.
+    """
+
+    _props = {
         'attributes': {
             'required': ['href'],
             'optional': [],
@@ -257,7 +342,10 @@ class URLRef:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.href: URL = None
         # elements
@@ -277,7 +365,11 @@ class URLRef:
 
 
 class Annotation(Multitext):
-    props = {
+    """The ``annotation`` element provides a mechanism for adding
+    meta-information to almost any element.
+    """
+
+    _props = {
         'attributes': {
             'required': ['name', 'value'],
             'optional': ['who', 'when'],
@@ -288,7 +380,10 @@ class Annotation(Multitext):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         self.name: Key = None
         self.value: Key = None
@@ -300,7 +395,7 @@ class Annotation(Multitext):
 
     def update_from_xml(self, xml_tree):
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for k, v in xml_tree.attrib.items():
@@ -315,7 +410,12 @@ class Annotation(Multitext):
 
 
 class Field(Multitext):
-    props = {
+    """A ``field`` is a generalised element to allow an application to store
+    information in a LIFT file that isn't explicitly described in the LIFT
+    standard.
+    """
+
+    _props = {
         'attributes': {
             'required': ['name'],
             'optional': ['date_created', 'date_modified'],
@@ -326,14 +426,21 @@ class Field(Multitext):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.name: str = None
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
         # elements
-        self.traits: Optional[List[Trait]] = None
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.traits: Optional[List[Flag]] = None
+            self.forms: Optional[List[Span]] = None
+        else:
+            self.traits: Optional[List[Trait]] = None
         self.annotations: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
@@ -341,7 +448,7 @@ class Field(Multitext):
 
     def update_from_xml(self, xml_tree):
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for k, v in xml_tree.attrib.items():
@@ -354,11 +461,21 @@ class Field(Multitext):
 
         for c in xml_tree.getchildren():
             if c.tag == 'trait':
-                t = Trait(c)
+                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                    t = Flag(c)
+                else:
+                    t = Trait(c)
                 if not self.traits:
                     self.traits = [t]
                 else:
                     self.traits.append(t)
+            elif c.tag == 'form':
+                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                    s = Span(c)
+                    if not self.forms:
+                        self.forms = [s]
+                    else:
+                        self.forms.append(s)
             elif c.tag == 'annotation':
                 a = Annotation(c)
                 if not self.annotations:
@@ -368,7 +485,11 @@ class Field(Multitext):
 
 
 class Extensible:
-    props = {
+    """This type is used to provide certain extra information in a
+    controlled extensible way.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['date_created', 'date_modified'],
@@ -379,13 +500,21 @@ class Extensible:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
         # elements
         self.fields: Optional[List[Field]] = None
-        self.traits: Optional[List[Trait]] = None
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            # TODO: Find definition of "Flag" in v0.13.
+            # self.traits: Optional[List[Flag]] = None
+            self.traits: Optional[List[Trait]] = None
+        else:
+            self.traits: Optional[List[Trait]] = None
         self.annotations: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
@@ -418,7 +547,7 @@ class Extensible:
                 else:
                     self.annotations.append(a)
 
-    def update_other_from_self(self, other):
+    def _update_other_from_self(self, other):
         other.date_created = self.date_created
         other.date_modified = self.date_modified
         other.fields = self.fields

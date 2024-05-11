@@ -1,12 +1,17 @@
+"""Manipulate lexicon entries and their dependent elements."""
+
 import logging
+from lxml import etree
 from typing import List
 from typing import Optional
 
+from . import config
 from . import utils
 from .base import Extensible
 from .base import Form
 from .base import Gloss
 from .base import Multitext
+from .base import Span
 from .base import Trait
 from .base import URLRef
 from .datatypes import DateTime
@@ -16,7 +21,11 @@ from .header import Header
 
 
 class Note(Multitext, Extensible):
-    props = {
+    """A ``note`` is used for storing descriptive information of many kinds
+    including comments, bibliographic information and domain specific notes.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['type'],
@@ -27,7 +36,10 @@ class Note(Multitext, Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.type: Optional[Key] = None
@@ -40,11 +52,11 @@ class Note(Multitext, Extensible):
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for k, v in xml_tree.attrib.items():
@@ -53,7 +65,10 @@ class Note(Multitext, Extensible):
 
 
 class Phonetic(Multitext, Extensible):
-    props = {
+    """This represents a single pronunciation in phonetic form.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': [],
@@ -64,10 +79,15 @@ class Phonetic(Multitext, Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # elements
         self.medias: Optional[List[URLRef]] = None
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.forms: Optional[List[Span]] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
@@ -77,11 +97,11 @@ class Phonetic(Multitext, Extensible):
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for c in xml_tree.getchildren():
@@ -92,10 +112,21 @@ class Phonetic(Multitext, Extensible):
                     self.medias = [r]
                 else:
                     self.medias.append(r)
+            if c.tag == 'form':
+                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                    f = Form(c)
+                    if not self.forms:
+                        self.forms = [f]
+                    else:
+                        self.forms.append(f)
 
 
 class Etymology(Extensible):
-    props = {
+    """An ``etymology`` is for describing lexical relations with a word that is
+    not an entry in the lexicon.
+    """
+
+    _props = {
         'attributes': {
             'required': ['type', 'source'],
             'optional': [],
@@ -106,7 +137,10 @@ class Etymology(Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.type: Key = None
@@ -123,7 +157,7 @@ class Etymology(Extensible):
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         for k, v in xml_tree.attrib.items():
@@ -144,7 +178,11 @@ class Etymology(Extensible):
 
 
 class GrammaticalInfo:
-    props = {
+    """The grammatical information of a ``sense`` is just a reference to a
+    ``range-element`` in the ``grammatical-info`` range.
+    """
+
+    _props = {
         'attributes': {
             'required': ['value'],
             'optional': [],
@@ -155,7 +193,10 @@ class GrammaticalInfo:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.value: Key = None
         # elements
@@ -183,7 +224,11 @@ class GrammaticalInfo:
 
 
 class Reversal(Multitext):
-    props = {
+    """Reverse indexes in a dictionary are a key tool for enabling a wider use
+    of a dictionary.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['type'],
@@ -194,7 +239,10 @@ class Reversal(Multitext):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.type: Optional[Key] = None
@@ -207,7 +255,7 @@ class Reversal(Multitext):
 
     def update_from_xml(self, xml_tree):
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for k, v in xml_tree.attrib.items():
@@ -222,7 +270,11 @@ class Reversal(Multitext):
 
 
 class Translation(Multitext):
-    props = {
+    """A ``translation`` is simply a ``Multitext`` with an optional translation
+    ``type`` attribute.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['type'],
@@ -233,7 +285,10 @@ class Translation(Multitext):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.type: Optional[Key] = None
@@ -243,7 +298,7 @@ class Translation(Multitext):
 
     def update_from_xml(self, xml_tree):
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for k, v in xml_tree.attrib.items():
@@ -252,7 +307,11 @@ class Translation(Multitext):
 
 
 class Example(Multitext, Extensible):
-    props = {
+    """An example gives an example sentence or phrase in the language and
+    glosses of that example in other languages.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['source'],
@@ -263,24 +322,28 @@ class Example(Multitext, Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.source: Optional[Key] = None
         # elements
         self.translations: Optional[List[Translation]] = None
-        self.notes: Optional[List[Note]] = None
+        if config.LIFT_VERSION in ['0.15']:
+            self.notes: Optional[List[Note]] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for c in xml_tree.getchildren():
@@ -293,15 +356,27 @@ class Example(Multitext, Extensible):
                 else:
                     self.translations.append(t)
             elif c.tag == 'note':
-                n = Note(c)
-                if not self.notes:
-                    self.notes = [n]
-                else:
-                    self.notes.append(n)
+                if config.LIFT_VERSION in ['0.15']:
+                    n = Note(c)
+                    if not self.notes:
+                        self.notes = [n]
+                    else:
+                        self.notes.append(n)
 
 
 class Relation(Extensible):
-    props = {
+    """This element is used for lexical relations.
+
+    :ivar Key type: Is the type of the particular lexical relation.
+    :ivar RefId ref: This is the other end of the relation, either a ``sense``
+        or an ``entry``.
+    :ivar Optional[int] order: Gives the relative ordering of relations of a
+        given type when a multiple relation is being described.
+    :ivar Optional[Multitext] usage: Gives information on usage in one or more
+        languages or writing systems.
+    """
+
+    _props = {
         'attributes': {
             'required': ['type', 'ref'],
             'optional': ['order', 'usage'],
@@ -312,7 +387,10 @@ class Relation(Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.type: Key = None
@@ -328,7 +406,7 @@ class Relation(Extensible):
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         for k, v in xml_tree.attrib.items():
@@ -344,7 +422,20 @@ class Relation(Extensible):
 
 
 class Variant(Multitext, Extensible):
-    props = {
+    """``variant`` elements are used for all sorts of variation.
+
+    :ivar Optional[RefId] ref: Gives the variation as a reference to another
+        ``entry`` or ``sense`` rather than specifying the ``form`` (that is,
+        the ``Multitext`` value of the variant).
+    :ivar Optional[List[Phonetic]] pronunciations: Holds the phonetic variant
+        whether it is that this is a variation in phonetics only or that the
+        phonetic variation arises because of an orthographic or phonemic
+        variation.
+    :ivar Optional[List[Relation]]relations: Some variants have a lexical
+        relationship with other senses or entries in the lexicon.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['ref'],
@@ -355,7 +446,10 @@ class Variant(Multitext, Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.ref: Optional[RefId] = None
@@ -370,12 +464,14 @@ class Variant(Multitext, Extensible):
         return self.ref if self.ref else 'variant'
 
     def update_from_xml(self, xml_tree):
+        """Set object attributes from the given XML data.
+        """
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         mul = Multitext(xml_tree)
-        mul.update_other_from_self(self)
+        mul._update_other_from_self(self)
         del mul
 
         for k, v in xml_tree.attrib.items():
@@ -398,7 +494,33 @@ class Variant(Multitext, Extensible):
 
 
 class Sense(Extensible):
-    props = {
+    """An ``entry`` is made up of a number of ``sense`` elements.
+
+    :ivar Optional[RefId] id: This gives an identifier for this ``Sense`` so
+        that things can refer to it.
+    :ivar Optional[int] order: A number that is used to give the relative
+        order of senses within an entry.
+    :ivar Optional[GrammaticalInfo] grammatical_info: Grammatical information.
+    :ivar Optional[List[Form]] glosses: `FieldWorks LIFT.` Each ``gloss`` is a
+        single string in a single language and writing system.
+    :ivar Optional[List[Gloss]] glosses: Each ``gloss`` is a single string in a
+        single language and writing system.
+    :ivar Optional[Multitext] definition: Gives the definition in multiple
+        languages or writing systems.
+    :ivar Optional[List[Relation]] relations: While a lexical relation isn't
+        strictly owned by a sense it is a good place to hold it.
+    :ivar Optional[List[Note]] notes: There are lots of different types of
+        notes.
+    :ivar Optional[List[Example]] examples: Examples may be used for different
+        target audiences.
+    :ivar Optional[List[Reversal]] reversals: There may be different reversal
+        indexes.
+    :ivar Optional[List[URLRef]] illustrations: The picture doesn't have to be
+        static.
+    :ivar Optional[List] subsenses: Senses can form a hierarchy.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['id', 'order'],
@@ -419,14 +541,20 @@ class Sense(Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
         # elements
         self.grammatical_info: Optional[GrammaticalInfo] = None
-        self.glosses: Optional[List[Gloss]] = None
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.glosses: Optional[List[Form]] = None
+        else:
+            self.glosses: Optional[List[Gloss]] = None
         self.definition: Optional[Multitext] = None
         self.relations: Optional[List[Relation]] = None
         self.notes: Optional[List[Note]] = None
@@ -439,19 +567,37 @@ class Sense(Extensible):
             self.update_from_xml(xml_tree)
 
     def __str__(self):
-        s = 'sense'
+        return self.get_summary_line()
+
+    def get_summary_line(self, lang='en'):
+        gl = utils.ellipsize(str(self.get_gloss(lang=lang)), 10)
+        gi = utils.ellipsize(self.get_grammatical_info(), 10)
+        de = str(self.definition)
+        return f"{gl:10}\t{gi:10}\t{de}"
+
+    def get_gloss(self, lang='en'):
+        gloss = ''
         if self.glosses:
-            s = '; '.join([str(g) for g in self.glosses])
-        elif self.id:
-            s = self.id
-        return s
+            # Choose 1st gloss if preferred language not found.
+            gloss = str(self.glosses[0])
+            for g in self.glosses:
+                if g.lang == lang:
+                    # Choose preferred language gloss.
+                    gloss = str(g)
+        return gloss
+
+    def get_grammatical_info(self):
+        grammatical_info = ''
+        if self.grammatical_info:
+            grammatical_info = str(self.grammatical_info)
+        return grammatical_info
 
     def show(self):
         print(self.__str__())
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         for k, v in xml_tree.attrib.items():
@@ -464,7 +610,10 @@ class Sense(Extensible):
             if c.tag == 'grammatical-info':
                 self.grammatical_info = GrammaticalInfo(c)
             elif c.tag == 'gloss':
-                g = Gloss(c)
+                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                    g = Form(c)
+                else:
+                    g = Gloss(c)
                 if not self.glosses:
                     self.glosses = [g]
                 else:
@@ -511,7 +660,32 @@ class Sense(Extensible):
 
 
 class Entry(Extensible):
-    props = {
+    """This is the core of a lexicon. A lexicon is made up of a set of entries.
+
+    :ivar Optional[RefId] id: This gives a unique identifier to this ``entry``.
+    :ivar Optional[str] guid: `Deprecated.` This gives a unique identifier to
+        this entry in the form of a “universally unique identifier” (RFC 4122).
+    :ivar Optional[int] order: This is the homograph number.
+    :ivar Optional[DateTime] date_deleted: If this attribute exists then it
+        indicates that the particular ``entry`` has been deleted.
+    :ivar Optional[Multitext] lexical_unit: The lexical form is the primary
+        lexical form as is found as the primary lexical form in the source data
+        models for this standard.
+    :ivar Optional[Multitext] citation: This is the form that is to be printed
+        in the dictionary.
+    :ivar Optional[List[Phonetic]] pronunciations: There can be multiple
+        phonetic forms of an entry.
+    :ivar Optional[List[Variant]] variants: Any constrained variants or free
+        orthographic variants.
+    :ivar Optional[List[Sense]] senses: This is where the definition goes.
+    :ivar Optional[List[Note]] notes: The more notes you keep the better.
+    :ivar Optional[List[Relation]] relations: Gives a lexical relationship
+        between this entry and another ``entry`` or ``sense``.
+    :ivar Optional[List[Etymology]] etymologies: Differs from a lexical
+        relation in that it has no referent in the lexicon.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': ['id', 'guid', 'order', 'date_deleted'],
@@ -531,7 +705,10 @@ class Entry(Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.id: Optional[RefId] = None
@@ -608,7 +785,7 @@ class Entry(Extensible):
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
         for k, v in xml_tree.attrib.items():
@@ -665,7 +842,17 @@ class Entry(Extensible):
 
 
 class LIFT:
-    props = {
+    """Top-level class for the LIFT file's data.
+
+    :ivar str version: Specifies the lift language version number.
+    :ivar Optional[str] producer: Identifies the particular producer of this
+        lift file.
+    :ivar Optional[Header] header: Contains the header information for the
+        database.
+    :ivar Optional[List[Entry]] entries: Each of the entries in the lexicon.
+    """
+
+    _props = {
         'attributes': {
             'required': ['version'],
             'optional': ['producer'],
@@ -676,7 +863,10 @@ class LIFT:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.version: str = None
         self.producer: Optional[str] = None
@@ -709,6 +899,7 @@ class LIFT:
         for k, v in xml_tree.attrib.items():
             if k == 'version':
                 self.version = v
+                config.LIFT_VERSION = self.version  # allow global access
             elif k == 'producer':
                 self.producer = v
 

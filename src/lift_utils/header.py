@@ -1,14 +1,67 @@
+"""Manipulate the header section."""
+
+from lxml import etree
 from typing import List
 from typing import Optional
 
+from . import config
 from .base import Extensible
 from .base import Multitext
 from .datatypes import Key
 from .datatypes import URL
 
 
+class FieldDefn(Multitext):
+    """A field definition gives information about a particular field type that
+    may be used by an application to add information not part of the LIFT
+    standard.
+
+    .. note:: Used by LIFT v0.13 (FieldWorks)
+    """
+
+    _props = {
+        'attributes': {
+            'required': ['tag'],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
+
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
+        super().__init__()
+        # attributes
+        self.tag: Key = None
+
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
+
+    def __str__(self):
+        forms = 'forms' if len(self.forms) > 1 else 'form'
+        return f"{self.tag} ({len(self.forms)} {forms})"
+
+    def update_from_xml(self, xml_tree):
+        m = Multitext(xml_tree)
+        m._update_other_from_self(self)
+        del m
+
+        for k, v in xml_tree.attrib.items():
+            if k == 'tag':
+                self.tag = Key(v)
+
+
 class FieldDefinition:
-    props = {
+    """A field definition gives information about a particular field type that
+    may be used by an application to add information not part of the LIFT
+    standard.
+    """
+
+    _props = {
         'attributes': {
             'required': ['name'],
             'optional': ['fd_class', 'type', 'option_range', 'writing_system'],
@@ -19,7 +72,10 @@ class FieldDefinition:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # attributes
         self.name: Key = None
         self.fd_class: Optional[str] = None
@@ -33,9 +89,10 @@ class FieldDefinition:
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
+    def __str__(self):
+        return self.name
+
     def update_from_xml(self, xml_tree):
-        from lxml import etree
-        print(etree.tostring(xml_tree, pretty_print=True).decode())
         for k, v in xml_tree.attrib.items():
             if k == 'name':
                 self.name = Key(v)
@@ -56,7 +113,11 @@ class FieldDefinition:
 
 
 class RangeElement(Extensible):
-    props = {
+    """A ``range-element`` is the description of a particular range element
+    found in a particular ``range``.
+    """
+
+    _props = {
         'attributes': {
             'required': ['id'],
             'optional': ['parent', 'guid'],
@@ -67,7 +128,10 @@ class RangeElement(Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.id: Key = None
@@ -83,12 +147,16 @@ class RangeElement(Extensible):
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
 
 class Range(Extensible):
-    props = {
+    """A ``range`` is a set of ``range-elements`` and is used to identify both
+    the group of ``range-elements`` but also to some extent their type.
+    """
+
+    _props = {
         'attributes': {
             'required': ['key'],
             'optional': ['guid', 'href'],
@@ -99,7 +167,10 @@ class Range(Extensible):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # attributes
         self.id: Key = None
@@ -116,23 +187,29 @@ class Range(Extensible):
 
     def update_from_xml(self, xml_tree):
         ext = Extensible(xml_tree)
-        ext.update_other_from_self(self)
+        ext._update_other_from_self(self)
         del ext
 
 
 class LiftRanges(list):
-    props = {
+    """The root element in a Lift Ranges file.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': [],
         },
         'elements': {
-            'required': [],
+            'required': ['ranges'],
             'optional': [],
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # elements
         self.ranges: List[Range] = None
@@ -144,8 +221,41 @@ class LiftRanges(list):
         pass
 
 
+class FieldDefns(list):
+    """This is a simple list of ``field-defn``.
+
+    .. note:: Used by LIFT v0.13 (FieldWorks)
+    """
+
+    _props = {
+        'attributes': {
+            'required': [],
+            'optional': [],
+        },
+        'elements': {
+            'required': [],
+            'optional': [],
+        },
+    }
+
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
+        super().__init__()
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
+
+    def update_from_xml(self, xml_tree):
+        for c in xml_tree.getchildren():
+            self.append(FieldDefn(c))
+
+
 class Fields(list):
-    props = {
+    """This is a simple list of ``field-definition`` elements.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': [],
@@ -156,17 +266,26 @@ class Fields(list):
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         super().__init__()
         # elements
-        self.field_definitions: Optional[List[FieldDefinition]] = None
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.field_definitions: Optional[List[FieldDefn]] = None
+        else:
+            self.field_definitions: Optional[List[FieldDefinition]] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
 
     def update_from_xml(self, xml_tree):
         for c in xml_tree.getchildren():
-            f = FieldDefinition(c)
+            if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                f = FieldDefn(c)
+            else:
+                f = FieldDefinition(c)
             if not self.field_definitions:
                 self.field_definitions = [f]
             else:
@@ -174,7 +293,11 @@ class Fields(list):
 
 
 class Header:
-    props = {
+    """This holds the header information for a LIFT file including range
+    information and added field definitions.
+    """
+
+    _props = {
         'attributes': {
             'required': [],
             'optional': [],
@@ -185,11 +308,17 @@ class Header:
         },
     }
 
-    def __init__(self, xml_tree=None):
+    def __init__(
+        self,
+        xml_tree: Optional[etree.ElementTree] = None
+    ):
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[LiftRanges[Range]] = None
-        self.fields: Optional[Fields[FieldDefinition]] = None
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.fields: Optional[FieldDefns] = None
+        else:
+            self.fields: Optional[Fields] = None
 
         if xml_tree is not None:
             self.update_from_xml(xml_tree)
@@ -201,4 +330,7 @@ class Header:
             elif c.tag == 'ranges':
                 self.ranges = LiftRanges(c)
             elif c.tag == 'fields':
-                self.fields = Fields(c)
+                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                    self.fields = FieldDefns(c)
+                else:
+                    self.fields = Fields(c)

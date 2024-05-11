@@ -1,0 +1,5 @@
+"""Define runtime global variables."""
+
+LIFT_VERSION_FIELDWORKS = '0.13'  # used by FLEx 9.1
+LIFT_VERSION_DEFAULT = LIFT_VERSION_FIELDWORKS
+LIFT_VERSION = None

@@ -1,4 +1,5 @@
-# Datatypes
+"""Define the basic datatypes."""
+
 
 class PCData(str):
     def __new__(cls, content=None):
