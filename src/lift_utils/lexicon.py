@@ -5,6 +5,7 @@ from lxml import etree
 from pathlib import Path
 from typing import List
 from typing import Optional
+from typing import Union
 
 from . import config
 from . import utils
@@ -943,7 +944,7 @@ class LIFT(LIFTUtilsBase):
                     if r.href:
                         ext_hrefs.add(r.href)
                 for p in ext_hrefs:
-                    self.update_from_filepath(p)
+                    self._update_from_filepath(p)
             elif c.tag == 'entry':
                 entry = Entry(c)
                 if not self.entries:
@@ -953,9 +954,9 @@ class LIFT(LIFTUtilsBase):
             else:
                 logging.warning(f"{__class__}: Unhandled XML tag: {c.tag}")
 
-    def update_from_filepath(self, filepath):
+    def _update_header_from_filepath(self, filepath: Union[Path, str]):
         try:
-            xml_tree = xml_to_etree(filepath)
+            xml_tree = xml_to_etree(str(filepath))
         except OSError:
             # Probably absolute URI from a different device.
             # Try same file name, but in same dir as current LIFT file.
