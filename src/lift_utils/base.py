@@ -1,5 +1,6 @@
 """Manipulate base linguistic elements."""
 
+import sys
 from lxml import etree
 from typing import List
 from typing import Optional
@@ -12,7 +13,40 @@ from .datatypes import Lang
 from .datatypes import URL
 
 
-class Span:
+class LIFTUtilsBase:
+    """This is a base class for all LIFT-related objects in this package.
+
+    :ivar etree xml_tree: The object's current data.
+    """
+    def __init__(self, xml_tree: etree = None):
+        self.xml_tree = None
+        if xml_tree is not None:
+            self.update_from_xml(xml_tree)
+
+    def to_xml(self):
+        """Convert the object's data to XML."""
+        return etree.tostring(
+            self.xml_tree,
+            encoding='UTF-8',
+            pretty_print=True,
+            xml_declaration=True
+        ).decode().rstrip()
+
+    def print(self, format='xml'):
+        """Print the object's data to stdout; as XML by default."""
+        try:
+            if format == 'xml':
+                print(self.to_xml(), flush=True)
+            else:
+                return
+        except BrokenPipeError:
+            sys.stdout = None
+
+    def update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
+
+class Span(LIFTUtilsBase):
     """A span is a Unicode string that is marked according to its language and
     formatting information.
     """
@@ -32,6 +66,9 @@ class Span:
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
@@ -64,7 +101,7 @@ class Span:
                     self.spans.append(s)
 
 
-class Trait:
+class Trait(LIFTUtilsBase):
     """A trait is an important mechanism for giving type information to an
     object or adding binary constraints.
     """
@@ -84,6 +121,9 @@ class Trait:
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -119,7 +159,7 @@ class Flag(Trait):
     """A trait is an important mechanism for giving type information to an
     object or adding binary constraints.
 
-    .. note:: Used by LIFT 0.13 (FieldWorks). Mentioned in specification but
+    .. note:: Used by LIFT v0.13 (FieldWorks). Mentioned in specification but
         not defined; assumed to be equivalent to ``Trait``.
     """
 
@@ -127,10 +167,12 @@ class Flag(Trait):
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
 
 
-class Form:
+class Form(LIFTUtilsBase):
     """A ``Form`` is a representation of a string in a particular language and
     script as specified by the ``lang`` attribute.
     """
@@ -150,6 +192,9 @@ class Form:
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.lang: Lang = None
         # elements
@@ -206,14 +251,20 @@ class Text(Form):
         text=None,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         self.pcdata: str = None
         if text is not None:
             self.pcdata = PCData(text)
         self.spans: Optional[List[Span]] = None
         if xml_tree is not None:
-            f = Form(xml_tree)
-            f._update_other_from_self(self)
-            del f
+            self.update_from_xml(xml_tree)
+
+    def update_from_xml(self, xml_tree):
+        f = Form(xml_tree)
+        f._update_other_from_self(self)
+        del f
 
     def __str__(self):
         return str(self.pcdata)
@@ -243,7 +294,9 @@ class Multitext(Text):
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
-        super().__init__()  # needed because listed 1st in multiple interitance
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # elements
         self.forms = None
         self.text = None  # deprecated in v0.15
@@ -304,6 +357,8 @@ class Gloss(Form):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # elements
         self.traits: Optional[List[Trait]] = None
 
@@ -327,7 +382,7 @@ class Gloss(Form):
                     self.traits.append(t)
 
 
-class URLRef:
+class URLRef(LIFTUtilsBase):
     """This is a URL with a caption.
     """
 
@@ -346,6 +401,9 @@ class URLRef:
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.href: URL = None
         # elements
@@ -385,6 +443,8 @@ class Annotation(Multitext):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         self.name: Key = None
         self.value: Key = None
         self.who: Optional[Key] = None
@@ -431,6 +491,8 @@ class Field(Multitext):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.name: str = None
         self.date_created: Optional[DateTime] = None
@@ -484,7 +546,7 @@ class Field(Multitext):
                     self.annotations.append(a)
 
 
-class Extensible:
+class Extensible(LIFTUtilsBase):
     """This type is used to provide certain extra information in a
     controlled extensible way.
     """
@@ -504,6 +566,9 @@ class Extensible:
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None

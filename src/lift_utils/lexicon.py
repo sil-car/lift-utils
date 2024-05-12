@@ -2,6 +2,7 @@
 
 import logging
 from lxml import etree
+from pathlib import Path
 from typing import List
 from typing import Optional
 
@@ -10,6 +11,7 @@ from . import utils
 from .base import Extensible
 from .base import Form
 from .base import Gloss
+from .base import LIFTUtilsBase
 from .base import Multitext
 from .base import Span
 from .base import Trait
@@ -18,6 +20,8 @@ from .datatypes import DateTime
 from .datatypes import Key
 from .datatypes import RefId
 from .header import Header
+from .header import Range
+from .utils import xml_to_etree
 
 
 class Note(Multitext, Extensible):
@@ -41,6 +45,8 @@ class Note(Multitext, Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.type: Optional[Key] = None
 
@@ -84,6 +90,8 @@ class Phonetic(Multitext, Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # elements
         self.medias: Optional[List[URLRef]] = None
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
@@ -142,6 +150,8 @@ class Etymology(Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.type: Key = None
         self.source: str = None
@@ -177,7 +187,7 @@ class Etymology(Extensible):
                 self.form = Form(c)
 
 
-class GrammaticalInfo:
+class GrammaticalInfo(LIFTUtilsBase):
     """The grammatical information of a ``sense`` is just a reference to a
     ``range-element`` in the ``grammatical-info`` range.
     """
@@ -197,6 +207,9 @@ class GrammaticalInfo:
         self,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.value: Key = None
         # elements
@@ -244,6 +257,8 @@ class Reversal(Multitext):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.type: Optional[Key] = None
         # elements
@@ -290,6 +305,8 @@ class Translation(Multitext):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.type: Optional[Key] = None
 
@@ -327,6 +344,8 @@ class Example(Multitext, Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.source: Optional[Key] = None
         # elements
@@ -392,6 +411,8 @@ class Relation(Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.type: Key = None
         self.ref: RefId = None
@@ -451,6 +472,8 @@ class Variant(Multitext, Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.ref: Optional[RefId] = None
         # elements
@@ -501,8 +524,8 @@ class Sense(Extensible):
     :ivar Optional[int] order: A number that is used to give the relative
         order of senses within an entry.
     :ivar Optional[GrammaticalInfo] grammatical_info: Grammatical information.
-    :ivar Optional[List[Form]] glosses: `FieldWorks LIFT.` Each ``gloss`` is a
-        single string in a single language and writing system.
+    :ivar Optional[List[Form]] glosses: `Used by LIFT v0.13 (FieldWorks).` Each
+        ``gloss`` is a single string in a single language and writing system.
     :ivar Optional[List[Gloss]] glosses: Each ``gloss`` is a single string in a
         single language and writing system.
     :ivar Optional[Multitext] definition: Gives the definition in multiple
@@ -546,6 +569,8 @@ class Sense(Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
@@ -710,6 +735,8 @@ class Entry(Extensible):
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
         # attributes
         self.id: Optional[RefId] = None
         self.guid: Optional[str] = None  # deprecated
@@ -841,8 +868,9 @@ class Entry(Extensible):
                     self.etymologies.append(e)
 
 
-class LIFT:
-    """Top-level class for the LIFT file's data.
+class LIFT(LIFTUtilsBase):
+    """This is the root node of the document and contains a header and all the
+    entries in the database.
 
     :ivar str version: Specifies the lift language version number.
     :ivar Optional[str] producer: Identifies the particular producer of this
@@ -865,8 +893,13 @@ class LIFT:
 
     def __init__(
         self,
+        path: Optional[Path] = None,
         xml_tree: Optional[etree.ElementTree] = None
     ):
+        super().__init__()
+        if xml_tree is not None:
+            super().update_from_xml(xml_tree)
+        self.path = path
         # attributes
         self.version: str = None
         self.producer: Optional[str] = None
@@ -882,9 +915,6 @@ class LIFT:
         if self.producer:
             s += f"; produced by {self.producer}"
         return s
-
-    def as_xml(self):
-        logging.warning(f"{__class__}: \"as_xml\" not yet implemented.")
 
     def show(self):
         text = "No entries."
@@ -903,16 +933,39 @@ class LIFT:
             elif k == 'producer':
                 self.producer = v
 
-        for elem in xml_tree.getchildren():
-            if elem.tag == 'header':
-                # TODO: Add Header
-                logging.warning(f"{__class__}: Unhandled XML tag: {elem.tag}")
-                self.header = Header(elem)
-            elif elem.tag == 'entry':
-                entry = Entry(elem)
+        for c in xml_tree.getchildren():
+            if c.tag == 'header':
+                # Get initial header info from LIFT file.
+                self.header = Header(c)
+                # Update header range data from external file(s).
+                ext_hrefs = set()
+                for r in self.header.ranges[:]:
+                    if r.href:
+                        ext_hrefs.add(r.href)
+                for p in ext_hrefs:
+                    self.update_from_filepath(p)
+            elif c.tag == 'entry':
+                entry = Entry(c)
                 if not self.entries:
                     self.entries = [entry]
                 else:
                     self.entries.append(entry)
             else:
-                logging.warning(f"{__class__}: Unhandled XML tag: {elem.tag}")
+                logging.warning(f"{__class__}: Unhandled XML tag: {c.tag}")
+
+    def update_from_filepath(self, filepath):
+        try:
+            xml_tree = xml_to_etree(filepath)
+        except OSError:
+            # Probably absolute URI from a different device.
+            # Try same file name, but in same dir as current LIFT file.
+            relpath = self.path.parent / Path(filepath).name
+            xml_tree = xml_to_etree(relpath)
+
+        for _range in xml_tree.getchildren():
+            for i, r in enumerate(self.header.ranges[:]):
+                if _range.attrib.get('id') == r.id:
+                    # print(f'matched {r.id}')
+                    href = r.href
+                    self.header.ranges[i] = Range(_range)
+                    self.header.ranges[i].href = href  # add href back in
