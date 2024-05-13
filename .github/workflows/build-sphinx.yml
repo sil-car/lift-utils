@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,9 +24,11 @@ jobs:
         name: html-docs
         path: sphinx/build
 
+    - run: "ls -l
+
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: "./"
+        publish_dir: "./sphinx/build/"
