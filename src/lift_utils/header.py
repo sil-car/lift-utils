@@ -13,8 +13,8 @@ from .datatypes import URL
 
 
 class FieldDefn(Multitext):
-    """A field definition gives information about a particular field type that
-    may be used by an application to add information not part of the LIFT
+    """Gives information about a particular field type.
+    It may be used by an application to add information not part of the LIFT
     standard.
 
     .. note:: Used by LIFT v0.13 (FieldWorks).
@@ -61,8 +61,8 @@ class FieldDefn(Multitext):
 
 
 class FieldDefinition(LIFTUtilsBase):
-    """A field definition gives information about a particular field type that
-    may be used by an application to add information not part of the LIFT
+    """Gives information about a particular field type.
+    It may be used by an application to add information not part of the LIFT
     standard.
     """
 
@@ -123,8 +123,7 @@ class FieldDefinition(LIFTUtilsBase):
 
 
 class RangeElement(Extensible):
-    """A ``range-element`` is the description of a particular range element
-    found in a particular ``range``.
+    """The description of a particular range element found in a ``range``.
     """
 
     _props = {
@@ -194,8 +193,9 @@ class RangeElement(Extensible):
 
 
 class Range(Extensible):
-    """A ``range`` is a set of ``range-elements`` and is used to identify both
-    the group of ``range-elements`` but also to some extent their type.
+    """A set of ``range-elements``.
+    It is used to identify both the group of ``range-elements`` but also to
+    some extent their type.
     """
 
     _props = {
@@ -386,8 +386,8 @@ class Fields(list, LIFTUtilsBase):
 
 
 class Header(LIFTUtilsBase):
-    """This holds the header information for a LIFT file including range
-    information and added field definitions.
+    """The header information for a LIFT file.
+    It includes range information and added field definitions.
 
     :ivar Optional[Multitext] description: Contains a multilingual description
         of the lexicon for information purposes only.

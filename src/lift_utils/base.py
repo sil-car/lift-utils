@@ -47,8 +47,7 @@ class LIFTUtilsBase:
 
 
 class Span(LIFTUtilsBase):
-    """A span is a Unicode string that is marked according to its language and
-    formatting information.
+    """A Unicode string marked with language and formatting information.
     """
 
     _props = {
@@ -104,8 +103,8 @@ class Span(LIFTUtilsBase):
 
 
 class Trait(LIFTUtilsBase):
-    """A trait is an important mechanism for giving type information to an
-    object or adding binary constraints.
+    """An important mechanism for giving type information to an object.
+    It can also be used for adding binary constraints.
     """
 
     _props = {
@@ -160,8 +159,8 @@ class Trait(LIFTUtilsBase):
 
 
 class Flag(Trait):
-    """A trait is an important mechanism for giving type information to an
-    object or adding binary constraints.
+    """An important mechanism for giving type information to an object.
+    It can also be use for adding binary constraints.
 
     .. note:: Used by LIFT v0.13 (FieldWorks). Mentioned in specification but
         not defined; assumed to be equivalent to ``Trait``.
@@ -177,8 +176,8 @@ class Flag(Trait):
 
 
 class Form(LIFTUtilsBase):
-    """A ``Form`` is a representation of a string in a particular language and
-    script as specified by the ``lang`` attribute.
+    """A representation of a string in a particular language and script.
+    This is specified by the ``lang`` attribute.
     """
 
     _props = {
@@ -235,8 +234,7 @@ class Form(LIFTUtilsBase):
 
 
 class Text(Form):
-    """This is a mixed content element containing textual data mixed with
-    ``span`` elements only.
+    """Contains textual data mixed with ``span`` elements only.
 
     .. note:: It only inherits from ``Form`` in LIFT v0.13 (FieldWorks).
     """
@@ -294,8 +292,8 @@ class Text(Form):
 
 
 class Multitext(Text):
-    """This element allows for different representations of the same
-    information in a given language, or in multiple languages.
+    """Allows for different representations of the same information.
+    It can be in a given language, or in multiple languages.
     """
 
     _props = {
@@ -358,8 +356,9 @@ class Multitext(Text):
 
 
 class Gloss(Form):
-    """A ``Gloss`` is a representation of a sense's gloss in a particular
-    language and script as specified by the ``lang`` attribute.
+    """A representation of a sense's gloss.
+    It's given in a particular language and script as specified by the ``lang``
+    attribute.
     """
 
     _props = {
@@ -448,8 +447,7 @@ class URLRef(LIFTUtilsBase):
 
 
 class Annotation(Multitext):
-    """The ``annotation`` element provides a mechanism for adding
-    meta-information to almost any element.
+    """Provides a mechanism for adding meta-information to almost any element.
     """
 
     _props = {
@@ -497,9 +495,9 @@ class Annotation(Multitext):
 
 
 class Field(Multitext):
-    """A ``field`` is a generalised element to allow an application to store
-    information in a LIFT file that isn't explicitly described in the LIFT
-    standard.
+    """A generalised element to allow an application to store information.
+    It's for information in a LIFT file that isn't explicitly described in the
+    LIFT standard.
     """
 
     _props = {
@@ -576,8 +574,7 @@ class Field(Multitext):
 
 
 class Extensible(LIFTUtilsBase):
-    """This type is used to provide certain extra information in a
-    controlled extensible way.
+    """Used to provide certain extra information in a controlled way.
 
     :ivar Optional[DateTime] date_created: Contains a date/timestamp saying
         when the element was added to the dictionary.

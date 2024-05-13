@@ -26,8 +26,9 @@ from .utils import xml_to_etree
 
 
 class Note(Multitext, Extensible):
-    """A ``note`` is used for storing descriptive information of many kinds
-    including comments, bibliographic information and domain specific notes.
+    """For storing descriptive information of many kinds.
+    It can include comments, bibliographic information and domain specific
+    notes.
     """
 
     _props = {
@@ -135,8 +136,7 @@ class Phonetic(Multitext, Extensible):
 
 
 class Etymology(Extensible):
-    """An ``etymology`` is for describing lexical relations with a word that is
-    not an entry in the lexicon.
+    """For describing lexical relations with a word not in the lexicon.
     """
 
     _props = {
@@ -195,8 +195,7 @@ class Etymology(Extensible):
 
 
 class GrammaticalInfo(LIFTUtilsBase):
-    """The grammatical information of a ``sense`` is just a reference to a
-    ``range-element`` in the ``grammatical-info`` range.
+    """A reference to a ``range-element`` in the ``grammatical-info`` range.
     """
 
     _props = {
@@ -249,8 +248,7 @@ class GrammaticalInfo(LIFTUtilsBase):
 
 
 class Reversal(Multitext):
-    """Reverse indexes in a dictionary are a key tool for enabling a wider use
-    of a dictionary.
+    """Enables a wider use of a dictionary.
     """
 
     _props = {
@@ -299,8 +297,7 @@ class Reversal(Multitext):
 
 
 class Translation(Multitext):
-    """A ``translation`` is simply a ``Multitext`` with an optional translation
-    ``type`` attribute.
+    """A ``Multitext`` with an optional translation ``type`` attribute.
     """
 
     _props = {
@@ -340,8 +337,8 @@ class Translation(Multitext):
 
 
 class Example(Multitext, Extensible):
-    """An example gives an example sentence or phrase in the language and
-    glosses of that example in other languages.
+    """An example gives an example sentence or phrase.
+    It is given in the language and glosses of that example in other languages.
     """
 
     _props = {
@@ -889,8 +886,8 @@ class Entry(Extensible):
 
 
 class Lexicon(LIFTUtilsBase):
-    """This is the root node of the document and contains the header and all
-        the entries in the database.
+    """This is the main class of the lexicon.
+    It contains the header and all the entries in the database.
 
     :ivar str version: Specifies the lift language version number.
     :ivar Optional[str] producer: Identifies the particular producer of this
