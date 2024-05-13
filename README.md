@@ -1,2 +1,2 @@
 # lift-utils
-Read and write LIFt files in python
+Read and write LIFT files in python
