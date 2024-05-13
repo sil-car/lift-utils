@@ -29,6 +29,9 @@ class Note(Multitext, Extensible):
     """For storing descriptive information of many kinds.
     It can include comments, bibliographic information and domain specific
     notes.
+
+    :ivar Optional[Key] type: Gives the type of note by reference to a
+        ``range-element`` in the ``note-type`` range.
     """
 
     _props = {
@@ -76,6 +79,12 @@ class Note(Multitext, Extensible):
 
 class Phonetic(Multitext, Extensible):
     """This represents a single pronunciation in phonetic form.
+
+    :ivar Optional[List[URLRef]] medias: Stores an audio representation of the
+        text.
+    :ivar Optional[List[Span]] forms: `Used by LIFT v0.13 (FieldWorks).` Stores
+        the phonetic representation using whichever writing system: IPA,
+        Americanist, etc.
     """
 
     _props = {
@@ -137,6 +146,14 @@ class Phonetic(Multitext, Extensible):
 
 class Etymology(Extensible):
     """For describing lexical relations with a word not in the lexicon.
+
+    :ivar Key type: Gives the etymological relationship between this sense and
+        some other word in another language.
+    :ivar str source: Gives the language for the source language of the
+        etymological relation.
+    :ivar Optional[List[Gloss]] glosses: Gives glosses of the word that the
+        etymological relationship is with.
+    :ivar Optional[Form] form: Holds the form of the etymological reference.
     """
 
     _props = {
@@ -196,6 +213,12 @@ class Etymology(Extensible):
 
 class GrammaticalInfo(LIFTUtilsBase):
     """A reference to a ``range-element`` in the ``grammatical-info`` range.
+
+    :ivar Key value: The part of speech tag into the ``grammatical-info``
+        range.
+    :ivar Optional[List[Trait]] traits: Allows the grammatical information for
+        a given sense to have more information than just the part of speech
+        given by the ``value`` attribute.
     """
 
     _props = {
@@ -249,6 +272,14 @@ class GrammaticalInfo(LIFTUtilsBase):
 
 class Reversal(Multitext):
     """Enables a wider use of a dictionary.
+
+    :ivar Optional[Key] type: Gives the type of the reversal as a
+        ``range-element`` in the ``reversal-type`` range.
+    :ivar Optional[Reversal] main: This gives the parent reversal in a
+        hierarchical set of reversals.
+    :ivar Optional[GrammaticalInfo] grammatical_info: This allows a reversal
+        relation to specify what the grammatical information is in the reversal
+        language.
     """
 
     _props = {
@@ -298,6 +329,8 @@ class Reversal(Multitext):
 
 class Translation(Multitext):
     """A ``Multitext`` with an optional translation ``type`` attribute.
+
+    :ivar Optional[Key] type: Gives the type of the translation.
     """
 
     _props = {
@@ -337,8 +370,15 @@ class Translation(Multitext):
 
 
 class Example(Multitext, Extensible):
-    """An example gives an example sentence or phrase.
+    """Gives an example sentence or phrase.
     It is given in the language and glosses of that example in other languages.
+
+    :ivar Optional[Key] source: Reference by which another application may
+        refer to this example or is a reference into another database of texts,
+        for example.
+    :ivar Optional[List[Translation]] translations: Gives translations of the
+        example into different languages.
+    :ivar Optional[List[Note]] notes: Holds notes on this example.
     """
 
     _props = {
@@ -612,12 +652,18 @@ class Sense(Extensible):
         return self.get_summary_line()
 
     def get_summary_line(self, lang='en'):
+        """Return a one-line summary of the entry's data for a given language.
+        Defaults to English.
+        """
         gl = utils.ellipsize(str(self.get_gloss(lang=lang)), 10)
         gi = utils.ellipsize(self.get_grammatical_info(), 10)
         de = str(self.definition)
         return f"{gl:10}\t{gi:10}\t{de}"
 
     def get_gloss(self, lang='en'):
+        """Get gloss details for a given language.
+        Defaults to English.
+        """
         gloss = ''
         if self.glosses:
             # Choose 1st gloss if preferred language not found.
@@ -629,12 +675,15 @@ class Sense(Extensible):
         return gloss
 
     def get_grammatical_info(self):
+        """Get basic grammatical info.
+        """
         grammatical_info = ''
         if self.grammatical_info:
             grammatical_info = str(self.grammatical_info)
         return grammatical_info
 
     def show(self):
+        """Print an overview of the ``sense`` in the terminal window."""
         print(self.__str__())
 
     def _update_from_xml(self, xml_tree):
@@ -778,20 +827,26 @@ class Entry(Extensible):
         return self.get_summary_line()
 
     def get_summary_line(self, lang='en'):
-        """Return a one-line summary of the entry's data."""
-
+        """Return a one-line summary of the entry's data for a given language.
+        Defaults to English.
+        """
         lu = utils.ellipsize(str(self.lexical_unit), 20)
         gl = self.get_gloss(lang=lang)
         gi = self.get_grammatical_info()
         return f"{lu:20}\t{gl:30}\t{gi}"
 
     def get_grammatical_info(self, sense_idx=0):
+        """Get basic grammatical info for a given sense index [default=0].
+        """
         grammatical_info = ''
         if self.senses:
-            grammatical_info = str(self.senses[sense_idx].grammatical_info)
+            grammatical_info = self.senses[sense_idx].get_grammatical_info()
         return grammatical_info
 
     def get_gloss(self, sense_idx=0, lang='en'):
+        """Get gloss details for a given sense index and language.
+        Defaults to index 0 and English.
+        """
         gloss = ''
         if self.senses and self.senses[sense_idx].glosses:
             # Choose 1st gloss if preferred language not found.
@@ -803,6 +858,7 @@ class Entry(Extensible):
         return gloss
 
     def show(self):
+        """Print an overview of the ``entry`` in the terminal window."""
         # Add header.
         text = ['\nEntry\n============']
         # Add overview line.
@@ -934,6 +990,7 @@ class Lexicon(LIFTUtilsBase):
         return s
 
     def show(self):
+        """Print an overview of the ``lexicon`` in the terminal window."""
         text = "No entries."
         if self.entries:
             summary_lines = [e.get_summary_line('en') for e in self.entries]
