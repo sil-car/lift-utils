@@ -42,6 +42,20 @@ etymologies: None
 .. toctree::
    :maxdepth: 4
 
+Roadmap
+=======
+
+.. list-table::
+   :widths: 8 32
+   :header-rows: 1
+
+   * - Release
+     - Feature
+   * - v0.1
+     - read support for LIFT files
+   * - v0.2
+     - write support for LIFT files
+
 Indexes
 =======
 
