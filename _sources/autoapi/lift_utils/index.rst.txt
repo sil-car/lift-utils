@@ -1,0 +1,26 @@
+:py:mod:`lift_utils`
+====================
+
+.. py:module:: lift_utils
+
+.. autoapi-nested-parse::
+
+   Manipulate LIFT files and data
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   base/index.rst
+   config/index.rst
+   datatypes/index.rst
+   header/index.rst
+   lexicon/index.rst
+   lift/index.rst
+   utils/index.rst
+
+
