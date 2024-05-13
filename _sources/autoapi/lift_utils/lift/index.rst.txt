@@ -1,0 +1,40 @@
+:py:mod:`lift_utils.lift`
+=========================
+
+.. py:module:: lift_utils.lift
+
+.. autoapi-nested-parse::
+
+   Read a LIFT file into memory.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   lift_utils.lift.LIFTFile
+
+
+
+
+.. py:class:: LIFTFile(path: Union[pathlib.Path, str] = None)
+
+
+   Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
+
+   Return ``LIFTFile`` object that can be read into memory.
+
+   :ivar Path path: The LIFT file object.
+   :ivar int size: Size in bytes of the LIFT file.
+
+   .. py:method:: to_lexicon() -> lift_utils.lexicon.Lexicon
+
+      Parse LIFT data to a Lexicon object.
+
+
+

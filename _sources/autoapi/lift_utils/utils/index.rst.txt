@@ -1,0 +1,39 @@
+:py:mod:`lift_utils.utils`
+==========================
+
+.. py:module:: lift_utils.utils
+
+.. autoapi-nested-parse::
+
+   Various utility functions.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   lift_utils.utils.ellipsize
+   lift_utils.utils.get_xml_parser
+   lift_utils.utils.unicode_sort
+   lift_utils.utils.xml_to_etree
+
+
+
+.. py:function:: ellipsize(string, length)
+
+
+.. py:function:: get_xml_parser()
+
+
+.. py:function:: unicode_sort(in_list)
+
+
+.. py:function:: xml_to_etree(filepath)
+
+
