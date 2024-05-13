@@ -37,18 +37,20 @@ class FieldDefn(Multitext):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.tag: Key = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         forms = 'forms' if len(self.forms) > 1 else 'form'
         return f"{self.tag} ({len(self.forms)} {forms})"
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         m = Multitext(xml_tree)
         m._update_other_from_self(self)
         del m
@@ -81,7 +83,7 @@ class FieldDefinition(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.name: Key = None
         self.fd_class: Optional[str] = None
@@ -93,12 +95,14 @@ class FieldDefinition(LIFTUtilsBase):
         self.description: Optional[Multitext] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return self.name
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for k, v in xml_tree.attrib.items():
             if k == 'name':
                 self.name = Key(v)
@@ -140,7 +144,7 @@ class RangeElement(Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.id: Key = None
         self.parent: Key = None
@@ -151,9 +155,11 @@ class RangeElement(Extensible):
         self.abbrevs: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -209,7 +215,7 @@ class Range(Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.id: Key = None
         self.guid: Optional[str] = None
@@ -221,9 +227,11 @@ class Range(Extensible):
         self.abbrevs: List[Multitext] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -280,16 +288,18 @@ class LiftRanges(list, LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
-            self.update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for c in xml_tree.getchildren():
             if c.tag == 'range':
                 updated = False
                 for _range in self[:]:
                     if _range.id == c.attrib.get('id'):
-                        _range.update_from_xml(c)
+                        _range._update_from_xml(c)
                         updated = True
                         break
                 if not updated:
@@ -319,11 +329,13 @@ class FieldDefns(list, LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for c in xml_tree.getchildren():
             self.append(FieldDefn(c))
 
@@ -349,7 +361,7 @@ class Fields(list, LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # elements
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self.field_definitions: Optional[List[FieldDefn]] = None
@@ -357,9 +369,11 @@ class Fields(list, LIFTUtilsBase):
             self.field_definitions: Optional[List[FieldDefinition]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for c in xml_tree.getchildren():
             if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
                 f = FieldDefn(c)
@@ -402,7 +416,7 @@ class Header(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[LiftRanges[Range]] = None
@@ -412,9 +426,21 @@ class Header(LIFTUtilsBase):
             self.fields: Optional[Fields] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def __str__(self):
+        s = 'Header'
+        if self.description:
+            s = str(self.description)
+        if self.ranges:
+            s += f": {len(self.ranges)} ranges"
+        if self.fields:
+            s += f", {len(self.fields)} fields"
+        return s
+
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for c in xml_tree.getchildren():
             if c.tag == 'description':
                 self.description = Multitext(c)

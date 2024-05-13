@@ -47,17 +47,19 @@ class Note(Multitext, Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.type: Optional[Key] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return super().__str__()
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -92,19 +94,21 @@ class Phonetic(Multitext, Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # elements
         self.medias: Optional[List[URLRef]] = None
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self.forms: Optional[List[Span]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return super().__str__()
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -116,7 +120,7 @@ class Phonetic(Multitext, Extensible):
         for c in xml_tree.getchildren():
             if c.tag == 'media':
                 r = URLRef()
-                r.update_from_xml(c)
+                r._update_from_xml(c)
                 if not self.medias:
                     self.medias = [r]
                 else:
@@ -152,7 +156,7 @@ class Etymology(Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.type: Key = None
         self.source: str = None
@@ -161,12 +165,14 @@ class Etymology(Extensible):
         self.form: Optional[Form] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return f"{self.type} ({self.source})"
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -210,19 +216,24 @@ class GrammaticalInfo(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.value: Key = None
         # elements
         self.traits: Optional[List[Trait]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
-        return self.value
+        traits = ''
+        if self.traits:
+            traits = f": {'; '.join([t for t in self.traits])}"
+        return f"{self.value}{traits}"
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for k, v in xml_tree.attrib.items():
             if k == 'value':
                 self.value = Key(v)
@@ -230,7 +241,7 @@ class GrammaticalInfo(LIFTUtilsBase):
         for c in xml_tree.getchildren():
             if c.tag == 'trait':
                 t = Trait()
-                t.update_from_xml(c)
+                t._update_from_xml(c)
                 if not self.traits:
                     self.traits = [t]
                 else:
@@ -259,7 +270,7 @@ class Reversal(Multitext):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.type: Optional[Key] = None
         # elements
@@ -267,9 +278,11 @@ class Reversal(Multitext):
         self.grammatical_info: Optional[GrammaticalInfo] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
@@ -307,14 +320,16 @@ class Translation(Multitext):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.type: Optional[Key] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
@@ -346,7 +361,7 @@ class Example(Multitext, Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.source: Optional[Key] = None
         # elements
@@ -355,9 +370,11 @@ class Example(Multitext, Extensible):
             self.notes: Optional[List[Note]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -413,7 +430,7 @@ class Relation(Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.type: Key = None
         self.ref: RefId = None
@@ -421,12 +438,14 @@ class Relation(Extensible):
         self.usage: Optional[Multitext] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return f"{self.type}: {self.ref}"
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -474,7 +493,7 @@ class Variant(Multitext, Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.ref: Optional[RefId] = None
         # elements
@@ -482,14 +501,14 @@ class Variant(Multitext, Extensible):
         self.relations: Optional[List[Relation]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return self.ref if self.ref else 'variant'
 
-    def update_from_xml(self, xml_tree):
-        """Set object attributes from the given XML data.
-        """
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -571,7 +590,7 @@ class Sense(Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
@@ -590,7 +609,7 @@ class Sense(Extensible):
         self.subsenses: Optional[List] = None  # Type should be 'Sense'
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return self.get_summary_line()
@@ -621,7 +640,9 @@ class Sense(Extensible):
     def show(self):
         print(self.__str__())
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -737,7 +758,7 @@ class Entry(Extensible):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.id: Optional[RefId] = None
         self.guid: Optional[str] = None  # deprecated
@@ -754,18 +775,14 @@ class Entry(Extensible):
         self.etymologies: Optional[List[Etymology]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return self.get_summary_line()
 
-    def get_senses_ct(self):
-        ct = 0
-        if self.senses:
-            ct = len(self.senses)
-        return ct
-
     def get_summary_line(self, lang='en'):
+        """Return a one-line summary of the entry's data."""
+
         lu = utils.ellipsize(str(self.lexical_unit), 20)
         gl = self.get_gloss(lang=lang)
         gi = self.get_grammatical_info()
@@ -811,7 +828,9 @@ class Entry(Extensible):
             text.append('; '.join(str(e) for e in self.etymologies))
         print('\n'.join(text))
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -869,9 +888,9 @@ class Entry(Extensible):
                     self.etymologies.append(e)
 
 
-class LIFT(LIFTUtilsBase):
-    """This is the root node of the document and contains a header and all the
-    entries in the database.
+class Lexicon(LIFTUtilsBase):
+    """This is the root node of the document and contains the header and all
+        the entries in the database.
 
     :ivar str version: Specifies the lift language version number.
     :ivar Optional[str] producer: Identifies the particular producer of this
@@ -899,7 +918,7 @@ class LIFT(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         self.path = path
         # attributes
         self.version: str = None
@@ -909,7 +928,7 @@ class LIFT(LIFTUtilsBase):
         self.entries: Optional[List[Entry]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         s = f"LIFT lexicon v{self.version}"
@@ -926,7 +945,23 @@ class LIFT(LIFTUtilsBase):
             text = nl.join(slist)
         print(text)
 
-    def update_from_xml(self, xml_tree):
+    def get_item_by_id(self, refid) -> Union[Entry, Sense, None]:
+        """Return an entry or sense by its ``RefId``."""
+
+        if not self.entries:
+            return
+
+        for entry in self.entries:
+            if entry.id == refid:
+                return entry
+            if entry.senses:
+                for sense in entry.senses:
+                    if sense.id == refid:
+                        return sense
+
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for k, v in xml_tree.attrib.items():
             if k == 'version':
                 self.version = v
@@ -944,7 +979,7 @@ class LIFT(LIFTUtilsBase):
                     if r.href:
                         ext_hrefs.add(r.href)
                 for p in ext_hrefs:
-                    self._update_from_filepath(p)
+                    self._update_header_from_filepath(p)
             elif c.tag == 'entry':
                 entry = Entry(c)
                 if not self.entries:

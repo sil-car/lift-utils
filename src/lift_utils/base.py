@@ -21,7 +21,7 @@ class LIFTUtilsBase:
     def __init__(self, xml_tree: etree = None):
         self.xml_tree = None
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def to_xml(self):
         """Convert the object's data to XML."""
@@ -42,7 +42,7 @@ class LIFTUtilsBase:
         except BrokenPipeError:
             sys.stdout = None
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
 
@@ -68,7 +68,7 @@ class Span(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
@@ -78,10 +78,12 @@ class Span(LIFTUtilsBase):
         self.spans: Optional[List[str]] = None  # Type should be 'Span'
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_data):
-        for k, v in xml_data.attrib.items():
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
+        for k, v in xml_tree.attrib.items():
             if k == 'lang':
                 self.lang = Lang(k)
             elif k == 'href':
@@ -89,10 +91,10 @@ class Span(LIFTUtilsBase):
             elif k == 'class':
                 self.style_class = v
 
-        if xml_data.text is not None:
-            self.pcdata = PCData(xml_data.text)
+        if xml_tree.text is not None:
+            self.pcdata = PCData(xml_tree.text)
 
-        for c in xml_data.getchildren():
+        for c in xml_tree.getchildren():
             if c.tag == 'span':
                 s = Span(c)
                 if not self.spans:
@@ -123,7 +125,7 @@ class Trait(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -132,12 +134,14 @@ class Trait(LIFTUtilsBase):
         self.annotations: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return f"{self.name}: {self.value}"
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for k, v in xml_tree.attrib.items():
             if k == 'name':
                 self.name = Key(v)
@@ -169,7 +173,7 @@ class Flag(Trait):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
 
 
 class Form(LIFTUtilsBase):
@@ -194,7 +198,7 @@ class Form(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.lang: Lang = None
         # elements
@@ -202,12 +206,14 @@ class Form(LIFTUtilsBase):
         self.annotations: Optional[List] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return str(self.text)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for k, v in xml_tree.attrib.items():
             if k == 'lang':
                 self.lang = Lang(v)
@@ -253,18 +259,31 @@ class Text(Form):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         self.pcdata: str = None
         if text is not None:
             self.pcdata = PCData(text)
         self.spans: Optional[List[Span]] = None
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         f = Form(xml_tree)
         f._update_other_from_self(self)
         del f
+
+        if xml_tree.text:
+            self.text = PCData(xml_tree.text)
+
+        for c in xml_tree.getchildren():
+            if c.tag == 'span':
+                if not self.spans:
+                    s = Span(c)
+                    self.spans = [s]
+                else:
+                    self.spans.append(s)
 
     def __str__(self):
         return str(self.pcdata)
@@ -296,13 +315,13 @@ class Multitext(Text):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # elements
         self.forms = None
         self.text = None  # deprecated in v0.15
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         s = 'multitext'
@@ -314,7 +333,9 @@ class Multitext(Text):
                 s = f"{s} ({ct} forms)"
         return s
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             txt = Text(xml_tree)
             txt._update_other_from_self(self)
@@ -358,17 +379,19 @@ class Gloss(Form):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # elements
         self.traits: Optional[List[Trait]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
     def __str__(self):
         return f"{self.text} ({self.lang})"
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         form = Form(xml_tree)
         form._update_other_from_self(self)
         del form
@@ -403,16 +426,18 @@ class URLRef(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.href: URL = None
         # elements
         self.label: Optional[Multitext] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for k, v in xml_tree.attrib.items():
             if k == 'href':
                 self.href = URL(v)
@@ -444,16 +469,18 @@ class Annotation(Multitext):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         self.name: Key = None
         self.value: Key = None
         self.who: Optional[Key] = None
         self.when: Optional[DateTime] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
@@ -492,7 +519,7 @@ class Field(Multitext):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.name: str = None
         self.date_created: Optional[DateTime] = None
@@ -506,9 +533,11 @@ class Field(Multitext):
         self.annotations: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
@@ -549,6 +578,15 @@ class Field(Multitext):
 class Extensible(LIFTUtilsBase):
     """This type is used to provide certain extra information in a
     controlled extensible way.
+
+    :ivar Optional[DateTime] date_created: Contains a date/timestamp saying
+        when the element was added to the dictionary.
+    :ivar Optional[DateTime] date_modified: Contains a date/timestamp saying
+        when the element was last changed.
+    :ivar Optional[List[Field]] fields: Holds extra textual information.
+    :ivar Optional[List[Trait]] traits: Adds type or constraint information.
+    :ivar Optional[List[Annotation]] annotation: Adds meta-information
+        describing the element.
     """
 
     _props = {
@@ -568,7 +606,7 @@ class Extensible(LIFTUtilsBase):
     ):
         super().__init__()
         if xml_tree is not None:
-            super().update_from_xml(xml_tree)
+            super()._update_from_xml(xml_tree)
         # attributes
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
@@ -583,9 +621,11 @@ class Extensible(LIFTUtilsBase):
         self.annotations: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
-            self.update_from_xml(xml_tree)
+            self._update_from_xml(xml_tree)
 
-    def update_from_xml(self, xml_tree):
+    def _update_from_xml(self, xml_tree):
+        self.xml_tree = xml_tree
+
         for k, v in xml_tree.attrib.items():
             if k == 'dateCreated':
                 self.date_created = v
