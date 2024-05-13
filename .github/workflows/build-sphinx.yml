@@ -21,7 +21,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: html-docs
-        path: sphinx/build/html
+        path: sphinx/build
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
