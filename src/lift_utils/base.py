@@ -53,7 +53,7 @@ class Span(LIFTUtilsBase):
     _props = {
         'attributes': {
             'required': [],
-            'optional': ['lang', 'href', 'class'],
+            'optional': ['lang', 'href', 'style_class'],
         },
         'elements': {
             'required': ['pcdata'],
@@ -100,6 +100,32 @@ class Span(LIFTUtilsBase):
                     self.spans = [s]
                 else:
                     self.spans.append(s)
+
+    def _build_xml_tree(self):
+        # This is basically the reverse function of _update_from_xml.
+        root_tag = 'span'
+        attribs = (
+            Span._props.get('attributes').get('required')
+            + Span._props.get('attributes').get('optional')
+        )
+        elems = (
+            Span._props.get('elements').get('required')
+            + Span._props.get('elements').get('optional')
+        )
+        root = etree.Element(root_tag)
+        for a in attribs:
+            root.set(a, self.__dict__.get(a))
+        for e in elems:
+            if isinstance(self.__dict__.get(e), list):
+                for i in self.__dict__.get(e):
+                    etree.SubElement(root, e[:-1])
+            elif hasattr(self.__dict__.get(e), 'xml_tree'):
+                e._build_xml_tree()
+            elif e == 'pcdata':
+                root.text = self.__dict__.get(e)
+            elif self.__dict__.get(e):
+                etree.SubElement(root, e)
+        return root
 
 
 class Trait(LIFTUtilsBase):
@@ -156,6 +182,39 @@ class Trait(LIFTUtilsBase):
                     self.annotations = [a]
                 else:
                     self.annotations.append(a)
+
+    def _build_xml_tree(self):
+        # This is basically the reverse function of _update_from_xml.
+        root_tag = 'trait'
+        attribs = (
+            Trait._props.get('attributes').get('required')
+            + Trait._props.get('attributes').get('optional')
+        )
+        elems = (
+            Trait._props.get('elements').get('required')
+            + Trait._props.get('elements').get('optional')
+        )
+        root = etree.Element(root_tag)
+        for a in attribs:
+            root.set(a, self.__dict__.get(a))
+        for e in elems:
+            if isinstance(self.__dict__.get(e), list):
+                # list element
+                for i in self.__dict__.get(e):
+                    if hasattr(self.__dict__.get(e), 'xml_tree'):
+                        root.append(e._build_xml_tree())
+                    else:
+                        etree.SubElement(root, e[:-1])
+            elif hasattr(self.__dict__.get(e), 'xml_tree'):
+                # element with own xml_tree to be generated
+                root.append(e._build_xml_tree())
+            elif e == 'pcdata':
+                # text data
+                root.text = self.__dict__.get(e)
+                # new empty element
+            elif self.__dict__.get(e):
+                etree.SubElement(root, e)
+        return root
 
 
 class Flag(Trait):
