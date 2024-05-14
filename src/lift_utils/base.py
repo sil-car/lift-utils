@@ -51,14 +51,26 @@ class Span(LIFTUtilsBase):
     """
 
     _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['lang', 'href', 'style_class'],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': [],
+                'optional': ['lang', 'href', 'style_class'],
+            },
+            'elements': {
+                'required': ['pcdata'],
+                'optional': ['spans'],
+            },
         },
-        'elements': {
-            'required': ['pcdata'],
-            'optional': ['spans'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': [],
+                'optional': ['lang', 'href', 'style_class'],
+            },
+            'elements': {
+                'required': ['pcdata'],
+                'optional': ['spans'],
+            },
+        }
     }
 
     def __init__(
@@ -134,14 +146,26 @@ class Trait(LIFTUtilsBase):
     """
 
     _props = {
-        'attributes': {
-            'required': ['name', 'value'],
-            'optional': ['id'],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': ['name', 'value'],
+                'optional': ['id'],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['annotations'],
+            },
         },
-        'elements': {
-            'required': [],
-            'optional': ['annotations'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': ['name', 'value'],
+                'optional': ['id'],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['annotations'],
+            },
+        }
     }
 
     def __init__(
@@ -240,14 +264,26 @@ class Form(LIFTUtilsBase):
     """
 
     _props = {
-        'attributes': {
-            'required': ['lang'],
-            'optional': [],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': ['lang'],
+                'optional': [],
+            },
+            'elements': {
+                'required': ['text'],
+                'optional': ['annotations'],
+            },
         },
-        'elements': {
-            'required': ['text'],
-            'optional': ['annotations'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': ['lang'],
+                'optional': [],
+            },
+            'elements': {
+                'required': ['text'],
+                'optional': ['annotations'],
+            },
+        }
     }
 
     def __init__(
@@ -299,14 +335,26 @@ class Text(Form):
     """
 
     _props = {
-        'attributes': {
-            'required': [],
-            'optional': [],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': [],
+                'optional': [],
+            },
+            'elements': {
+                'required': ['pcdata'],
+                'optional': ['spans'],
+            },
         },
-        'elements': {
-            'required': ['pcdata'],
-            'optional': ['spans'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': [],
+                'optional': [],
+            },
+            'elements': {
+                'required': ['pcdata'],
+                'optional': ['spans'],
+            },
+        }
     }
 
     def __init__(
@@ -356,14 +404,26 @@ class Multitext(Text):
     """
 
     _props = {
-        'attributes': {
-            'required': [],
-            'optional': [],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': [],
+                'optional': [],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['forms', 'text'],
+            },
         },
-        'elements': {
-            'required': [],
-            'optional': ['forms', 'text'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': [],
+                'optional': [],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['forms', 'text'],
+            },
+        }
     }
 
     def __init__(
@@ -421,14 +481,26 @@ class Gloss(Form):
     """
 
     _props = {
-        'attributes': {
-            'required': [],
-            'optional': [],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': [],
+                'optional': [],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['traits'],
+            },
         },
-        'elements': {
-            'required': [],
-            'optional': ['traits'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': [],
+                'optional': [],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['traits'],
+            },
+        }
     }
 
     def __init__(
@@ -468,14 +540,26 @@ class URLRef(LIFTUtilsBase):
     """
 
     _props = {
-        'attributes': {
-            'required': ['href'],
-            'optional': [],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': ['href'],
+                'optional': [],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['label'],
+            },
         },
-        'elements': {
-            'required': [],
-            'optional': ['label'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': ['href'],
+                'optional': [],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['label'],
+            },
+        }
     }
 
     def __init__(
@@ -510,14 +594,26 @@ class Annotation(Multitext):
     """
 
     _props = {
-        'attributes': {
-            'required': ['name', 'value'],
-            'optional': ['who', 'when'],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': ['name', 'value'],
+                'optional': ['who', 'when'],
+            },
+            'elements': {
+                'required': [],
+                'optional': [],
+            },
         },
-        'elements': {
-            'required': [],
-            'optional': [],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': ['name', 'value'],
+                'optional': ['who', 'when'],
+            },
+            'elements': {
+                'required': [],
+                'optional': [],
+            },
+        }
     }
 
     def __init__(
@@ -560,14 +656,26 @@ class Field(Multitext):
     """
 
     _props = {
-        'attributes': {
-            'required': ['name'],
-            'optional': ['date_created', 'date_modified'],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': ['type'],
+                'optional': ['date_created', 'date_modified'],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['traits', 'forms', 'annotations'],
+            },
         },
-        'elements': {
-            'required': [],
-            'optional': ['traits', 'annotations'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': ['name'],
+                'optional': ['date_created', 'date_modified'],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['traits', 'annotations'],
+            },
+        }
     }
 
     def __init__(
@@ -578,7 +686,11 @@ class Field(Multitext):
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
         # attributes
-        self.name: str = None
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.type: Key = None
+        else:
+            self.type: str = None
+            self.name: Key = None
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
         # elements
@@ -600,7 +712,9 @@ class Field(Multitext):
         del mul
 
         for k, v in xml_tree.attrib.items():
-            if k == 'name':
+            if k == 'type':
+                self.type = v
+            elif k == 'name':
                 self.name = v
             elif k == 'dateCreated':
                 self.date_created = DateTime(v)
@@ -646,14 +760,26 @@ class Extensible(LIFTUtilsBase):
     """
 
     _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['date_created', 'date_modified'],
+        config.LIFT_VERSION_FIELDWORKS: {
+            'attributes': {
+                'required': [],
+                'optional': ['date_created', 'date_modified'],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['fields', 'traits', 'annotations'],
+            },
         },
-        'elements': {
-            'required': [],
-            'optional': ['fields', 'traits', 'annotations'],
-        },
+        config.LIFT_VERSION_HIGHEST: {
+            'attributes': {
+                'required': [],
+                'optional': ['date_created', 'date_modified'],
+            },
+            'elements': {
+                'required': [],
+                'optional': ['fields', 'traits', 'annotations'],
+            },
+        }
     }
 
     def __init__(
