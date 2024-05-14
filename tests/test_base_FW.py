@@ -11,134 +11,190 @@ ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_FW.lift")
 
 
 class TestAnnotation(unittest.TestCase):
-    def test_annotation_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')
-        ann = base.Annotation(xml_tree)
-        for a in base.Annotation._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(ann.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Annotation
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+
+    def test_annotation_attribs(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
+
+    def test_annotation_elems(self):
+        pass  # no elements
 
 
 class TestExtensible(unittest.TestCase):
-    def test_extensible_good(self):
-        ext = base.Extensible(etree.parse(ENTRY_LIFT_GOOD).getroot())
-        for a in base.Extensible._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(ext.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Extensible
+        self.obj = self.cls(etree.parse(ENTRY_LIFT_GOOD).getroot())
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+
+    def test_extensible(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
 
 
 class TestField(unittest.TestCase):
-    def test_field_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//field')
-        field = base.Field(xml_tree)
-        for a in base.Field._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(field.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Field
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//field')
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+
+    def test_field_attribs(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
+
+    def test_field_elems(self):
+        required = self.props.get('elements').get('required')
+        test_elems(self, self.obj, required)
+        optional = self.props.get('elements').get('optional')
+        test_elems(self, self.obj, optional)
 
 
 class TestForm(unittest.TestCase):
-    def test_form_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
-        form = base.Form(xml_tree)
-        for a in base.Form._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(form.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Form
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
 
-        for elem in base.Form._props.get(config.LIFT_VERSION).get('elements').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(form.__dict__.get(elem))
-            except AssertionError as e:
-                raise Exception(f"\"{elem}\" {str(e)}")
+    def test_form_attribs(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
+
+    def test_form_elems(self):
+        required = self.props.get('elements').get('required')
+        test_elems(self, self.obj, required)
+        optional = self.props.get('elements').get('optional')
+        test_elems(self, self.obj, optional)
 
 
 class TestGloss(unittest.TestCase):
-    def test_gloss_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//gloss')
-        glo = base.Gloss(xml_tree)
-        for a in base.Gloss._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(glo.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Gloss
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//gloss')
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+
+    def test_gloss_attribs(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
 
 
 class TestMultitext(unittest.TestCase):
-    def test_multitext_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
-        mul = base.Multitext(xml_tree)
-        for a in base.Multitext._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(mul.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Multitext
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+
+    def test_multitext_attribs(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
 
 
 class TestSpan(unittest.TestCase):
-    def test_span_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//span')
-        sp = base.Span(xml_tree)
-        for a in base.Span._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(sp.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Span
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//span')
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
 
-        for elem in base.Span._props.get(config.LIFT_VERSION).get('elements').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(sp.__dict__.get(elem))
-            except AssertionError as e:
-                raise Exception(f"\"{elem}\" {str(e)}")
+    def test_span_attribs(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
+
+    def test_span_elems(self):
+        required = self.props.get('elements').get('required')
+        test_elems(self, self.obj, required)
+        optional = self.props.get('elements').get('optional')
+        optional.remove('spans')  # hard to test optional span-in-span element
+        test_elems(self, self.obj, optional)
 
 
 class TestText(unittest.TestCase):
-    def test_text_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
-        text = None
-        for c in xml_tree.getchildren():
+    def setUp(self):
+        self.cls = base.Text
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+        self.obj = None
+        for c in self.xml_tree.getchildren():
             if c.tag == 'text':
-                text = base.Text(c)
+                self.obj = base.Text(c)
                 break
-        if not text:
+        if not self.obj:
             raise AssertionError
 
-        for a in base.Text._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(text.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def test_text_attribs(self):
+        required = self.props.get('attributes').get('required')
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')
+        test_attribs(self, self.obj, optional)
 
-        for elem in base.Text._props.get(config.LIFT_VERSION).get('elements').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(text.__dict__.get(elem))
-            except AssertionError as e:
-                raise Exception(f"\"{elem}\" {str(e)}")
+    def test_text_elems(self):
+        required = self.props.get('elements').get('required')
+        test_elems(self, self.obj, required)
+        optional = self.props.get('elements').get('optional')
+        optional.remove('spans')  # already tested in test_span_elems
+        test_elems(self, self.obj, optional)
 
 
 class TestTrait(unittest.TestCase):
-    def test_trait_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('trait')
-        trait = base.Trait(xml_tree)
-        for a in base.Trait._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(trait.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.Trait
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('trait')
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+
+    def test_trait_attribs(self):
+        required = self.props.get('attributes').get('required')  # noqa: E501
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')  # noqa: E501
+        test_attribs(self, self.obj, optional)
 
 
 class TestURLRef(unittest.TestCase):
-    def test_urlref_good(self):
-        xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//urlref')
-        ref = base.URLRef(xml_tree)
-        for a in base.URLRef._props.get(config.LIFT_VERSION).get('attributes').get('required'):  # noqa: E501
-            try:
-                self.assertIsNotNone(ref.__dict__.get(a))
-            except AssertionError as e:
-                raise Exception(f"\"{a}\" {str(e)}")
+    def setUp(self):
+        self.cls = base.URLRef
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//urlref')  # noqa: E501
+        self.obj = self.cls(self.xml_tree)
+        self.props = self.cls._props.get(config.LIFT_VERSION)
+
+    def test_urlref_attribs(self):
+        required = self.props.get('attributes').get('required')  # noqa: E501
+        test_attribs(self, self.obj, required)
+        optional = self.props.get('attributes').get('optional')  # noqa: E501
+        test_attribs(self, self.obj, optional)
+
+
+def test_attribs(test_cls, obj, attribs):
+    for a in attribs:
+        try:
+            test_cls.assertIsNotNone(obj.__dict__.get(a))
+        except AssertionError as e:
+            raise Exception(f"\"{a}\" {str(e)}")
+
+
+def test_elems(test_cls, obj, elems):
+    for elem in elems:
+        try:
+            test_cls.assertIsNotNone(obj.__dict__.get(elem))
+        except AssertionError as e:
+            raise Exception(f"\"{elem}\" {str(e)}")

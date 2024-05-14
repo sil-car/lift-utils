@@ -1,7 +1,13 @@
-<entry id="6b7537f0-31c8-42f9-811c-1da97cc907b4"
-dateModified="1990-02-26">
+<entry id="6b7537f0-31c8-42f9-811c-1da97cc907b4" dateCreated="2008-04-03T03:09:11Z" dateModified="1990-02-26">
     <lexical-unit>
-        <form lang="und-Latn"><text>abat</text></form>
+        <form lang="und-Latn">
+            <text>abat</text>
+            <annotation name="TestName" value="TestValue" who="unknown" when="sometime">
+                <form lang="en">
+                    <text>A test annotation.</text>
+                </form>
+            </annotation>
+        </form>
     </lexical-unit>
     <citation>
     </citation>
@@ -63,7 +69,7 @@ dateModified="1990-02-26">
         </example>
         <note type="encyclopedic">
             <form lang="en">
-                <text>This is <span class="underline">not</span> limited to coconut groves but is used for mangoes, etc.</text>
+                <text>This is <span class="underline" lang="en" href="//home/user">not</span> limited to coconut groves but is used for mangoes, etc.</text>
             </form>
         </note>
     </sense>
@@ -120,8 +126,20 @@ dateModified="1990-02-26">
     <relation type="Synonyms" ref="fc336f37-548c-458b-9610-f3fbe0ba2344"/>
     <relation type="Synonyms" ref="fc336f37-548c-458b-9610-f3fbe0ba2345"/>
     <etymology type="borrowed" source="">
-        <field type="languagenotes">
+        <field type="languagenotes" dateCreated="2008-04-03T03:09:11Z" dateModified="2008-04-03T03:09:11Z">
             <form lang="zh-CN"><text>Yi?</text></form>
+            <trait name="morph-type" value="phrase"/>
+            <trait name="morph-type" value="phrase2"/>
+            <annotation name="TestName" value="TestValue" who="unknown" when="sometime">
+                <form lang="en">
+                    <text>A test annotation.</text>
+                </form>
+            </annotation>
+            <annotation name="TestName2" value="TestValue2" who="unknown" when="sometime">
+                <form lang="en">
+                    <text>A 2nd test annotation.</text>
+                </form>
+            </annotation>
         </field>
     </etymology>
     <etymology>
@@ -129,8 +147,8 @@ dateModified="1990-02-26">
             <form lang="zh-CN"><text>Yi2?</text></form>
         </field>
     </etymology>
-    <trait name="morph-type" value="phrase"/>
-    <annotation name="TestName" value="TestValue">
+    <trait name="morph-type" value="phrase" id="test"/>
+    <annotation name="TestName" value="TestValue" who="unknown" when="sometime">
         <form lang="en">
             <text>A test annotation.</text>
         </form>
