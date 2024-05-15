@@ -20,6 +20,8 @@ from .base import URLRef
 from .datatypes import DateTime
 from .datatypes import Key
 from .datatypes import RefId
+from .datatypes import Prop
+from .datatypes import Props
 from .header import Header
 from .header import Range
 from .utils import xml_to_etree
@@ -34,17 +36,6 @@ class Note(Multitext, Extensible):
         ``range-element`` in the ``note-type`` range.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['type'],
-        },
-        'elements': {
-            'required': [],
-            'optional': [],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -52,6 +43,11 @@ class Note(Multitext, Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('type'),
+        ]
         # attributes
         self.type: Optional[Key] = None
 
@@ -87,17 +83,6 @@ class Phonetic(Multitext, Extensible):
         Americanist, etc.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': [],
-        },
-        'elements': {
-            'required': [],
-            'optional': ['media'],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -105,6 +90,11 @@ class Phonetic(Multitext, Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.elements = [
+            Prop('medias'),
+        ]
         # elements
         self.medias: Optional[List[URLRef]] = None
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
@@ -156,17 +146,6 @@ class Etymology(Extensible):
     :ivar Optional[Form] form: Holds the form of the etymological reference.
     """
 
-    _props = {
-        'attributes': {
-            'required': ['type', 'source'],
-            'optional': [],
-        },
-        'elements': {
-            'required': [],
-            'optional': ['glosses', 'form'],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -174,6 +153,16 @@ class Etymology(Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('type', required=True),
+            Prop('source', required=True),
+        ]
+        self.props.elements = [
+            Prop('glosses'),
+            Prop('form'),
+        ]
         # attributes
         self.type: Key = None
         self.source: str = None
@@ -221,17 +210,6 @@ class GrammaticalInfo(LIFTUtilsBase):
         given by the ``value`` attribute.
     """
 
-    _props = {
-        'attributes': {
-            'required': ['value'],
-            'optional': [],
-        },
-        'elements': {
-            'required': [],
-            'optional': ['trait'],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -239,6 +217,14 @@ class GrammaticalInfo(LIFTUtilsBase):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('value', required=True),
+        ]
+        self.props.elements = [
+            Prop('traits'),
+        ]
         # attributes
         self.value: Key = None
         # elements
@@ -282,17 +268,6 @@ class Reversal(Multitext):
         language.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['type'],
-        },
-        'elements': {
-            'required': [],
-            'optional': ['main', 'grammatical_info'],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -300,6 +275,15 @@ class Reversal(Multitext):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('type'),
+        ]
+        self.props.elements = [
+            Prop('main'),
+            Prop('grammatical_info'),
+        ]
         # attributes
         self.type: Optional[Key] = None
         # elements
@@ -333,17 +317,6 @@ class Translation(Multitext):
     :ivar Optional[Key] type: Gives the type of the translation.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['type'],
-        },
-        'elements': {
-            'required': [],
-            'optional': [],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -351,6 +324,11 @@ class Translation(Multitext):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('type'),
+        ]
         # attributes
         self.type: Optional[Key] = None
 
@@ -381,17 +359,6 @@ class Example(Multitext, Extensible):
     :ivar Optional[List[Note]] notes: Holds notes on this example.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['source'],
-        },
-        'elements': {
-            'required': [],
-            'optional': ['translation', 'note'],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -399,6 +366,15 @@ class Example(Multitext, Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('source'),
+        ]
+        self.props.elements = [
+            Prop('translations'),
+            Prop('notes'),
+        ]
         # attributes
         self.source: Optional[Key] = None
         # elements
@@ -450,17 +426,6 @@ class Relation(Extensible):
         languages or writing systems.
     """
 
-    _props = {
-        'attributes': {
-            'required': ['type', 'ref'],
-            'optional': ['order', 'usage'],
-        },
-        'elements': {
-            'required': [],
-            'optional': [],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -468,6 +433,14 @@ class Relation(Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('type', required=True),
+            Prop('ref', required=True),
+            Prop('order'),
+            Prop('usage'),
+        ]
         # attributes
         self.type: Key = None
         self.ref: RefId = None
@@ -513,17 +486,6 @@ class Variant(Multitext, Extensible):
         relationship with other senses or entries in the lexicon.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['ref'],
-        },
-        'elements': {
-            'required': [],
-            'optional': ['pronunciations', 'relations'],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -531,6 +493,15 @@ class Variant(Multitext, Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('ref'),
+        ]
+        self.props.elements = [
+            Prop('pronunciations'),
+            Prop('relations'),
+        ]
         # attributes
         self.ref: Optional[RefId] = None
         # elements
@@ -600,27 +571,6 @@ class Sense(Extensible):
     :ivar Optional[List] subsenses: Senses can form a hierarchy.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['id', 'order'],
-        },
-        'elements': {
-            'required': [],
-            'optional': [
-                'grammatical_info',
-                'glosses',
-                'definition',
-                'relations',
-                'notes',
-                'examples',
-                'reversals',
-                'illustrations',
-                'subsenses',
-            ],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -628,6 +578,23 @@ class Sense(Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('id'),
+            Prop('order'),
+        ]
+        self.props.elements = [
+            Prop('grammatical_info'),
+            Prop('glosses'),
+            Prop('definition'),
+            Prop('relations'),
+            Prop('notes'),
+            Prop('examples'),
+            Prop('reversals'),
+            Prop('illustrations'),
+            Prop('subsenses'),
+        ]
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
@@ -778,26 +745,6 @@ class Entry(Extensible):
         relation in that it has no referent in the lexicon.
     """
 
-    _props = {
-        'attributes': {
-            'required': [],
-            'optional': ['id', 'guid', 'order', 'date_deleted'],
-        },
-        'elements': {
-            'required': [],
-            'optional': [
-                'lexical_unit',
-                'citation',
-                'pronunciations',
-                'variants',
-                'senses',
-                'notes',
-                'relations',
-                'etymologies'
-            ],
-        },
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -805,6 +752,24 @@ class Entry(Extensible):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('id'),
+            Prop('guid'),
+            Prop('order'),
+            Prop('date_deleted'),
+        ]
+        self.props.elements = [
+            Prop('lexical_unit'),
+            Prop('citation'),
+            Prop('pronunciations'),
+            Prop('variants'),
+            Prop('senses'),
+            Prop('notes'),
+            Prop('relations'),
+            Prop('etymologies'),
+        ]
         # attributes
         self.id: Optional[RefId] = None
         self.guid: Optional[str] = None  # deprecated
@@ -953,17 +918,6 @@ class Lexicon(LIFTUtilsBase):
     :ivar Optional[List[Entry]] entries: Each of the entries in the lexicon.
     """
 
-    _props = {
-        'attributes': {
-            'required': ['version'],
-            'optional': ['producer'],
-        },
-        'elements': {
-            'required': [],
-            'optional': ['header', 'entry'],
-        },
-    }
-
     def __init__(
         self,
         path: Optional[Path] = None,
@@ -972,6 +926,16 @@ class Lexicon(LIFTUtilsBase):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('version', required=True),
+            Prop('producer'),
+        ]
+        self.props.elements = [
+            Prop('header'),
+            Prop('entry'),
+        ]
         self.path = path
         # attributes
         self.version: str = None

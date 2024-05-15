@@ -1,5 +1,7 @@
 """Define the basic datatypes."""
 
+from typing import List
+
 
 class PCData(str):
     def __new__(cls, content=None):
@@ -39,3 +41,25 @@ class URL(str):
     def __new__(cls, content=None):
         if content is not None:
             return super().__new__(cls, content)
+
+
+class Prop:
+    def __init__(
+        self,
+        name: str = None,
+        required: bool = False,
+    ):
+        self.name = name
+        self.required = required
+
+
+class Props:
+    def __init__(
+        self,
+        lift_version: str = None,
+        attributes: List[Prop] = None,
+        elements: List[Prop] = None,
+    ):
+        self.lift_version = lift_version
+        self.attributes = attributes
+        self.elements = elements

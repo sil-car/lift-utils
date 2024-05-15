@@ -10,6 +10,8 @@ from .datatypes import PCData
 from .datatypes import DateTime
 from .datatypes import Key
 from .datatypes import Lang
+from .datatypes import Prop
+from .datatypes import Props
 from .datatypes import URL
 
 
@@ -50,29 +52,6 @@ class Span(LIFTUtilsBase):
     """A Unicode string marked with language and formatting information.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': [],
-                'optional': ['lang', 'href', 'style_class'],
-            },
-            'elements': {
-                'required': ['pcdata'],
-                'optional': ['spans'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': [],
-                'optional': ['lang', 'href', 'style_class'],
-            },
-            'elements': {
-                'required': ['pcdata'],
-                'optional': ['spans'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -80,6 +59,17 @@ class Span(LIFTUtilsBase):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('lang'),
+            Prop('href'),
+            Prop('style_class'),
+        ]
+        self.props.elements = [
+            Prop('pcdata', required=True),
+            Prop('spans'),
+        ]
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
@@ -116,18 +106,12 @@ class Span(LIFTUtilsBase):
     def _build_xml_tree(self):
         # This is basically the reverse function of _update_from_xml.
         root_tag = 'span'
-        attribs = (
-            Span._props.get('attributes').get('required')
-            + Span._props.get('attributes').get('optional')
-        )
-        elems = (
-            Span._props.get('elements').get('required')
-            + Span._props.get('elements').get('optional')
-        )
         root = etree.Element(root_tag)
-        for a in attribs:
+        for attrib in self.props.attributes:
+            a = attrib.name
             root.set(a, self.__dict__.get(a))
-        for e in elems:
+        for elem in self.props.elements:
+            e = elem.name
             if isinstance(self.__dict__.get(e), list):
                 for i in self.__dict__.get(e):
                     etree.SubElement(root, e[:-1])
@@ -145,29 +129,6 @@ class Trait(LIFTUtilsBase):
     It can also be used for adding binary constraints.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': ['name', 'value'],
-                'optional': ['id'],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['annotations'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': ['name', 'value'],
-                'optional': ['id'],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['annotations'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -175,6 +136,16 @@ class Trait(LIFTUtilsBase):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('name', required=True),
+            Prop('value', required=True),
+            Prop('id'),
+        ]
+        self.props.elements = [
+            Prop('annotations'),
+        ]
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -210,18 +181,12 @@ class Trait(LIFTUtilsBase):
     def _build_xml_tree(self):
         # This is basically the reverse function of _update_from_xml.
         root_tag = 'trait'
-        attribs = (
-            Trait._props.get('attributes').get('required')
-            + Trait._props.get('attributes').get('optional')
-        )
-        elems = (
-            Trait._props.get('elements').get('required')
-            + Trait._props.get('elements').get('optional')
-        )
         root = etree.Element(root_tag)
-        for a in attribs:
+        for attrib in self.props.attributes:
+            a = attrib.name
             root.set(a, self.__dict__.get(a))
-        for e in elems:
+        for elem in self.props.elements:
+            e = elem.name
             if isinstance(self.__dict__.get(e), list):
                 # list element
                 for i in self.__dict__.get(e):
@@ -263,29 +228,6 @@ class Form(LIFTUtilsBase):
     This is specified by the ``lang`` attribute.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': ['lang'],
-                'optional': [],
-            },
-            'elements': {
-                'required': ['text'],
-                'optional': ['annotations'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': ['lang'],
-                'optional': [],
-            },
-            'elements': {
-                'required': ['text'],
-                'optional': ['annotations'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -293,6 +235,15 @@ class Form(LIFTUtilsBase):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('lang', required=True),
+        ]
+        self.props.elements = [
+            Prop('text', required=True),
+            Prop('annotations'),
+        ]
         # attributes
         self.lang: Lang = None
         # elements
@@ -334,29 +285,6 @@ class Text(Form):
     .. note:: It only inherits from ``Form`` in LIFT v0.13 (FieldWorks).
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': [],
-                'optional': [],
-            },
-            'elements': {
-                'required': ['pcdata'],
-                'optional': ['spans'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': [],
-                'optional': [],
-            },
-            'elements': {
-                'required': ['pcdata'],
-                'optional': ['spans'],
-            },
-        }
-    }
-
     def __init__(
         self,
         text=None,
@@ -365,6 +293,13 @@ class Text(Form):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.elements = [
+            Prop('pcdata', required=True),
+            Prop('spans'),
+        ]
+        # elements
         self.pcdata: str = None
         if text is not None:
             self.pcdata = PCData(text)
@@ -403,29 +338,6 @@ class Multitext(Text):
     It can be in a given language, or in multiple languages.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': [],
-                'optional': [],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['forms', 'text'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': [],
-                'optional': [],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['forms', 'text'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -433,6 +345,12 @@ class Multitext(Text):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.elements = [
+            Prop('forms'),
+            Prop('text'),
+        ]
         # elements
         self.forms = None
         self.text = None  # deprecated in v0.15
@@ -480,29 +398,6 @@ class Gloss(Form):
     attribute.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': [],
-                'optional': [],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['traits'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': [],
-                'optional': [],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['traits'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -510,6 +405,11 @@ class Gloss(Form):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.elements = [
+            Prop('traits'),
+        ]
         # elements
         self.traits: Optional[List[Trait]] = None
 
@@ -539,29 +439,6 @@ class URLRef(LIFTUtilsBase):
     """This is a URL with a caption.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': ['href'],
-                'optional': [],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['label'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': ['href'],
-                'optional': [],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['label'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -569,6 +446,14 @@ class URLRef(LIFTUtilsBase):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('href', required=True),
+        ]
+        self.props.elements = [
+            Prop('label'),
+        ]
         # attributes
         self.href: URL = None
         # elements
@@ -593,29 +478,6 @@ class Annotation(Multitext):
     """Provides a mechanism for adding meta-information to almost any element.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': ['name', 'value'],
-                'optional': ['who', 'when'],
-            },
-            'elements': {
-                'required': [],
-                'optional': [],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': ['name', 'value'],
-                'optional': ['who', 'when'],
-            },
-            'elements': {
-                'required': [],
-                'optional': [],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -623,6 +485,15 @@ class Annotation(Multitext):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('name', required=True),
+            Prop('value', required=True),
+            Prop('who'),
+            Prop('when'),
+        ]
+        # attributes
         self.name: Key = None
         self.value: Key = None
         self.who: Optional[Key] = None
@@ -655,29 +526,6 @@ class Field(Multitext):
     LIFT standard.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': ['type'],
-                'optional': ['date_created', 'date_modified'],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['traits', 'forms', 'annotations'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': ['name'],
-                'optional': ['date_created', 'date_modified'],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['traits', 'annotations'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -685,6 +533,22 @@ class Field(Multitext):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('date_created'),
+            Prop('date_modified'),
+        ]
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.props.attributes.append(Prop('type', required=True))
+        else:
+            self.props.attributes.append(Prop('name', required=True))
+        self.props.elements = [
+            Prop('traits'),
+            Prop('annotations'),
+        ]
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self.props.elements.append(Prop('forms'))
         # attributes
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self.type: Key = None
@@ -759,29 +623,6 @@ class Extensible(LIFTUtilsBase):
         describing the element.
     """
 
-    _props = {
-        config.LIFT_VERSION_FIELDWORKS: {
-            'attributes': {
-                'required': [],
-                'optional': ['date_created', 'date_modified'],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['fields', 'traits', 'annotations'],
-            },
-        },
-        config.LIFT_VERSION_HIGHEST: {
-            'attributes': {
-                'required': [],
-                'optional': ['date_created', 'date_modified'],
-            },
-            'elements': {
-                'required': [],
-                'optional': ['fields', 'traits', 'annotations'],
-            },
-        }
-    }
-
     def __init__(
         self,
         xml_tree: Optional[etree.ElementTree] = None
@@ -789,6 +630,17 @@ class Extensible(LIFTUtilsBase):
         super().__init__()
         if xml_tree is not None:
             super()._update_from_xml(xml_tree)
+        # properties
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = [
+            Prop('date_created'),
+            Prop('date_modified'),
+        ]
+        self.props.elements = [
+            Prop('fields'),
+            Prop('traits'),
+            Prop('annotations'),
+        ]
         # attributes
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None

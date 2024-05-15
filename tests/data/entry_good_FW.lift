@@ -2,10 +2,11 @@
     <lexical-unit>
         <form lang="und-Latn">
             <text>abat</text>
-            <annotation name="TestName" value="TestValue" who="unknown" when="sometime">
+            <annotation name="TestFormAnno" value="TestValue" who="unknown" when="sometime">
                 <form lang="en">
                     <text>A test annotation.</text>
                 </form>
+                <text>Deprecated in v0.15, but still valid in v0.13</text>
             </annotation>
         </form>
     </lexical-unit>
@@ -13,7 +14,14 @@
     </citation>
     <pronunciation>
         <media>
-            <urlref href="https://sil.org/some/file.wav"/>
+            <urlref href="https://sil.org/some/file.wav">
+                <label name="TestURLRefLabel" value="TestValue" who="unknown" when="sometime">
+                    <form lang="en">
+                        <text>A test label.</text>
+                    </form>
+                    <text>Deprecated in v0.15, but still valid in v0.13</text>
+                </label>
+            </urlref>
         </media>
     </pronunciation>
     <pronunciation>
@@ -37,6 +45,7 @@
         <grammatical-info value="n"/>
         <gloss lang="en">
             <text>grove</text>
+            <trait name="morph-type" value="phrase"/>
         </gloss>
         <gloss lang="id">
             <text>dusun</text>
@@ -147,8 +156,14 @@
             <form lang="zh-CN"><text>Yi2?</text></form>
         </field>
     </etymology>
-    <trait name="morph-type" value="phrase" id="test"/>
-    <annotation name="TestName" value="TestValue" who="unknown" when="sometime">
+    <trait name="morph-type" value="phrase" id="test">
+        <annotation name="TraitAnno" value="TestValue" who="unknown" when="sometime">
+            <form lang="en">
+                <text>A test annotation.</text>
+            </form>
+        </annotation>
+    </trait>
+    <annotation name="EntryAnno" value="TestValue" who="unknown" when="sometime">
         <form lang="en">
             <text>A test annotation.</text>
         </form>
