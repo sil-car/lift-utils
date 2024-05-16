@@ -371,7 +371,7 @@ class Multitext(Text):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             txt = Text(xml_tree)
             txt._update_other_from_self(self)
             del txt
@@ -384,7 +384,7 @@ class Multitext(Text):
                 else:
                     self.forms.append(f)
             elif c.tag == 'text':
-                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                if config.LIFT_VERSION == '0.13':
                     self.text = c.text
 
     def _update_other_from_self(self, other):
@@ -539,7 +539,7 @@ class Field(Multitext):
             Prop('date_created'),
             Prop('date_modified'),
         ]
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.props.attributes.append(Prop('type', required=True))
         else:
             self.props.attributes.append(Prop('name', required=True))
@@ -547,18 +547,17 @@ class Field(Multitext):
             Prop('traits'),
             Prop('annotations'),
         ]
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.props.elements.append(Prop('forms'))
         # attributes
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.type: Key = None
         else:
-            self.type: str = None
             self.name: Key = None
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
         # elements
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.traits: Optional[List[Flag]] = None
             self.forms: Optional[List[Span]] = None
         else:
@@ -587,7 +586,7 @@ class Field(Multitext):
 
         for c in xml_tree.getchildren():
             if c.tag == 'trait':
-                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                if config.LIFT_VERSION == '0.13':
                     t = Flag(c)
                 else:
                     t = Trait(c)
@@ -596,7 +595,7 @@ class Field(Multitext):
                 else:
                     self.traits.append(t)
             elif c.tag == 'form':
-                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                if config.LIFT_VERSION == '0.13':
                     s = Span(c)
                     if not self.forms:
                         self.forms = [s]
@@ -646,7 +645,7 @@ class Extensible(LIFTUtilsBase):
         self.date_modified: Optional[DateTime] = None
         # elements
         self.fields: Optional[List[Field]] = None
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             # TODO: Find definition of "Flag" in v0.13.
             # self.traits: Optional[List[Flag]] = None
             self.traits: Optional[List[Trait]] = None

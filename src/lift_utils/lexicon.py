@@ -97,7 +97,7 @@ class Phonetic(Multitext, Extensible):
         ]
         # elements
         self.medias: Optional[List[URLRef]] = None
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.forms: Optional[List[Span]] = None
 
         if xml_tree is not None:
@@ -126,7 +126,7 @@ class Phonetic(Multitext, Extensible):
                 else:
                     self.medias.append(r)
             if c.tag == 'form':
-                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                if config.LIFT_VERSION == '0.13':
                     f = Form(c)
                     if not self.forms:
                         self.forms = [f]
@@ -600,7 +600,7 @@ class Sense(Extensible):
         self.order: Optional[int] = None
         # elements
         self.grammatical_info: Optional[GrammaticalInfo] = None
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.glosses: Optional[List[Form]] = None
         else:
             self.glosses: Optional[List[Gloss]] = None
@@ -670,7 +670,7 @@ class Sense(Extensible):
             if c.tag == 'grammatical-info':
                 self.grammatical_info = GrammaticalInfo(c)
             elif c.tag == 'gloss':
-                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                if config.LIFT_VERSION == '0.13':
                     g = Form(c)
                 else:
                     g = Gloss(c)

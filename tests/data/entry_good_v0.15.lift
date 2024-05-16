@@ -1,0 +1,176 @@
+<entry id="6b7537f0-31c8-42f9-811c-1da97cc907b4" dateCreated="2008-04-03T03:09:11Z" dateModified="1990-02-26">
+    <lexical-unit>
+        <form lang="und-Latn">
+            <text>abat</text>
+            <annotation name="TestFormAnno" value="TestValue" who="unknown" when="sometime">
+                <form lang="en">
+                    <text>A test annotation.</text>
+                </form>
+                <text>Deprecated in v0.15, but still valid in v0.13</text>
+            </annotation>
+        </form>
+    </lexical-unit>
+    <citation>
+    </citation>
+    <pronunciation>
+        <media>
+            <urlref href="https://sil.org/some/file.wav">
+                <label name="TestURLRefLabel" value="TestValue" who="unknown" when="sometime">
+                    <form lang="en">
+                        <text>A test label.</text>
+                    </form>
+                    <text>Deprecated in v0.15, but still valid in v0.13</text>
+                </label>
+            </urlref>
+        </media>
+    </pronunciation>
+    <pronunciation>
+        <media>
+            <urlref href="https://sil.org/some/file2.wav"/>
+        </media>
+    </pronunciation>
+    <variant><!--This is a paradigm-->
+        <trait name="paradigm" value="sing"/>
+        <form lang="und-Latn">
+            <text>abatke</text>
+        </form>
+    </variant>
+    <variant><!--This is a paradigm-->
+        <trait name="paradigm" value="sing2"/>
+        <form lang="und-Latn">
+            <text>abatke2</text>
+        </form>
+    </variant>
+    <sense id="c71333e0-be6c-434b-adda-bdc6c154d562">
+        <grammatical-info value="n"/>
+        <gloss lang="en">
+            <text>grove</text>
+            <trait name="morph-type" value="phrase"/>
+        </gloss>
+        <gloss lang="id">
+            <text>dusun</text>
+        </gloss>
+        <example source="d2.077.03">
+            <form lang="und-Latn">
+                <text>Kbwai abatke to ksweruk nurare.</text>
+            </form>
+            <translation>
+                <form lang="en">
+                    <text>I went to the coconut groves to clear the grass.</text>
+                </form>
+                <form lang="id">
+                    <text>Saya pergi menyiangi dusun kelapa.</text>
+                </form>
+            </translation>
+        </example>
+        <example source="d4.079.16">
+            <form lang="und-Latn">
+                <text>Kbwa ti ktwan nurke o abatke.</text>
+            </form>
+            <translation>
+                <form lang="en">
+                    <text>I'm going to plant coconut trees in the limited to coconut groves but is used for grove.</text>
+                </form>
+                <form lang="id">
+                    <text>Saya pergi tanam kelapa di dusun.</text>
+                </form>
+            </translation>
+        </example>
+        <note type="encyclopedic">
+            <form lang="en">
+                <text>This is <span class="underline" lang="en" href="//home/user">not</span> limited to coconut groves but is used for mangoes, etc.</text>
+            </form>
+        </note>
+    </sense>
+    <sense id="c71333e0-be6c-434b-adda-bdc6c154d563">
+        <grammatical-info value="n"/>
+        <gloss lang="en">
+            <text>grove2</text>
+        </gloss>
+        <gloss lang="id">
+            <text>dusun2</text>
+        </gloss>
+        <example source="d2.077.03">
+            <form lang="und-Latn">
+                <text>Kbwai abatke to ksweruk nurare.</text>
+            </form>
+            <translation>
+                <form lang="en">
+                    <text>I went to the coconut groves to clear the grass.</text>
+                </form>
+                <form lang="id">
+                    <text>Saya pergi menyiangi dusun kelapa.</text>
+                </form>
+            </translation>
+        </example>
+        <example source="d4.079.16">
+            <form lang="und-Latn">
+                <text>Kbwa ti ktwan nurke o abatke.</text>
+            </form>
+            <translation>
+                <form lang="en">
+                    <text>I'm going to plant coconut trees in the limited to coconut groves but is used for grove.</text>
+                </form>
+                <form lang="id">
+                    <text>Saya pergi tanam kelapa di dusun.</text>
+                </form>
+            </translation>
+        </example>
+        <note type="encyclopedic">
+            <form lang="en">
+                <text>This is <span class="underline">not</span> limited to coconut groves but is used for mangoes, etc.</text>
+            </form>
+        </note>
+    </sense>
+    <note>
+        <form lang="en">
+            <text>This is the text of <span class="underline">not</span> an otherwise pointless note.</text>
+        </form>
+    </note>
+    <note>
+        <form lang="en">
+            <text>This is also the text of <span class="underline">not</span> another pointless note.</text>
+        </form>
+    </note>
+    <relation type="Synonyms" ref="fc336f37-548c-458b-9610-f3fbe0ba2344"/>
+    <relation type="Synonyms" ref="fc336f37-548c-458b-9610-f3fbe0ba2345"/>
+    <etymology type="borrowed" source="">
+        <field name="languagenotes" dateCreated="2008-04-03T03:09:11Z" dateModified="2008-04-03T03:09:11Z">
+            <form lang="zh-CN"><text>Yi?</text></form>
+            <trait name="morph-type" value="phrase"/>
+            <trait name="morph-type" value="phrase2"/>
+            <annotation name="TestName" value="TestValue" who="unknown" when="sometime">
+                <form lang="en">
+                    <text>A test annotation.</text>
+                </form>
+            </annotation>
+            <annotation name="TestName2" value="TestValue2" who="unknown" when="sometime">
+                <form lang="en">
+                    <text>A 2nd test annotation.</text>
+                </form>
+            </annotation>
+        </field>
+    </etymology>
+    <etymology>
+        <field type="languagenotes">
+            <form lang="zh-CN"><text>Yi2?</text></form>
+        </field>
+    </etymology>
+    <trait name="morph-type" value="phrase" id="test">
+        <annotation name="TraitAnno" value="TestValue" who="unknown" when="sometime">
+            <form lang="en">
+                <text>A test annotation.</text>
+            </form>
+        </annotation>
+    </trait>
+    <annotation name="EntryAnno" value="TestValue" who="unknown" when="sometime">
+        <form lang="en">
+            <text>A test annotation.</text>
+        </form>
+    </annotation>
+    <field name="CAWL">
+        <form lang="en">
+            <text>i-1056</text>
+        </form>
+    </field>
+</entry>

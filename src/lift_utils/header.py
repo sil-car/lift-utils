@@ -342,7 +342,7 @@ class Fields(list, LIFTUtilsBase):
             Prop('field_definitions'),
         ]
         # elements
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.field_definitions: Optional[List[FieldDefn]] = None
         else:
             self.field_definitions: Optional[List[FieldDefinition]] = None
@@ -354,7 +354,7 @@ class Fields(list, LIFTUtilsBase):
         self.xml_tree = xml_tree
 
         for c in xml_tree.getchildren():
-            if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            if config.LIFT_VERSION == '0.13':
                 f = FieldDefn(c)
             else:
                 f = FieldDefinition(c)
@@ -395,7 +395,7 @@ class Header(LIFTUtilsBase):
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[LiftRanges[Range]] = None
-        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+        if config.LIFT_VERSION == '0.13':
             self.fields: Optional[FieldDefns] = None
         else:
             self.fields: Optional[Fields] = None
@@ -422,7 +422,7 @@ class Header(LIFTUtilsBase):
             elif c.tag in ['ranges', 'lift-ranges']:
                 self.ranges = LiftRanges(c)
             elif c.tag == 'fields':
-                if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+                if config.LIFT_VERSION == '0.13':
                     self.fields = FieldDefns(c)
                 else:
                     self.fields = Fields(c)

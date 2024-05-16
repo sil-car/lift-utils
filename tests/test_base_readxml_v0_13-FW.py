@@ -6,8 +6,8 @@ from . import DATA_PATH
 from lift_utils import base
 from lift_utils import config
 
-config.LIFT_VERSION = config.LIFT_VERSION_FIELDWORKS
-ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_FW.lift")
+config.LIFT_VERSION = '0.13'
+ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_v0.13_FW.lift")
 
 
 class TestAnnotation(unittest.TestCase):
@@ -102,8 +102,6 @@ class TestMultitext(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        if config.LIFT_VERSION != config.LIFT_VERSION_FIELDWORKS:
-            optional.remove('text')  # remove deprecated element
         test_elems(self, self.obj, optional)
 
 
