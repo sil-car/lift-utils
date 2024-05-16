@@ -25,7 +25,7 @@ Module Contents
 
    
 
-.. py:data:: LIFT_VERSION_HIGHEST
+.. py:data:: LIFT_VERSION_LATEST
    :value: '0.15'
 
    
