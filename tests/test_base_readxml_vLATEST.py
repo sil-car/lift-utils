@@ -6,12 +6,12 @@ from . import DATA_PATH
 from lift_utils import base
 from lift_utils import config
 
-config.LIFT_VERSION = config.LIFT_VERSION_LATEST
 ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_v0.15.lift")
 
 
 class TestAnnotation(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
         self.obj = base.Annotation(self.xml_tree)
 
@@ -27,6 +27,7 @@ class TestAnnotation(unittest.TestCase):
 
 class TestExtensible(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.obj = base.Extensible(etree.parse(ENTRY_LIFT_GOOD).getroot())
 
     def test_extensible_attribs(self):
@@ -44,6 +45,7 @@ class TestExtensible(unittest.TestCase):
 
 class TestField(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//field')
         self.obj = base.Field(self.xml_tree)
 
@@ -62,6 +64,7 @@ class TestField(unittest.TestCase):
 
 class TestForm(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
         self.obj = base.Form(self.xml_tree)
 
@@ -80,6 +83,7 @@ class TestForm(unittest.TestCase):
 
 class TestGloss(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//gloss')
         self.obj = base.Gloss(self.xml_tree)
 
@@ -92,6 +96,7 @@ class TestGloss(unittest.TestCase):
 
 class TestMultitext(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
         self.obj = base.Multitext(self.xml_tree)
 
@@ -109,6 +114,7 @@ class TestMultitext(unittest.TestCase):
 
 class TestSpan(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//span')
         self.obj = base.Span(self.xml_tree)
 
@@ -128,6 +134,7 @@ class TestSpan(unittest.TestCase):
 
 class TestText(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
         self.obj = None
         for c in self.xml_tree.getchildren():
@@ -150,6 +157,7 @@ class TestText(unittest.TestCase):
 
 class TestTrait(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('trait')
         self.obj = base.Trait(self.xml_tree)
 
@@ -168,6 +176,7 @@ class TestTrait(unittest.TestCase):
 
 class TestURLRef(unittest.TestCase):
     def setUp(self):
+        config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//urlref')  # noqa: E501
         self.obj = base.URLRef(self.xml_tree)
 
