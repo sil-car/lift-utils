@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import List
 from typing import Optional
 from typing import Union
+from urllib.parse import unquote
+from urllib.parse import urlparse
 
 from . import config
 from . import utils
@@ -22,6 +24,7 @@ from .datatypes import Key
 from .datatypes import RefId
 from .datatypes import Prop
 from .datatypes import Props
+from .datatypes import URL
 from .header import Header
 from .header import Range
 from .utils import xml_to_etree
@@ -997,7 +1000,7 @@ class Lexicon(LIFTUtilsBase):
                     if r.href:
                         ext_hrefs.add(r.href)
                 for p in ext_hrefs:
-                    self._update_header_from_filepath(p)
+                    self._update_header_from_href(p)
             elif c.tag == 'entry':
                 entry = Entry(c)
                 if not self.entries:
@@ -1007,9 +1010,10 @@ class Lexicon(LIFTUtilsBase):
             else:
                 logging.warning(f"{__class__}: Unhandled XML tag: {c.tag}")
 
-    def _update_header_from_filepath(self, filepath: Union[Path, str]):
+    def _update_header_from_href(self, href: URL):
+        filepath = unquote(urlparse(href).path)
         try:
-            xml_tree = xml_to_etree(str(filepath))
+            xml_tree = xml_to_etree(filepath)
         except OSError:
             # Probably absolute URI from a different device.
             # Try same file name, but in same dir as current LIFT file.

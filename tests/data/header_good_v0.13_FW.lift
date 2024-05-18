@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- See https://github.com/sillsdev/lift-standard for more information on the format used here. -->
+<lift producer="SIL.FLEx 9.1.15.658" version="0.13">
+  <header>
+    <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
+    <ranges>
+      <range id="etymology" guid="unique-range-identifier-001" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges">
+        <range-element id="borrowed">
+          <label><form lang="en"><text>borrowed</text></form></label>
+          <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
+        </range-element>
+        <range-element id="proto">
+          <label><form lang="en"><text>proto</text></form></label>
+          <description><form lang="en"><text>The proto form of the word in another language</text></form></description>
+        </range-element>
+        <description><form lang="en"><text>Range description</text></form></description>
+        <label><form lang="en"><text>Range label</text></form></label>
+        <abbrev><form lang="en"><text>Range abbrev</text></form></abbrev>
+      </range>
+      <range id="dialect" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="etymology" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="grammatical-info" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="lexical-relation" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="note-type" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="paradigm" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="reversal-type" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="semantic-domain-ddp4" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="status" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="users" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="location" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <!-- The following ranges are produced by FieldWorks Language Explorer, and are not part of the LIFT standard. -->
+      <range id="anthro-code" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="translation-type" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <!-- The parts of speech are duplicated in another range because derivational affixes require a "From" PartOfSpeech as well as a "To" PartOfSpeech. -->
+      <range id="from-part-of-speech" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="morph-type" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="exception-feature" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="inflection-feature" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="inflection-feature-type" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+      <range id="do-not-publish-in" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
+    </ranges>
+    <fields>
+      <field tag="cv-pattern">
+        <form lang="en">
+          <text>This records the syllable pattern for a LexPronunciation in FieldWorks.</text>
+        </form>
+      </field>
+      <field tag="tone">
+        <form lang="en">
+          <text>This records the tone information for a LexPronunciation in FieldWorks.</text>
+        </form>
+      </field>
+      <field tag="comment">
+        <form lang="en">
+          <text>This records a comment (note) in a LexEtymology in FieldWorks.</text>
+        </form>
+      </field>
+      <field tag="import-residue">
+        <form lang="en">
+          <text>This records residue left over from importing a standard format file into FieldWorks (or LinguaLinks).</text>
+        </form>
+      </field>
+      <field tag="literal-meaning">
+        <form lang="en">
+          <text>This field is used to store a literal meaning of the entry.  Typically, this field is necessary only for a compound or an idiom where the meaning of the whole is different from the sum of its parts.</text>
+        </form>
+      </field>
+      <field tag="summary-definition">
+        <form lang="en">
+          <text>A summary definition (located at the entry level in the Entry pane) is a general definition summarizing all the senses of a primary entry. It has no theoretical value; its use is solely pragmatic.</text>
+        </form>
+      </field>
+      <field tag="scientific-name">
+        <form lang="en">
+          <text>This field stores the scientific name pertinent to the current sense.</text>
+        </form>
+      </field>
+      <field tag="SIL Cawl">
+        <form lang="en">
+          <text/>
+        </form>
+        <form lang="qaa-x-spec">
+          <text>Class=LexSense; Type=String; WsSelector=kwsAnal</text>
+        </form>
+      </field>
+      <field tag="SIL CAWL">
+        <form lang="en">
+          <text/>
+        </form>
+        <form lang="qaa-x-spec">
+          <text>Class=LexSense; Type=String; WsSelector=kwsAnal</text>
+        </form>
+      </field>
+      <field tag="CAWL">
+        <form lang="en">
+          <text/>
+        </form>
+        <form lang="qaa-x-spec">
+          <text>Class=LexSense; Type=String; WsSelector=kwsAnal</text>
+        </form>
+      </field>
+    </fields>
+  </header>
+</lift>

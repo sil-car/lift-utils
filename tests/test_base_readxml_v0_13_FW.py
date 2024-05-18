@@ -2,6 +2,8 @@ import unittest
 from lxml import etree
 
 from . import DATA_PATH
+from .utils import test_attribs
+from .utils import test_elems
 
 from lift_utils import base
 from lift_utils import config
@@ -189,19 +191,3 @@ class TestURLRef(unittest.TestCase):
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
         test_elems(self, self.obj, optional)
-
-
-def test_attribs(test_cls, obj, attribs):
-    for a in attribs:
-        try:
-            test_cls.assertIsNotNone(obj.__dict__.get(a))
-        except AssertionError as e:
-            raise Exception(f"\"{a}\" {str(e)}")
-
-
-def test_elems(test_cls, obj, elems):
-    for elem in elems:
-        try:
-            test_cls.assertIsNotNone(obj.__dict__.get(elem))
-        except AssertionError as e:
-            raise Exception(f"\"{elem}\" {str(e)}")

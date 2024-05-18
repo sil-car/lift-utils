@@ -207,15 +207,15 @@ class Range(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('key', required=True),
+            Prop('id', required=True),
             Prop('guid'),
             Prop('href'),
         ]
         self.props.elements = [
-            Prop('range_element', required=True),
+            Prop('range_elements', required=True),
             Prop('description'),
-            Prop('label'),
-            Prop('abbrev'),
+            Prop('labels'),
+            Prop('abbrevs'),
         ]
         # attributes
         self.id: Key = None
