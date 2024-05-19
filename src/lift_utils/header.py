@@ -19,7 +19,7 @@ class FieldDefn(Multitext):
     It may be used by an application to add information not part of the LIFT
     standard.
 
-    .. note:: Used by LIFT v0.13 (FieldWorks).
+    .. note:: Used by LIFT v0.13 (FieldWorks) instead of ``FieldDefinition``.
     """
 
     def __init__(
@@ -139,9 +139,9 @@ class RangeElement(Extensible):
             Prop('guid'),
         ]
         self.props.elements = [
-            Prop('description'),
-            Prop('label'),
-            Prop('abbrev'),
+            Prop('descriptions'),
+            Prop('labels'),
+            Prop('abbrevs'),
         ]
         # attributes
         self.id: Key = None
@@ -302,9 +302,9 @@ class LiftRanges(list, LIFTUtilsBase):
 
 
 class FieldDefns(list, LIFTUtilsBase):
-    """This is a simple list of ``field-defn``.
+    """This is a simple list of ``field-defn`` elements.
 
-    .. note:: Used by LIFT v0.13 (FieldWorks).
+    .. note:: Used by LIFT v0.13 (FieldWorks) instead of ``Fields``.
     """
 
     def __init__(

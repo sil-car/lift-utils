@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- See https://github.com/sillsdev/lift-standard for more information on the format used here. -->
-<lift producer="SIL.FLEx 9.1.15.658" version="0.13">
+<lift producer="SIL.FLEx 9.1.15.658" version="0.15">
   <header>
     <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
     <ranges>
-      <range id="etymology" guid="unique-range-identifier-001" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges">
+      <range id="etymology" guid="unique-range-identifier-001" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.15.lift-ranges">
         <range-element id="borrowed" guid="unique-range-element-identifier-001" parent="none">
           <label><form lang="en"><text>borrowed</text></form></label>
           <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
@@ -41,42 +41,44 @@
       <range id="do-not-publish-in" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
     </ranges>
     <fields>
-      <field tag="cv-pattern">
+      <field name="cv-pattern" class="unknown" type="option" option-range="dialect" writing-system="en">
         <form lang="en">
           <text>This records the syllable pattern for a LexPronunciation in FieldWorks.</text>
         </form>
+        <label><form lang="en"><text>FieldDefninition label</text></form></label>
+        <description><form lang="en"><text>FieldDefninition description</text></form></description>
       </field>
-      <field tag="tone">
+      <field name="tone">
         <form lang="en">
           <text>This records the tone information for a LexPronunciation in FieldWorks.</text>
         </form>
       </field>
-      <field tag="comment">
+      <field name="comment">
         <form lang="en">
           <text>This records a comment (note) in a LexEtymology in FieldWorks.</text>
         </form>
       </field>
-      <field tag="import-residue">
+      <field name="import-residue">
         <form lang="en">
           <text>This records residue left over from importing a standard format file into FieldWorks (or LinguaLinks).</text>
         </form>
       </field>
-      <field tag="literal-meaning">
+      <field name="literal-meaning">
         <form lang="en">
           <text>This field is used to store a literal meaning of the entry.  Typically, this field is necessary only for a compound or an idiom where the meaning of the whole is different from the sum of its parts.</text>
         </form>
       </field>
-      <field tag="summary-definition">
+      <field name="summary-definition">
         <form lang="en">
           <text>A summary definition (located at the entry level in the Entry pane) is a general definition summarizing all the senses of a primary entry. It has no theoretical value; its use is solely pragmatic.</text>
         </form>
       </field>
-      <field tag="scientific-name">
+      <field name="scientific-name">
         <form lang="en">
           <text>This field stores the scientific name pertinent to the current sense.</text>
         </form>
       </field>
-      <field tag="SIL Cawl">
+      <field name="SIL Cawl">
         <form lang="en">
           <text/>
         </form>
@@ -84,7 +86,7 @@
           <text>Class=LexSense; Type=String; WsSelector=kwsAnal</text>
         </form>
       </field>
-      <field tag="SIL CAWL">
+      <field name="SIL CAWL">
         <form lang="en">
           <text/>
         </form>
@@ -92,7 +94,7 @@
           <text>Class=LexSense; Type=String; WsSelector=kwsAnal</text>
         </form>
       </field>
-      <field tag="CAWL">
+      <field name="CAWL">
         <form lang="en">
           <text/>
         </form>
