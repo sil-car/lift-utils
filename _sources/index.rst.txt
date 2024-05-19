@@ -55,6 +55,8 @@ Roadmap
      - read support for LIFT files
    * - v0.2
      - write support for LIFT files
+   * - v0.3
+     - add helper methods (get, set, add, list, etc.)
 
 Indexes
 =======
