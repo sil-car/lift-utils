@@ -923,7 +923,7 @@ class Lexicon(LIFTUtilsBase):
 
     def __init__(
         self,
-        path: Optional[Path] = None,
+        path: Optional[Union[Path, str]] = None,
         xml_tree: Optional[etree.ElementTree] = None
     ):
         super().__init__()
@@ -937,9 +937,9 @@ class Lexicon(LIFTUtilsBase):
         ]
         self.props.elements = [
             Prop('header'),
-            Prop('entry'),
+            Prop('entries'),
         ]
-        self.path = path
+        self.path = Path(path)
         # attributes
         self.version: str = None
         self.producer: Optional[str] = None

@@ -17,13 +17,13 @@ class TestAnnotation(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
         self.obj = base.Annotation(self.xml_tree)
 
-    def test_annotation_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_annotation_elems(self):
+    def test_elems(self):
         pass  # no elements
 
 
@@ -32,13 +32,13 @@ class TestExtensible(unittest.TestCase):
         config.LIFT_VERSION = '0.13'
         self.obj = base.Extensible(etree.parse(ENTRY_LIFT_GOOD).getroot())
 
-    def test_extensible_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_extensible_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -51,13 +51,13 @@ class TestField(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//field')
         self.obj = base.Field(self.xml_tree)
 
-    def test_field_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_field_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -70,13 +70,13 @@ class TestForm(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
         self.obj = base.Form(self.xml_tree)
 
-    def test_form_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_form_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -89,7 +89,7 @@ class TestGloss(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//gloss')
         self.obj = base.Gloss(self.xml_tree)
 
-    def test_gloss_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -102,10 +102,10 @@ class TestMultitext(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
         self.obj = base.Multitext(self.xml_tree)
 
-    def test_multitext_attribs(self):
+    def test_attribs(self):
         pass  # no attribs
 
-    def test_multitext_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -118,13 +118,13 @@ class TestSpan(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//span')
         self.obj = base.Span(self.xml_tree)
 
-    def test_span_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_span_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -144,14 +144,14 @@ class TestText(unittest.TestCase):
         if not self.obj:
             raise AssertionError
 
-    def test_text_attribs(self):
+    def test_attribs(self):
         pass  # no attribs
 
-    def test_text_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')  # already tested in test_span_elems
+        optional.remove('spans')  # already tested in TestSpan
         test_elems(self, self.obj, optional)
 
 
@@ -161,13 +161,13 @@ class TestTrait(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('trait')
         self.obj = base.Trait(self.xml_tree)
 
-    def test_trait_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_trait_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -180,13 +180,13 @@ class TestURLRef(unittest.TestCase):
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//urlref')  # noqa: E501
         self.obj = base.URLRef(self.xml_tree)
 
-    def test_urlref_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_urlref_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]

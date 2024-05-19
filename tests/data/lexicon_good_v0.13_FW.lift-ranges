@@ -71,6 +71,21 @@
 </description>
 <trait name="catalog-source-id" value="Pronoun"/>
 </range-element>
+<range-element id="Pronom interrogatif" guid="e5e7d0cb-36c5-497d-831c-cb614e283d7c" parent="Proforme">
+<label>
+<form lang="en"><text>Interrogative pro-form</text></form>
+<form lang="fr"><text>Pronom interrogatif</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>interrog</text></form>
+<form lang="fr"><text>pron.int</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An interrogative pro-form is a pro-form that is used in questions to stand for the item questioned.</text></form>
+<form lang="fr"><text>Une proforme interrogatif (pronom interrogatif) est une proforme (un pronom) remplaçant le terme sur lequel porte l’interrogation [Qui a-t-il vu ? Que voit-il ? Où va-t-il ?, etc.].</text></form>
+</description>
+<trait name="catalog-source-id" value="InterrogativeProform"/>
+</range-element>
 <range-element id="Verbe" guid="86ff66f6-0774-407a-a0dc-3eeaf873daf7">
 <label>
 <form lang="en"><text>Verb</text></form>
@@ -86,94 +101,260 @@
 </description>
 <trait name="catalog-source-id" value="Verb"/>
 </range-element>
-<range-element id="adj" guid="8553d089-f072-4a19-ad4b-fd8229b2a4f5">
+<range-element id="Temps_aspect_mode" guid="f5447e4d-216d-499d-84ee-ef8a4d37185c" parent="Verbe">
 <label>
-<form lang="en"><text>adj</text></form>
+<form lang="en"><text>Tense_aspect_modality</text></form>
+<form lang="fr"><text>Temps_aspect_mode</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>adj</text></form>
+<form lang="fr"><text>TAM</text></form>
 </abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="nbre" guid="f4fb33a3-56af-4c47-9106-5bb53c2dcd87">
+<range-element id="Formule" guid="707f0102-0600-4054-8c74-be5956120874">
 <label>
-<form lang="en"><text>nbre</text></form>
+<form lang="en"><text>Complex form</text></form>
+<form lang="fr"><text>Formule</text></form>
+</label>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Formule d&apos;acceptation" guid="4069545a-46a8-422c-af6f-394298be6014" parent="Formule">
+<label>
+<form lang="fr"><text>Formule d'acceptation</text></form>
+</label>
+<description>
+<form lang="fr"><text>Rep</text></form>
+</description>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Formule de desapprobation" guid="bc48c48c-0f1a-401b-a45b-9e6add07a75b" parent="Formule">
+<label>
+<form lang="fr"><text>Formule de desapprobation</text></form>
+</label>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Idéophone" guid="d6c41504-67ec-4bbf-b8e6-cf99af2eca1d" parent="Formule">
+<label>
+<form lang="de"><text>Ideophon</text></form>
+<form lang="en"><text>Ideophone</text></form>
+<form lang="fr"><text>Idéophone</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>nbre</text></form>
+<form lang="de"><text>Ideo</text></form>
+<form lang="en"><text>Ideo</text></form>
+<form lang="fr"><text>Idéo</text></form>
 </abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="indef" guid="65045777-c043-4ffe-945e-c32347177b57">
+<range-element id="Particule" guid="6e758bbc-2b40-427d-b79f-bf14a7c96c6a">
 <label>
-<form lang="en"><text>indef</text></form>
+<form lang="en"><text>Particle</text></form>
+<form lang="fr"><text>Particule</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>indef</text></form>
+<form lang="en"><text>prt</text></form>
+<form lang="fr"><text>partic</text></form>
 </abbrev>
+<description>
+<form lang="en"><text>A particle is a part of speech whose members do not belong to one of the main classes of words, is invariable, and typically has grammatical or pragmatic meaning.</text></form>
+<form lang="fr"><text>Une particule est une partie du discours qui n’appartient pas aux classes majeures de mot, qui est invariable et qui a généralement un sens grammatical ou pragmatique.</text></form>
+</description>
+<trait name="catalog-source-id" value="Particle"/>
+</range-element>
+<range-element id="Superlatif" guid="b69164e9-e482-49ba-99fc-74981e296fe8" parent="Particule">
+<label>
+<form lang="en"><text>Superlative</text></form>
+<form lang="fr"><text>Superlatif</text></form>
+</label>
+<abbrev>
+<form lang="fr"><text>sup</text></form>
+</abbrev>
+<description>
+<form lang="fr"><text>Particle qui determine le degre d'un adjectif</text></form>
+</description>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="Question particle" guid="9293f6fa-a875-4fb1-a191-e9364f217248">
+<range-element id="Particule nominale" guid="c6853f58-a74c-483e-9494-732002a7ab5b" parent="Particule">
+<label>
+<form lang="en"><text>Nominal particle</text></form>
+<form lang="fr"><text>Particule nominale</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>nomprt</text></form>
+<form lang="fr"><text>partic.nom</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A nominal particle is a member of a closed class of particles that co-occur with nouns.</text></form>
+<form lang="fr"><text>Une particule nominale est une particule qui modifie un nominal.</text></form>
+</description>
+<trait name="catalog-source-id" value="NominalParticle"/>
+</range-element>
+<range-element id="Particule interrogative" guid="07455e91-118a-4d7d-848c-39bedd355a3d" parent="Particule">
 <label>
 <form lang="en"><text>Question particle</text></form>
+<form lang="fr"><text>Particule interrogative</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>Question particle</text></form>
+<form lang="en"><text>q</text></form>
+<form lang="fr"><text>partic.interr</text></form>
 </abbrev>
-<trait name="catalog-source-id" value=""/>
+<description>
+<form lang="en"><text>A question particle is a part of speech whose members signal a yes/no question.</text></form>
+<form lang="fr"><text>Une particule interrogative est une particule indiquant une question polaire (réponse par oui ou par non).</text></form>
+</description>
+<trait name="catalog-source-id" value="QuestionParticle"/>
 </range-element>
-<range-element id="unknown" guid="c24fe609-7eae-493c-a044-64d82b58e30b">
+<range-element id="Adjectif" guid="30d07580-5052-4d91-bc24-469b8b2d7df9">
 <label>
-<form lang="en"><text>unknown</text></form>
+<form lang="en"><text>Adjective</text></form>
+<form lang="fr"><text>Adjectif</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>unknown</text></form>
+<form lang="en"><text>adj</text></form>
+<form lang="fr"><text>adj</text></form>
 </abbrev>
-<trait name="catalog-source-id" value=""/>
+<description>
+<form lang="en"><text>An adjective is a part of speech whose members modify nouns. An adjective specifies the attributes of a noun referent. Note: this is one case among many. Adjectives are a class of modifiers.</text></form>
+<form lang="fr"><text>Un adjectif est un modificateur du nom.</text></form>
+</description>
+<trait name="catalog-source-id" value="Adjective"/>
 </range-element>
-<range-element id="Numeral" guid="65ffffaf-46bc-4ffb-a57f-b3e84a2d9a5f">
+<range-element id="Relativiseur" guid="c5f222a3-e1aa-4250-b196-d94f0eb0d47b">
 <label>
-<form lang="en"><text>Numeral</text></form>
+<form lang="en"><text>Relativizer</text></form>
+<form lang="fr"><text>Relativiseur</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>Numeral</text></form>
+<form lang="en"><text>rel</text></form>
+<form lang="fr"><text>relativis</text></form>
 </abbrev>
-<trait name="catalog-source-id" value=""/>
+<description>
+<form lang="en"><text>A relativizer is a subordinating connective that links a relative clause to its head noun. It is distinguishable from a relative pronoun in that it does not have a nominal function within the relative clause.</text></form>
+<form lang="fr"><text>Un relativiseur est un connecteur subordonnant qui relie une proposition relative à son antécédent, mais qui se distingue d’un pronom relatif en ce qu’il n’assume aucune fonction dans la proposition relative.</text></form>
+</description>
+<trait name="catalog-source-id" value="Relativizer"/>
 </range-element>
-<range-element id="preposition" guid="d7f55c7f-daad-44c5-8095-c3296cee75be">
-<label>
-<form lang="en"><text>preposition</text></form>
-</label>
-<abbrev>
-<form lang="en"><text>preposition</text></form>
-</abbrev>
-<trait name="catalog-source-id" value=""/>
-</range-element>
-<range-element id="Connective" guid="a7a24f30-c95d-4331-89a7-ea45c57264e1">
+<range-element id="Connecteur" guid="6e0682a7-efd4-43c9-b083-22c4ce245419">
 <label>
 <form lang="en"><text>Connective</text></form>
+<form lang="fr"><text>Connecteur</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>Connective</text></form>
+<form lang="en"><text>conn</text></form>
+<form lang="fr"><text>conn</text></form>
 </abbrev>
+<description>
+<form lang="en"><text>Also known as a conjunction, a connective is a class of parts of speech whose members syntactically link words or larger constituents, and expresses a semantic relationship between them. A conjunction is positionally fixed relative to one or more of the elements related by it, thus distinguishing it from constituents such as English conjunctive adverbs.</text></form>
+<form lang="fr"><text>Appelé aussi conjonction, un connecteur est une partie du discours qui lie syntaxiquement des mots ou des constituants plus vastes. La place du connecteur est fixe par rapport à un ou plusieurs des éléments qu’elle relie.</text></form>
+</description>
+<trait name="catalog-source-id" value="Connective"/>
+</range-element>
+<range-element id="Connecteur subordonnant" guid="09052f32-bf65-400a-8179-6a1c54ef30c9" parent="Connecteur">
+<label>
+<form lang="en"><text>Subordinating connective</text></form>
+<form lang="fr"><text>Connecteur subordonnant</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>subordconn</text></form>
+<form lang="fr"><text>conn.subord</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A subordinating connective is a connective that links constructions by making one of them a constituent of another. The subordinating conjunction typically marks the incorporated constituent.</text></form>
+<form lang="fr"><text>Un connecteur subordonnant est un connecteur qui relie des constituants entre eux en faisant de l’un d’entre eux le constituant de l’autre. Le plus souvent, le connecteur subordonnant marque le constituant qui est incorporé dans l’autre.</text></form>
+</description>
+<trait name="catalog-source-id" value="SubordinatingConnective"/>
+</range-element>
+<range-element id="Adverbialisateur" guid="a0a9906d-d987-42cb-8a65-f549462b16fc" parent="Connecteur subordonnant">
+<label>
+<form lang="en"><text>Adverbializer</text></form>
+<form lang="fr"><text>Adverbialisateur</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>advlizer</text></form>
+<form lang="fr"><text>adverbialisateur</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An adverbializer is a subordinating connective that links a subordinate clause to a main clause, and indicates that the subordinate clause has an 'adverbial' or interpropositional relation to the main clause, indicating purpose, condition, time, and location.</text></form>
+</description>
+<trait name="catalog-source-id" value="Adverbializer"/>
+</range-element>
+<range-element id="Connecteur coordonnant" guid="75ac4332-a445-4ce8-918e-b27b04073745" parent="Connecteur">
+<label>
+<form lang="en"><text>Coordinating connective</text></form>
+<form lang="fr"><text>Connecteur coordonnant</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>coordconn</text></form>
+<form lang="fr"><text>conn.coord</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A coordinating connective is a connective that links constituents without syntactically subordinating one to the other.</text></form>
+<form lang="fr"><text>Un connecteur coordonnant est un connecteur qui relie des constituants entre eux sans établir une subordination de l’un ou de l’autre.</text></form>
+</description>
+<trait name="catalog-source-id" value="CoordinatingConnective"/>
+</range-element>
+<range-element id="Prenom" guid="f1ac9eab-5f8c-41cf-b234-e53405aaaac5">
+<label>
+<form lang="en"><text>Prenom</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>prenom</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An element which may be compounded to the front of a noun to signal information such as size, color, etc..</text></form>
+</description>
+<trait name="catalog-source-id" value="Prenoun"/>
+</range-element>
+<range-element id="Marqueur existentiel" guid="25b2ef8c-d87e-4868-898c-8f5375afeeb3">
+<label>
+<form lang="en"><text>Existential marker</text></form>
+<form lang="fr"><text>Marqueur existentiel</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>existmrkr</text></form>
+<form lang="fr"><text>marq.exist</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An existential marker is a part of speech whose members are found in distinct clause types and which mark a referent's existence.</text></form>
+</description>
+<trait name="catalog-source-id" value="ExistentialMarker"/>
+</range-element>
+<range-element id="Postposition" guid="18f1b2b8-0ce3-4889-90e9-003fed6a969f">
+<label>
+<form lang="en"><text>Postposition</text></form>
+<form lang="fr"><text>Postposition</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>post</text></form>
+<form lang="fr"><text>post</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A postposition is an adposition that occurs after its complement.</text></form>
+</description>
+<trait name="catalog-source-id" value="Postposition"/>
+</range-element>
+<range-element id="Compléments" guid="ee6903f2-647a-45ff-ad4a-0ea673315f24">
+<label>
+<form lang="en"><text>Object</text></form>
+<form lang="fr"><text>Compléments</text></form>
+</label>
+<description>
+<form lang="fr"><text>Cplmt</text></form>
+</description>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="adjective" guid="c5189799-b542-44bc-be7f-71b3182cef34">
+<range-element id="Complément du lieu" guid="e0d5d24b-acfc-4253-96ab-38b9294f57b1" parent="Compléments">
 <label>
-<form lang="en"><text>adjective</text></form>
+<form lang="en"><text>Locative</text></form>
+<form lang="fr"><text>Complément du lieu</text></form>
 </label>
-<abbrev>
-<form lang="en"><text>adjective</text></form>
-</abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="Demonstrative" guid="2ee89137-4836-46e4-991a-34a561e42380">
+<range-element id="Preposition" guid="956e2da0-bd77-4645-a9bb-b144d0ce2fa8">
 <label>
-<form lang="en"><text>Demonstrative</text></form>
+<form lang="en"><text>Preposition</text></form>
+<form lang="fr"><text>Preposition</text></form>
 </label>
-<abbrev>
-<form lang="en"><text>Demonstrative</text></form>
-</abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
 <range-element id="Interjection" guid="d32dff62-4117-4762-a887-96478406769b">
@@ -190,6 +371,98 @@
 <form lang="fr"><text>Une interjection est une partie du discours, généralement de forme brève (p.ex. une syllabe [Zut !], un mot [Ciel !]), indécomposable en morphèmes distincts, et qui est utilisée pour exprimer une réaction affective vive du locuteur. De façon générale, l’interjection n’est reliée syntaxiquement à aucun élément d’une phrase, mais forme à elle seule une phrase. Il n’est pas rare que certains sons ou certaines combinaisons de sons soient propres aux interjections.</text></form>
 </description>
 <trait name="catalog-source-id" value="Interjection"/>
+</range-element>
+<range-element id="Marqueur d&apos;hypothese" guid="3fb7cb6f-da06-43fe-80e5-303b538e0458">
+<label>
+<form lang="fr"><text>Marqueur d'hypothese</text></form>
+</label>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Preverb" guid="4e676ad2-542d-461d-9d78-1dbcb55ec456">
+<label>
+<form lang="en"><text>Preverb</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>preverb</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An element which may be compounded to the front of a verb, to signal information such as tense, direction, etc..</text></form>
+</description>
+<trait name="catalog-source-id" value="Preverb"/>
+</range-element>
+<range-element id="Numéral" guid="e680330e-2b41-4bec-b96b-514743c47cae">
+<label>
+<form lang="en"><text>Numeral</text></form>
+<form lang="fr"><text>Numéral</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>num</text></form>
+<form lang="fr"><text>num</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A numeral is a part of speech whose members function most typically as adjectives or pronouns and express a number, or relation to the number, such as one of the following: quantity, sequence, frequency, fraction.</text></form>
+<form lang="fr"><text>Un numéral est une sous-classe de nominaux fonctionnant généralement comme adjectifs ou pronoms et exprimant un nombre ou une relation à un nombre comme par exemple une quantité, une séquence, une fréquence ou une fraction.</text></form>
+</description>
+<trait name="catalog-source-id" value="Numeral"/>
+</range-element>
+<range-element id="Démonstratif" guid="093264d7-06c3-42e1-bc4d-5a965ce63887">
+<label>
+<form lang="en"><text>Demonstrative</text></form>
+<form lang="fr"><text>Démonstratif</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>dem</text></form>
+<form lang="fr"><text>dém</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A demonstrative is a determiner that is used deictically to indicate a referent's spatial, temporal, or discourse location. A demonstrative functions as a modifier of a noun, or a pronoun.</text></form>
+<form lang="fr"><text>Un démonstratif est un déterminant déictique indiquant la situation spatiale, temporelle ou discursive du référent. Il fonctionne comme modificateur d’un nom ou d’un pronom.</text></form>
+</description>
+<trait name="catalog-source-id" value="Demonstrative"/>
+</range-element>
+<range-element id="Quantificateur" guid="a4a759b4-5a10-4d7a-80a3-accf5bd840b1">
+<label>
+<form lang="en"><text>Quantifier</text></form>
+<form lang="fr"><text>Quantificateur</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>quant</text></form>
+<form lang="fr"><text>quant</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A quantifier is a determiner that expresses a referent's definite or indefinite number or amount. A quantifier functions as a modifier of a noun, or a pronoun.</text></form>
+<form lang="fr"><text>Un quantificateur est un déterminant qui précise la quantité précise ou non par laquelle le nom est défini. Il fonctionne comme modificateur d’un nom ou d’un pronom.</text></form>
+</description>
+<trait name="catalog-source-id" value="Quantifier"/>
+</range-element>
+<range-element id="Adposition" guid="ae115ea8-2cd7-4501-8ae7-dc638e4f17c5">
+<label>
+<form lang="en"><text>Adposition</text></form>
+<form lang="fr"><text>Adposition</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>adp</text></form>
+<form lang="fr"><text>adpos</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An adposition is a part of speech whose members are of a closed set and occur before or after a complement composed of a noun phrase, noun, pronoun, or clause that functions as a noun phrase and forms a single structure with the complement to express its grammatical and semantic relation to another unit within a clause.</text></form>
+</description>
+<trait name="catalog-source-id" value="Adposition"/>
+</range-element>
+<range-element id="Article" guid="af3f65de-b0d5-4243-a196-53b67bd6a4df">
+<label>
+<form lang="en"><text>Article</text></form>
+<form lang="fr"><text>Article</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>art</text></form>
+<form lang="fr"><text>art</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An article is a member of a small class of determiners that identify a noun's definite or indefinite reference, and new or given status.</text></form>
+<form lang="fr"><text>Un article est un déterminant qui modifie le nom en apportant des précisions quant à la définitude (défini, indéfini) ou quant à la structure d’information (nouvelle, donnée).</text></form>
+</description>
+<trait name="catalog-source-id" value="Article"/>
 </range-element>
 </range>
 <range id="lexical-relation">
@@ -467,22 +740,22 @@
 </range-element>
 </range>
 <range id="reversal-type">
+<range-element id="fr">
+<label>
+<form lang="en"><text>French</text></form>
+<form lang="fr"><text>French</text></form>
+</label>
+</range-element>
 <range-element id="en">
 <label>
 <form lang="en"><text>English</text></form>
 <form lang="fr"><text>English</text></form>
 </label>
 </range-element>
-<range-element id="sg">
+<range-element id="de">
 <label>
-<form lang="en"><text>Sango</text></form>
-<form lang="fr"><text>Sango</text></form>
-</label>
-</range-element>
-<range-element id="fr">
-<label>
-<form lang="en"><text>French</text></form>
-<form lang="fr"><text>French</text></form>
+<form lang="en"><text>German</text></form>
+<form lang="fr"><text>German</text></form>
 </label>
 </range-element>
 </range>
@@ -1098,10 +1371,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui fait référence aux gouttes d’eau et à ce qu’elles font.</text></form>
 </description>
 </range-element>
-<range-element id="1.3.2.4 Vagues" guid="741c417a-11e9-460c-9ab3-51b8220df016" parent="1.3.2 Mouvement de l’eau">
+<range-element id="1.3.2.4 vagues" guid="741c417a-11e9-460c-9ab3-51b8220df016" parent="1.3.2 Mouvement de l’eau">
 <label>
 <form lang="en"><text>Wave</text></form>
-<form lang="fr"><text>Vagues</text></form>
+<form lang="fr"><text>vagues</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>1.3.2.4</text></form>
@@ -1280,10 +1553,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui fait référence aux buissons et arbustes : végétaux plus petits que des arbres et qui ont plusieurs troncs (phylum des spermaphytes, embranchement des angiospermes).</text></form>
 </description>
 </range-element>
-<range-element id="1.5.3 Herbes, lianes, plantes grimpantes" guid="c345f278-91ff-463d-b9a6-8abac8a267eb" parent="1.5 Végétaux">
+<range-element id="1.5.3 Herbes, plantes grimpantes" guid="c345f278-91ff-463d-b9a6-8abac8a267eb" parent="1.5 Végétaux">
 <label>
 <form lang="en"><text>Grass, herb, vine</text></form>
-<form lang="fr"><text>Herbes, lianes, plantes grimpantes</text></form>
+<form lang="fr"><text>Herbes, plantes grimpantes</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>1.5.3</text></form>
@@ -1735,10 +2008,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au cycle de la vie d’un animal.</text></form>
 </description>
 </range-element>
-<range-element id="1.6.3.1 Oeuf" guid="b6a40216-fe93-4b0f-b85b-5622327031d0" parent="1.6.3 Cycle de la vie animale">
+<range-element id="1.6.3.1 oeuf" guid="b6a40216-fe93-4b0f-b85b-5622327031d0" parent="1.6.3 Cycle de la vie animale">
 <label>
 <form lang="en"><text>Egg</text></form>
-<form lang="fr"><text>Oeuf</text></form>
+<form lang="fr"><text>oeuf</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>1.6.3.1</text></form>
@@ -1835,7 +2108,8 @@
 <form lang="en"><text>1.6.7</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain for words referring to male and female animals. Most languages have special words for the male and female of a species only for domesticated animals. Sometimes there will be a word for the male and not the female, and vice versa (male dog, bitch). Sometimes the word for one is also used generically (cow for both female and generic).</text></form>
+<form lang="en"><text>Use this domain for words referring to male and female animals. Most languages have special words for the male and female of a species only for domesticated animals. Sometimes there will be a word for the male and not the female, and vice versa (male dog, bitch). Sometimes the word for one is also used generically
+(cow for both female and generic).</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui désigne les animaux mâles et femelles. La plupart des langues ont des mots spécifiques pour désigner le mâle et la femelle d’une espèce uniquement pour les animaux domestiques. Il existera parfois un mot pour désigner le mâle, mais il n’y en aura pas pour la femelle, et vice versa (un castor, une girafe). D’autres fois, le mot qui désigne l’un des deux genres se trouve également être le nom qui désigne l’animal en général (un chat, un mouton à la fois pour le nom du mâle et le nom générique).</text></form>
 </description>
 </range-element>
@@ -1865,10 +2139,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical les mots ou expressions qui décrivent une chose naturelle : quelque chose appartenant au monde qui nous entoure, par opposition à quelque chose qui a été créé ou modifié par l’homme.</text></form>
 </description>
 </range-element>
-<range-element id="2 La personne" guid="ba06de9e-63e1-43e6-ae94-77bea498379a">
+<range-element id="2 La Personne" guid="ba06de9e-63e1-43e6-ae94-77bea498379a">
 <label>
 <form lang="en"><text>Person</text></form>
-<form lang="fr"><text>La personne</text></form>
+<form lang="fr"><text>La Personne</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>2</text></form>
@@ -1878,7 +2152,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes génériques désignant une personne ou l’humanité.</text></form>
 </description>
 </range-element>
-<range-element id="2.1 Le corps" guid="1b0270a5-babf-4151-99f5-279ba5a4b044" parent="2 La personne">
+<range-element id="2.1 Le corps" guid="1b0270a5-babf-4151-99f5-279ba5a4b044" parent="2 La Personne">
 <label>
 <form lang="en"><text>Body</text></form>
 <form lang="fr"><text>Le corps</text></form>
@@ -2151,7 +2425,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé aux organes de reproduction féminins et au cycle menstruel de la femme. Certains de ces termes peuvent être tabous. Choisir soigneusement des mots ou expressions pouvant figurer dans le dictionnaire. Demander à un groupe de femmes de décider quels sont les termes « décents » qui peuvent être mis dans le dictionnaire, et ceux qui sont tabous, trop explicites ou embarrassants. Par exemple, dans certaines sociétés, les gens craignent que l’on abuse des femmes du fait que ces termes soient connus.</text></form>
 </description>
 </range-element>
-<range-element id="2.2 Fonctions du corps" guid="7fe69c4c-2603-4949-afca-f39c010ad24e" parent="2 La personne">
+<range-element id="2.2 Fonctions du corps" guid="7fe69c4c-2603-4949-afca-f39c010ad24e" parent="2 La Personne">
 <label>
 <form lang="en"><text>Body functions</text></form>
 <form lang="fr"><text>Fonctions du corps</text></form>
@@ -2268,7 +2542,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à la défécation.</text></form>
 </description>
 </range-element>
-<range-element id="2.3 Sentir, percevoir" guid="38bbb33a-90bf-4a2c-a0e5-4bde7e134bd9" parent="2 La personne">
+<range-element id="2.3 Sentir, percevoir" guid="38bbb33a-90bf-4a2c-a0e5-4bde7e134bd9" parent="2 La Personne">
 <label>
 <form lang="en"><text>Sense, perceive</text></form>
 <form lang="fr"><text>Sentir, percevoir</text></form>
@@ -2408,7 +2682,7 @@
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to how something appears.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à l’aspect extérieur d’une chose.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à l’aspect exnérieur d’une chose.</text></form>
 </description>
 </range-element>
 <range-element id="2.3.1.8.1 Beau" guid="e4517880-aa2d-4977-b55a-dcb0b6d1f533" parent="2.3.1.8 Apparence">
@@ -2502,10 +2776,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire faisant référence aux différents types de sons.</text></form>
 </description>
 </range-element>
-<range-element id="2.3.2.4 Fort (son)" guid="6804db44-b71b-4452-98b1-b726bc7cf022" parent="2.3.2 Ouïe">
+<range-element id="2.3.2.4 Fort" guid="6804db44-b71b-4452-98b1-b726bc7cf022" parent="2.3.2 Ouïe">
 <label>
 <form lang="en"><text>Loud</text></form>
-<form lang="fr"><text>Fort (son)</text></form>
+<form lang="fr"><text>Fort</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>2.3.2.4</text></form>
@@ -2580,7 +2854,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à la sensation de confort : se sentir bien dans son corps car il n’y a rien alentour qui soit cause de désagrément. Ceci inclut des éléments tels que vêtements, chaise, lit, température ou voyage.</text></form>
 </description>
 </range-element>
-<range-element id="2.4 Condition physique" guid="f7706644-542f-4fcb-b8e1-e91d04c8032a" parent="2 La personne">
+<range-element id="2.4 Condition physique" guid="f7706644-542f-4fcb-b8e1-e91d04c8032a" parent="2 La Personne">
 <label>
 <form lang="en"><text>Body condition</text></form>
 <form lang="fr"><text>Condition physique</text></form>
@@ -2593,10 +2867,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes génériques en rapport avec la condition physique.</text></form>
 </description>
 </range-element>
-<range-element id="2.4.1 Fort, qui a de la force" guid="e949f393-2a5b-4792-af8f-75138322ceee" parent="2.4 Condition physique">
+<range-element id="2.4.1 Fort" guid="e949f393-2a5b-4792-af8f-75138322ceee" parent="2.4 Condition physique">
 <label>
 <form lang="en"><text>Strong</text></form>
-<form lang="fr"><text>Fort, qui a de la force</text></form>
+<form lang="fr"><text>Fort</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>2.4.1</text></form>
@@ -2658,7 +2932,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de se reposer.</text></form>
 </description>
 </range-element>
-<range-element id="2.5 En bonne santé" guid="32bebe7e-bdcc-4e40-8f0a-894cd6b26f25" parent="2 La personne">
+<range-element id="2.5 En bonne santé" guid="32bebe7e-bdcc-4e40-8f0a-894cd6b26f25" parent="2 La Personne">
 <label>
 <form lang="en"><text>Healthy</text></form>
 <form lang="fr"><text>En bonne santé</text></form>
@@ -3074,7 +3348,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé aux maladies ou handicaps mentaux.</text></form>
 </description>
 </range-element>
-<range-element id="2.6 La vie" guid="50db27b5-89eb-4ffb-af82-566f51c8ec0b" parent="2 La personne">
+<range-element id="2.6 La vie" guid="50db27b5-89eb-4ffb-af82-566f51c8ec0b" parent="2 La Personne">
 <label>
 <form lang="en"><text>Life</text></form>
 <form lang="fr"><text>La vie</text></form>
@@ -3646,10 +3920,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical les mots ou expressions en rapport avec la vie après la mort.</text></form>
 </description>
 </range-element>
-<range-element id="3 Le langage et la pensée" guid="f4491f9b-3c5e-42ab-afc0-f22e19d0fff5">
+<range-element id="3 Le Langage et la pensée" guid="f4491f9b-3c5e-42ab-afc0-f22e19d0fff5">
 <label>
 <form lang="en"><text>Language and thought</text></form>
-<form lang="fr"><text>Le langage et la pensée</text></form>
+<form lang="fr"><text>Le Langage et la pensée</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>3</text></form>
@@ -3659,7 +3933,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes génériques qui font référence à l’activité mentale et langagière. Ce champ sert essentiellement à regrouper différents champs voisins. Il se peut donc que dans certaines langues, il n’y ait aucun terme générique couvrant une telle variété de sens.</text></form>
 </description>
 </range-element>
-<range-element id="3.1 Âme, esprit" guid="1cb79293-d4f7-4990-9f50-3bb595744f61" parent="3 Le langage et la pensée">
+<range-element id="3.1 Âme, esprit" guid="1cb79293-d4f7-4990-9f50-3bb595744f61" parent="3 Le Langage et la pensée">
 <label>
 <form lang="en"><text>Soul, spirit</text></form>
 <form lang="fr"><text>Âme, esprit</text></form>
@@ -3750,7 +4024,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait d’ignorer quelqu’un, de ne pas le regarder, de ne pas l’écouter ou de ne pas lui parler parce qu’on ne le trouve pas important ou qu’on ne l’aime pas.</text></form>
 </description>
 </range-element>
-<range-element id="3.2 Penser" guid="df9ee372-e92e-4f73-aac5-d36908497698" parent="3 Le langage et la pensée">
+<range-element id="3.2 Penser" guid="df9ee372-e92e-4f73-aac5-d36908497698" parent="3 Le Langage et la pensée">
 <label>
 <form lang="en"><text>Think</text></form>
 <form lang="fr"><text>Penser</text></form>
@@ -4361,7 +4635,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui indique que le locuteur pense que quelque chose tend à être ceci ou cela.</text></form>
 </description>
 </range-element>
-<range-element id="3.3 Volonté" guid="b50f39cb-3152-4d56-9ddc-4b98f763e76a" parent="3 Le langage et la pensée">
+<range-element id="3.3 Volonté" guid="b50f39cb-3152-4d56-9ddc-4b98f763e76a" parent="3 Le Langage et la pensée">
 <label>
 <form lang="en"><text>Want</text></form>
 <form lang="fr"><text>Volonté</text></form>
@@ -4790,7 +5064,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui fait référence au fait de refuser une offre.</text></form>
 </description>
 </range-element>
-<range-element id="3.4 Émotion" guid="cb95189c-8c74-465b-af07-48e08dbf7c39" parent="3 Le langage et la pensée">
+<range-element id="3.4 Émotion" guid="cb95189c-8c74-465b-af07-48e08dbf7c39" parent="3 Le Langage et la pensée">
 <label>
 <form lang="en"><text>Emotion</text></form>
 <form lang="fr"><text>Émotion</text></form>
@@ -5362,7 +5636,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire en lien avec le fait d’avoir l’esprit confus, d’être inquiet et de ne pas vraiment savoir ce que quelque chose signifie ou ce qu’il faut faire.</text></form>
 </description>
 </range-element>
-<range-element id="3.5 Communication" guid="c9aee4df-ac3e-4159-bd1a-060db1a5f070" parent="3 Le langage et la pensée">
+<range-element id="3.5 Communication" guid="c9aee4df-ac3e-4159-bd1a-060db1a5f070" parent="3 Le Langage et la pensée">
 <label>
 <form lang="en"><text>Communication</text></form>
 <form lang="fr"><text>Communication</text></form>
@@ -6597,7 +6871,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé aux moyens de communication.</text></form>
 </description>
 </range-element>
-<range-element id="3.6 Enseignement" guid="6137239a-b469-46be-b7cb-b9ac22fcc195" parent="3 Le langage et la pensée">
+<range-element id="3.6 Enseignement" guid="6137239a-b469-46be-b7cb-b9ac22fcc195" parent="3 Le Langage et la pensée">
 <label>
 <form lang="en"><text>Teach</text></form>
 <form lang="fr"><text>Enseignement</text></form>
@@ -7247,10 +7521,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé aux différentes races humaines : les grandes catégories mondiales de personnes dont la couleur de peau et le physique diffèrent.</text></form>
 </description>
 </range-element>
-<range-element id="4.2 Activités sociales" guid="57225f57-ba51-45d7-b6d2-b22052877ea4" parent="4 Les relations sociales">
+<range-element id="4.2 activités sociales" guid="57225f57-ba51-45d7-b6d2-b22052877ea4" parent="4 Les relations sociales">
 <label>
 <form lang="en"><text>Social activity</text></form>
-<form lang="fr"><text>Activités sociales</text></form>
+<form lang="fr"><text>activités sociales</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>4.2</text></form>
@@ -7260,7 +7534,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé aux activités sociales.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.1 Se réunir, former un groupe" guid="935da513-126e-4cab-8e07-625458821181" parent="4.2 Activités sociales">
+<range-element id="4.2.1 Se réunir, former un groupe" guid="935da513-126e-4cab-8e07-625458821181" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Come together, form a group</text></form>
 <form lang="fr"><text>Se réunir, former un groupe</text></form>
@@ -7442,10 +7716,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de faire partie d’une organisation.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.1.9 Groupe social" guid="f81b7632-3e5a-4a2d-8a93-648872a6616b" parent="4.2.1 Se réunir, former un groupe">
+<range-element id="4.2.1.9 Goupe social" guid="f81b7632-3e5a-4a2d-8a93-648872a6616b" parent="4.2.1 Se réunir, former un groupe">
 <label>
 <form lang="en"><text>Social group</text></form>
-<form lang="fr"><text>Groupe social</text></form>
+<form lang="fr"><text>Goupe social</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>4.2.1.9</text></form>
@@ -7455,7 +7729,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à une organisation.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.2 Rencontres sociales" guid="c4b110cf-d968-4bc6-ac0c-7e70cbad2756" parent="4.2 Activités sociales">
+<range-element id="4.2.2 Rencontres sociales" guid="c4b110cf-d968-4bc6-ac0c-7e70cbad2756" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Social event</text></form>
 <form lang="fr"><text>Rencontres sociales</text></form>
@@ -7507,7 +7781,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de célébrer quelque chose.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.3 Musique" guid="5446b5cf-f05a-4bb2-89eb-ce63e27040f3" parent="4.2 Activités sociales">
+<range-element id="4.2.3 Musique" guid="5446b5cf-f05a-4bb2-89eb-ce63e27040f3" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Music</text></form>
 <form lang="fr"><text>Musique</text></form>
@@ -7585,7 +7859,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à des instruments de musique et à ceux qui jouent d’un instrument particulier.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.4 Danse" guid="4b3a9b5a-df7d-4ec2-9576-2c07fe396021" parent="4.2 Activités sociales">
+<range-element id="4.2.4 Danse" guid="4b3a9b5a-df7d-4ec2-9576-2c07fe396021" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Dance</text></form>
 <form lang="fr"><text>Danse</text></form>
@@ -7598,7 +7872,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à la danse.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.5 Théâtre" guid="e27adda9-0761-4b7f-abbf-24938ce1c01a" parent="4.2 Activités sociales">
+<range-element id="4.2.5 Théâtre" guid="e27adda9-0761-4b7f-abbf-24938ce1c01a" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Drama</text></form>
 <form lang="fr"><text>Théâtre</text></form>
@@ -7611,7 +7885,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au théâtre.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.6 Divertissement, récréation" guid="6745c89d-1fcd-44b8-be4b-9fd9d62f64e7" parent="4.2 Activités sociales">
+<range-element id="4.2.6 Divertissement, récréation" guid="6745c89d-1fcd-44b8-be4b-9fd9d62f64e7" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Entertainment, recreation</text></form>
 <form lang="fr"><text>Divertissement, récréation</text></form>
@@ -7728,7 +8002,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de parier.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.7 Jeu, amusement" guid="a3d95c6a-4b0b-4af0-aca8-addd042becd2" parent="4.2 Activités sociales">
+<range-element id="4.2.7 Jeu, amusement" guid="a3d95c6a-4b0b-4af0-aca8-addd042becd2" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Play, fun</text></form>
 <form lang="fr"><text>Jeu, amusement</text></form>
@@ -7741,7 +8015,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de s’amuser.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.8 Humour" guid="c27b87cf-1211-4df2-96b1-12c416edabbe" parent="4.2 Activités sociales">
+<range-element id="4.2.8 Humour" guid="c27b87cf-1211-4df2-96b1-12c416edabbe" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Humor</text></form>
 <form lang="fr"><text>Humour</text></form>
@@ -7767,7 +8041,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait d’être sérieux, de ne pas rire ou plaisanter.</text></form>
 </description>
 </range-element>
-<range-element id="4.2.9 Vacances" guid="4e791773-94c8-4667-93f8-92dc0100ddfe" parent="4.2 Activités sociales">
+<range-element id="4.2.9 Vacances" guid="4e791773-94c8-4667-93f8-92dc0100ddfe" parent="4.2 activités sociales">
 <label>
 <form lang="en"><text>Holiday</text></form>
 <form lang="fr"><text>Vacances</text></form>
@@ -10051,7 +10325,8 @@
 <form lang="en"><text>4.8.2</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain for words referring to fighting someone. The words in this domain describe a situation in which two people or groups of people fight each other over something or in order to reach some goal. A fight can use words, various kinds of weapons, or other actions. For fights that only use words use the domain 'Quarrel'.</text></form>
+<form lang="en"><text>Use this domain for words referring to fighting someone. The words in this domain describe a situation in which two people or groups of people fight each other over something or in order to reach some goal. A fight can use words, various kinds of weapons, or other actions. For fights that only use words use the domain
+'Quarrel'.</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de combattre quelqu’un. Les mots de ce champ lexical décrivent une situation dans laquelle deux personnes ou groupes de personnes se combattent pour obtenir quelque chose ou pour atteindre un but. Dans un combat on emploie des mots ou diverses sortes d’armes ou bien l’on agit. Si on utilise seulement des mots, on les classera dans le champ « querelle ».</text></form>
 </description>
 </range-element>
@@ -10341,10 +10616,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à un espion.</text></form>
 </description>
 </range-element>
-<range-element id="4.8.3.6.6 Fort, forteresse" guid="98830eda-3997-4f4a-9ba4-664df669e7e2" parent="4.8.3.6 Instances militaires">
+<range-element id="4.8.3.6.6 Fort" guid="98830eda-3997-4f4a-9ba4-664df669e7e2" parent="4.8.3.6 Instances militaires">
 <label>
 <form lang="en"><text>Fort</text></form>
-<form lang="fr"><text>Fort, forteresse</text></form>
+<form lang="fr"><text>Fort</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>4.8.3.6.6</text></form>
@@ -10393,10 +10668,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à la paix : période où des personnes ou bien des pays ne sont pas en conflit.</text></form>
 </description>
 </range-element>
-<range-element id="4.8.4.1 Réprimander" guid="6eafbb5a-26ba-44b5-a0d5-21b9e7750ece" parent="4.8.4 Paix">
+<range-element id="4.8.4.1 réprimander" guid="6eafbb5a-26ba-44b5-a0d5-21b9e7750ece" parent="4.8.4 Paix">
 <label>
 <form lang="en"><text>Rebuke</text></form>
-<form lang="fr"><text>Réprimander</text></form>
+<form lang="fr"><text>réprimander</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>4.8.4.1</text></form>
@@ -10967,7 +11242,7 @@
 </range-element>
 <range-element id="4.9.7.7 Animisme" guid="f6134be5-3f96-4750-a03e-fca381a42db1" parent="4.9.7 Organisation religieuse">
 <label>
-<form lang="en"><text>Animism</text></form>
+<form lang="en"><text>Animism </text></form>
 <form lang="fr"><text>Animisme</text></form>
 </label>
 <abbrev>
@@ -11615,10 +11890,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical les mots ou expressions se rapportant à l’huile de cuisine.</text></form>
 </description>
 </range-element>
-<range-element id="5.2.3.4 Plat (nourriture)" guid="effc49dd-6322-4302-899c-4cf540f0e2e4" parent="5.2.3 Types de nourriture et de boisson">
+<range-element id="5.2.3.4 Plat" guid="effc49dd-6322-4302-899c-4cf540f0e2e4" parent="5.2.3 Types de nourriture et de boisson">
 <label>
 <form lang="en"><text>Prepared food</text></form>
-<form lang="fr"><text>Plat (nourriture)</text></form>
+<form lang="fr"><text>Plat</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>5.2.3.4</text></form>
@@ -11845,7 +12120,8 @@
 <form lang="en"><text>5.3.8</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain for words related to being naked--not wearing any clothes, and for words referring to how a person feels about being naked. It is a part of universal human experience that people do not want to be naked. So there are words that refer to feeling bad if one does not have enough clothes on (shame). Other words refer to wanting to have enough clothes (modest). Other words refer to how people feel about other people who do not wear enough clothes (indecent).</text></form>
+<form lang="en"><text>Use this domain for words related to being naked--not wearing any clothes, and for words referring to how a person feels about being naked. It is a part of universal human experience that people do not want to be naked. So there are words that refer to feeling bad if one does not have enough clothes on (shame). Other words refer to wanting to have enough clothes (modest). Other words refer to how people feel about other people who do not wear enough clothes
+(indecent).</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical les mots ou expressions désignant la nudité (fait de ne porter aucun vêtement) et le sentiment qu’une personne peut avoir en étant nue. Il peut arriver, dans l’espèce humaine tout entière, que certaines personnes ne veuillent pas être nues. Il existe donc certains mots décrivant le malaise ressenti de ne pas avoir assez de vêtements sur soi (honte). D’autres mots décriront la volonté d’avoir assez de vêtements (pudeur). D’autres mots, encore, décriront ce que certaines personnes ressentent lorsque d’autres personnes ne portent pas assez de vêtements (indécence).</text></form>
 </description>
 </range-element>
@@ -12330,10 +12606,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de vivre quelque part.</text></form>
 </description>
 </range-element>
-<range-element id="6 Le travail et diverses activités" guid="c82fa28f-7e26-489e-a244-4d69cea87b94">
+<range-element id="6 Le Travail et diverses activités" guid="c82fa28f-7e26-489e-a244-4d69cea87b94">
 <label>
 <form lang="en"><text>Work and occupation</text></form>
-<form lang="fr"><text>Le travail et diverses activités</text></form>
+<form lang="fr"><text>Le Travail et diverses activités</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>6</text></form>
@@ -12343,7 +12619,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes génériques associés au travail.</text></form>
 </description>
 </range-element>
-<range-element id="6.1 Travail" guid="d68911f6-6507-483a-b015-44726fdf868a" parent="6 Le travail et diverses activités">
+<range-element id="6.1 Travail" guid="d68911f6-6507-483a-b015-44726fdf868a" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Work</text></form>
 <form lang="fr"><text>Travail</text></form>
@@ -12720,28 +12996,28 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes associés au fait d’être efficace.</text></form>
 </description>
 </range-element>
-<range-element id="6.1.2.8 Efficient" guid="6dd16e6e-fbdb-4df1-9730-4877651e68f3" parent="6.1.2 Façon de faire">
+<range-element id="6.1.2.8 Occasion" guid="6dd16e6e-fbdb-4df1-9730-4877651e68f3" parent="6.1.2 Façon de faire">
 <label>
 <form lang="en"><text>Efficient</text></form>
+<form lang="fr"><text>Occasion</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>6.1.2.8</text></form>
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to being efficient.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical les termes associés à l’occasion de faire quelque chose.</text></form>
 </description>
 </range-element>
-<range-element id="6.1.2.9 Occasion" guid="a7568031-43e3-4cf9-b162-ac2fe74125f1" parent="6.1.2 Façon de faire">
+<range-element id="6.1.2.9 Opportunity" guid="a7568031-43e3-4cf9-b162-ac2fe74125f1" parent="6.1.2 Façon de faire">
 <label>
 <form lang="en"><text>Opportunity</text></form>
-<form lang="fr"><text>Occasion</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>6.1.2.9</text></form>
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to an opportunity to do something.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical les termes associés à l’occasion de faire quelque chose.</text></form>
 </description>
 </range-element>
 <range-element id="6.1.3 Difficile, impossible" guid="31ccb9e3-d434-4430-ac84-486cc5a1c53d" parent="6.1 Travail">
@@ -12887,7 +13163,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes signifiant être habitué à quelque chose.</text></form>
 </description>
 </range-element>
-<range-element id="6.2 Agriculture" guid="5bb29704-fe0f-4594-9622-ce0aa42b93c8" parent="6 Le travail et diverses activités">
+<range-element id="6.2 Agriculture" guid="5bb29704-fe0f-4594-9622-ce0aa42b93c8" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Agriculture</text></form>
 <form lang="fr"><text>Agriculture</text></form>
@@ -13368,43 +13644,43 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes associés à la récolte.</text></form>
 </description>
 </range-element>
-<range-element id="6.2.6.1 Vanner" guid="8fb9a1a6-844d-45a5-86c7-977d3e420149" parent="6.2.6 Utiliser la récolte">
+<range-element id="6.2.6.1 Battre la récolte" guid="8fb9a1a6-844d-45a5-86c7-977d3e420149" parent="6.2.6 Utiliser la récolte">
 <label>
 <form lang="en"><text>Winnow grain</text></form>
-<form lang="fr"><text>Vanner</text></form>
+<form lang="fr"><text>Battre la récolte</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>6.2.6.1</text></form>
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to winnowing grain--to separate the chaff from the grain.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical les termes associés à l’action de vanner le grain : séparer la balle du grain.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical les termes associés au fait de battre du grain.</text></form>
 </description>
 </range-element>
-<range-element id="6.2.6.2 Moudre" guid="69d0a37d-f5b3-48a5-9486-5654d37b030b" parent="6.2.6 Utiliser la récolte">
+<range-element id="6.2.6.2 Vanner" guid="69d0a37d-f5b3-48a5-9486-5654d37b030b" parent="6.2.6 Utiliser la récolte">
 <label>
 <form lang="en"><text>Mill grain</text></form>
-<form lang="fr"><text>Moudre</text></form>
+<form lang="fr"><text>Vanner</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>6.2.6.2</text></form>
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to milling grain.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical les termes associés au fait de moudre le grain.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical les termes associés à l’action de vanner le grain : séparer la balle du grain.</text></form>
 </description>
 </range-element>
-<range-element id="6.2.6.3 Battre la récolte" guid="47ed6c39-b728-4ae7-be7c-c45c714c3153" parent="6.2.6 Utiliser la récolte">
+<range-element id="6.2.6.3 Moudre" guid="47ed6c39-b728-4ae7-be7c-c45c714c3153" parent="6.2.6 Utiliser la récolte">
 <label>
 <form lang="en"><text>Thresh</text></form>
-<form lang="fr"><text>Battre la récolte</text></form>
+<form lang="fr"><text>Moudre</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>6.2.6.3</text></form>
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to threshing grain.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical les termes associés au fait de battre du grain.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical les termes associés au fait de moudre le grain.</text></form>
 </description>
 </range-element>
 <range-element id="6.2.6.4 Conserver la récolte" guid="ceedce41-cdef-4766-9c5e-8ff5608c5464" parent="6.2.6 Utiliser la récolte">
@@ -13459,7 +13735,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes associés aux terres agricoles.</text></form>
 </description>
 </range-element>
-<range-element id="6.3 Ẻlevage" guid="79b580ff-64a7-445b-abcb-b49b9093779c" parent="6 Le travail et diverses activités">
+<range-element id="6.3 Ẻlevage" guid="79b580ff-64a7-445b-abcb-b49b9093779c" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Animal husbandry</text></form>
 <form lang="fr"><text>Ẻlevage</text></form>
@@ -13706,7 +13982,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes associés à la castration d’un animal. Il existe parfois des termes spécifiques pour désigner les animaux castrés, tels que « bœuf », pour désigner un bovin castré avant l'âge adulte.</text></form>
 </description>
 </range-element>
-<range-element id="6.4 Chasse et pêche" guid="9e6d7c69-788c-4d40-8584-32f185e91932" parent="6 Le travail et diverses activités">
+<range-element id="6.4 Chasse et pêche" guid="9e6d7c69-788c-4d40-8584-32f185e91932" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Hunt and fish</text></form>
 <form lang="fr"><text>Chasse et pêche</text></form>
@@ -13849,7 +14125,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes associés à ce que l'on peut faire aux animaux.</text></form>
 </description>
 </range-element>
-<range-element id="6.5 Bâtiment et travaux publics" guid="cde96694-79e5-44af-8d38-d988d1938e5f" parent="6 Le travail et diverses activités">
+<range-element id="6.5 Bâtiment et travaux publics" guid="cde96694-79e5-44af-8d38-d988d1938e5f" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Working with buildings</text></form>
 <form lang="fr"><text>Bâtiment et travaux publics</text></form>
@@ -14122,7 +14398,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes associés à la délimitation d’une zone.</text></form>
 </description>
 </range-element>
-<range-element id="6.6 Diverses activités" guid="9bab95c4-9773-4894-9cb9-d7ad39378b45" parent="6 Le travail et diverses activités">
+<range-element id="6.6 Diverses activités" guid="9bab95c4-9773-4894-9cb9-d7ad39378b45" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Occupation</text></form>
 <form lang="fr"><text>Diverses activités</text></form>
@@ -14616,7 +14892,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes associés au travail se rapportant à l’électricité.</text></form>
 </description>
 </range-element>
-<range-element id="6.7 Outil" guid="6342c8bf-55b5-400f-af7e-63055fe6813b" parent="6 Le travail et diverses activités">
+<range-element id="6.7 Outil" guid="6342c8bf-55b5-400f-af7e-63055fe6813b" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Tool</text></form>
 <form lang="fr"><text>Outil</text></form>
@@ -14798,7 +15074,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé aux machines.</text></form>
 </description>
 </range-element>
-<range-element id="6.8 Finance" guid="2b893d04-3450-4862-b046-7df6f87272f6" parent="6 Le travail et diverses activités">
+<range-element id="6.8 Finance" guid="2b893d04-3450-4862-b046-7df6f87272f6" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Finance</text></form>
 <form lang="fr"><text>Finance</text></form>
@@ -15357,10 +15633,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé aux impôts.</text></form>
 </description>
 </range-element>
-<range-element id="6.8.9 Pratique financière malhonnête" guid="63b18261-faf3-4ab2-bcb4-7c3ac4d6d6ba" parent="6.8 Finance">
+<range-element id="6.8.9 pratique financière malhonnête" guid="63b18261-faf3-4ab2-bcb4-7c3ac4d6d6ba" parent="6.8 Finance">
 <label>
 <form lang="en"><text>Dishonest financial practices</text></form>
-<form lang="fr"><text>Pratique financière malhonnête</text></form>
+<form lang="fr"><text>pratique financière malhonnête</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>6.8.9</text></form>
@@ -15370,7 +15646,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à des pratiques financières malhonnêtes.</text></form>
 </description>
 </range-element>
-<range-element id="6.8.9.1 Voler" guid="db2232d9-8b17-4920-936f-2b6249c6f7fa" parent="6.8.9 Pratique financière malhonnête">
+<range-element id="6.8.9.1 Voler" guid="db2232d9-8b17-4920-936f-2b6249c6f7fa" parent="6.8.9 pratique financière malhonnête">
 <label>
 <form lang="en"><text>Steal</text></form>
 <form lang="fr"><text>Voler</text></form>
@@ -15383,7 +15659,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de voler, de prendre ce qui appartient à quelqu’un d’autre.</text></form>
 </description>
 </range-element>
-<range-element id="6.8.9.2 Tromper" guid="d7ae7208-7869-46e3-90c1-676342c3d7af" parent="6.8.9 Pratique financière malhonnête">
+<range-element id="6.8.9.2 Tromper" guid="d7ae7208-7869-46e3-90c1-676342c3d7af" parent="6.8.9 pratique financière malhonnête">
 <label>
 <form lang="en"><text>Cheat</text></form>
 <form lang="fr"><text>Tromper</text></form>
@@ -15396,7 +15672,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de tromper quelqu’un.</text></form>
 </description>
 </range-element>
-<range-element id="6.8.9.3 Extorquer de l’argent" guid="a8ae0ee7-56ca-4bdf-bd9a-c56da3ff9254" parent="6.8.9 Pratique financière malhonnête">
+<range-element id="6.8.9.3 Extorquer de l’argent" guid="a8ae0ee7-56ca-4bdf-bd9a-c56da3ff9254" parent="6.8.9 pratique financière malhonnête">
 <label>
 <form lang="en"><text>Extort money</text></form>
 <form lang="fr"><text>Extorquer de l’argent</text></form>
@@ -15409,7 +15685,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à l’extorsion d’argent : forcer quelqu’un à donner régulièrement de l’argent en le menaçant de lui faire du mal.</text></form>
 </description>
 </range-element>
-<range-element id="6.8.9.4 Prendre de force" guid="b4fc91fe-68f7-45a6-8863-75bba1029bef" parent="6.8.9 Pratique financière malhonnête">
+<range-element id="6.8.9.4 Prendre de force" guid="b4fc91fe-68f7-45a6-8863-75bba1029bef" parent="6.8.9 pratique financière malhonnête">
 <label>
 <form lang="en"><text>Take by force</text></form>
 <form lang="fr"><text>Prendre de force</text></form>
@@ -15422,7 +15698,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de prendre quelque chose de force.</text></form>
 </description>
 </range-element>
-<range-element id="6.8.9.5 Corrompre" guid="892b66f4-5dfd-4451-a491-4c4fd2179081" parent="6.8.9 Pratique financière malhonnête">
+<range-element id="6.8.9.5 Corrompre" guid="892b66f4-5dfd-4451-a491-4c4fd2179081" parent="6.8.9 pratique financière malhonnête">
 <label>
 <form lang="en"><text>Bribe</text></form>
 <form lang="fr"><text>Corrompre</text></form>
@@ -15435,7 +15711,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé au fait de donner de l’argent pour corrompre quelqu’un.</text></form>
 </description>
 </range-element>
-<range-element id="6.8.9.6 Faire de la contrebande" guid="a36b3354-8598-4228-b779-c7c922b1e61d" parent="6.8.9 Pratique financière malhonnête">
+<range-element id="6.8.9.6 Faire de la contrebande" guid="a36b3354-8598-4228-b779-c7c922b1e61d" parent="6.8.9 pratique financière malhonnête">
 <label>
 <form lang="en"><text>Smuggle</text></form>
 <form lang="fr"><text>Faire de la contrebande</text></form>
@@ -15448,7 +15724,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à la contrebande : faire entrer secrètement dans un pays quelque chose qui est illégal ou sans payer les taxes.</text></form>
 </description>
 </range-element>
-<range-element id="6.9 Entreprise" guid="f726d9bb-ae80-4c01-bdef-b600cb27736e" parent="6 Le travail et diverses activités">
+<range-element id="6.9 Entreprise" guid="f726d9bb-ae80-4c01-bdef-b600cb27736e" parent="6 Le Travail et diverses activités">
 <label>
 <form lang="en"><text>Business organization</text></form>
 <form lang="fr"><text>Entreprise</text></form>
@@ -15704,7 +15980,8 @@
 <form lang="en"><text>7.2</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain for intransitive verbs of movement referring to moving your whole body to a different location. There are many components of meaning involved in verbs of movement. They can include a source location (from), a goal location (to), a path (along), manner (walk, run), speed (race, crawl), direction (forward, back, side, up, down, toward, away from), shape of the path (straight, curve, circle, angle), relationship to some object or objects (on, hang, against, between, across, through, into, out of, onto, off of, around), proximity (near, far), multiple movements (back and forth, return, bounce), inclusion with other objects or parts of objects (join, leave, collect, disperse, unite, separate), volition (go versus drift), intransitive versus transitive (move versus move something). Some verbs of movement do not involve moving from one place to another, but express bodily movement.</text></form>
+<form lang="en"><text>Use this domain for intransitive verbs of movement referring to moving your whole body to a different location. There are many components of meaning involved in verbs of movement. They can include a source location (from), a goal location (to), a path (along), manner (walk, run), speed (race, crawl), direction
+(forward, back, side, up, down, toward, away from), shape of the path (straight, curve, circle, angle), relationship to some object or objects (on, hang, against, between, across, through, into, out of, onto, off of, around), proximity (near, far), multiple movements (back and forth, return, bounce), inclusion with other objects or parts of objects (join, leave, collect, disperse, unite, separate), volition (go versus drift), intransitive versus transitive (move versus move something). Some verbs of movement do not involve moving from one place to another, but express bodily movement.</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical les verbes intransitifs de mouvement exprimant l’action de se déplacer d’un endroit vers un autre. Les verbes de mouvement comportent un grand nombre de traits sémantiques : le lieu de départ (d’où), la destination (vers), un chemin (le long), la manière (faire la course, ramper), la vitesse (marcher, courir), la direction (en avant, derrière, sur le côté, en haut, en bas, en direction de, loin de), la forme du chemin (droit, en lacet, en rond, angle), la relation à un ou des objets (sur, accrocher, contre, entre, en face, à travers, dans, hors de, sur, de, autour de), la proximité (près de, loin de), des mouvements multiples (aller-retour, revenir ou retourner, rebondir), la relation à d’autres objets ou parties d’objets (assembler, laisser, collectionner, disperser, unir, séparer), la volonté (aller par opposition à dériver), les verbes intransitifs par opposition aux verbes transitifs (bouger par opposition à bouger quelque chose).Certains verbes de mouvement ne comportent pas la notion de déplacement d’un endroit à un autre, mais expriment un mouvement du corps.</text></form>
 </description>
 </range-element>
@@ -17746,7 +18023,7 @@
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to making a hole or opening in something.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à l’action de percer quelque chose ou de faire un trou ou une ouverture dans quelque chose.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à l’action de faire un trou ou une ouverture dans quelque chose.</text></form>
 </description>
 </range-element>
 <range-element id="7.8.6 Creuser" guid="c5b8c936-1e01-4e86-9145-a2b721ec9e39" parent="7.8 Diviser en morceaux">
@@ -19240,7 +19517,8 @@
 <form lang="en"><text>8.3.3.2.1</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain for words related to a shadow--the area on the ground where the light does not shine because something is in the way. For instance if the sun (or another light) is shining on an object, the area behind the object is in shadow (dark).</text></form>
+<form lang="en"><text>Use this domain for words related to a shadow--the area on the ground where the light does not shine because something is in the way. For instance if the sun
+(or another light) is shining on an object, the area behind the object is in shadow (dark).</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire associé à l’ombre : partie du sol sur laquelle il n’y a pas de lumière car quelque chose empêche la lumière de l’atteindre. Par exemple, si le soleil (ou tout autre lumière) éclaire un objet, la partie derrière cet objet est dans l’ombre.</text></form>
 </description>
 </range-element>
@@ -19569,10 +19847,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui décrit quelque chose  d’étrange.</text></form>
 </description>
 </range-element>
-<range-element id="8.3.5.4 Schéma, modèle" guid="ac527685-f31d-42f3-81bd-97221a01c7ef" parent="8.3.5 Type, genre">
+<range-element id="8.3.5.4 schéma, modèle" guid="ac527685-f31d-42f3-81bd-97221a01c7ef" parent="8.3.5 Type, genre">
 <label>
 <form lang="en"><text>Pattern, model</text></form>
-<form lang="fr"><text>Schéma, modèle</text></form>
+<form lang="fr"><text>schéma, modèle</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>8.3.5.4</text></form>
@@ -21545,17 +21823,17 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire lié à la partie intérieure de quelque chose.</text></form>
 </description>
 </range-element>
-<range-element id="8.6.4.1 Partie extérieure" guid="e2806bed-b450-4469-900a-1afa7ded2224" parent="8.6.4 Partie intérieure">
+<range-element id="8.6.4.1 Partie exnérieure" guid="e2806bed-b450-4469-900a-1afa7ded2224" parent="8.6.4 Partie intérieure">
 <label>
 <form lang="en"><text>Outer part</text></form>
-<form lang="fr"><text>Partie extérieure</text></form>
+<form lang="fr"><text>Partie exnérieure</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>8.6.4.1</text></form>
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for words related to the outside or surface part of something.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical le vocabulaire lié à la partie extérieure ou à la surface de quelque chose.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical le vocabulaire lié à la partie exnérieure ou à la surface de quelque chose.</text></form>
 </description>
 </range-element>
 <range-element id="8.6.5 Milieu" guid="3005971d-de4d-401f-8400-b25de5e052ad" parent="8.6 Parties de choses">
@@ -21597,10 +21875,10 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire relatif à la fin de quelque chose.</text></form>
 </description>
 </range-element>
-<range-element id="9 La grammaire" guid="349f0278-7998-422a-9c3b-6053989cbb20">
+<range-element id="9 La Grammaire" guid="349f0278-7998-422a-9c3b-6053989cbb20">
 <label>
 <form lang="en"><text>Grammar</text></form>
-<form lang="fr"><text>La grammaire</text></form>
+<form lang="fr"><text>La Grammaire</text></form>
 </label>
 <abbrev>
 <form lang="en"><text>9</text></form>
@@ -21610,7 +21888,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les termes linguistiques techniques qui font référence aux termes et constructions grammaticales. La plupart des langues ont très peu de mots, voire aucun, dans ce champ lexical.</text></form>
 </description>
 </range-element>
-<range-element id="9.1 Termes génériques" guid="3a2c0773-6b3e-4f8b-909d-c8f84d66d4f4" parent="9 La grammaire">
+<range-element id="9.1 Termes génériques" guid="3a2c0773-6b3e-4f8b-909d-c8f84d66d4f4" parent="9 La Grammaire">
 <label>
 <form lang="en"><text>General words</text></form>
 <form lang="fr"><text>Termes génériques</text></form>
@@ -21671,7 +21949,8 @@
 <form lang="en"><text>9.1.1.3</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Many languages have several general words that are used to indicate a variety of relationships between two things. There are three such words in English: "have," "of," and the possessive suffix "-'s." The basic meaning of these words in English is 'to own', but they can mean many other things too. For instance they can mean that I am related to someone (I have a brother), something has a part (birds have wings), and many other ideas. There is also a set of pronouns in English that are like nouns ending in -'s (my/mine, your/yours, his, her/hers, its, our/ours, their/theirs, whose). Use this domain for these general words.</text></form>
+<form lang="en"><text>Many languages have several general words that are used to indicate a variety of relationships between two things. There are three such words in English:
+"have," "of," and the possessive suffix "-'s." The basic meaning of these words in English is 'to own', but they can mean many other things too. For instance they can mean that I am related to someone (I have a brother), something has a part (birds have wings), and many other ideas. There is also a set of pronouns in English that are like nouns ending in -'s (my/mine, your/yours, his, her/hers, its, our/ours, their/theirs, whose). Use this domain for these general words.</text></form>
 <form lang="fr"><text>De nombreuses langues utilisent plusieurs termes génériques pour indiquer une variété de relations entre deux choses. Il existe deux termes en anglais : "avoir" et "de". Le sens de base de ces termes en français est « posséder », mais ils peuvent également signifier de nombreuses autres choses. Par exemple, ils peuvent signifier que je suis lié à quelqu'un (j'ai un frère), que quelque chose comporte une partie (les oiseaux ont des ailes), et de nombreuses autres notions. Il existe aussi en français des pronoms ou adjectifs qui marquent la possession (mon ou le mien, ton ou le tien, votre ou le vôtre, son ou le sien, sa ou la sienne, notre ou le nôtre, leur ou le leur) et leurs féminins et pluriels respectifs. Utiliser ce champ lexical pour ces termes génériques.</text></form>
 </description>
 </range-element>
@@ -21857,7 +22136,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les adverbes génériques qui peuvent remplacer d’autres adverbes.</text></form>
 </description>
 </range-element>
-<range-element id="9.2 Parties du discours" guid="af0909a5-928a-4421-baaa-f33b14302714" parent="9 La grammaire">
+<range-element id="9.2 Parties du discours" guid="af0909a5-928a-4421-baaa-f33b14302714" parent="9 La Grammaire">
 <label>
 <form lang="en"><text>Part of speech</text></form>
 <form lang="fr"><text>Parties du discours</text></form>
@@ -22100,7 +22379,8 @@
 <form lang="en"><text>9.2.8</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain to list all idiophones. If there are many idiophones in your language, it is probably not worth the trouble to list them here. The Shoebox program (and other dictionary programs) can sort your dictionary by part of speech.</text></form>
+<form lang="en"><text>Use this domain to list all idiophones. If there are many idiophones in your language, it is probably not worth the trouble to list them here. The Shoebox program
+(and other dictionary programs) can sort your dictionary by part of speech.</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical tous les idéophones. S’il existe un grand nombre d’idéophones dans votre langue, il ne vaut peut-être pas la peine de les énumérer ici : le logiciel Shoebox peut trier votre dictionnaire par parties du discours.</text></form>
 </description>
 </range-element>
@@ -22156,7 +22436,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical tous les affixes de dérivation, c’est-à-dire ceux qui, ajoutés au radical, le transforment en un autre mot, appartenant souvent à une autre partie du discours. Les affixes de dérivation modifient en général le sens du radical de façon importante.</text></form>
 </description>
 </range-element>
-<range-element id="9.3 Très" guid="5422d4ba-8af4-4767-912e-43b60ef28eab" parent="9 La grammaire">
+<range-element id="9.3 Très" guid="5422d4ba-8af4-4767-912e-43b60ef28eab" parent="9 La Grammaire">
 <label>
 <form lang="en"><text>Very</text></form>
 <form lang="fr"><text>Très</text></form>
@@ -22286,7 +22566,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical les mots ou expressions qui modifient un qualificatif.</text></form>
 </description>
 </range-element>
-<range-element id="9.4 Constituants sémantiques verbaux" guid="61a28bdc-c05c-49d8-b47e-d54a9082156c" parent="9 La grammaire">
+<range-element id="9.4 Constituants sémantiques verbaux" guid="61a28bdc-c05c-49d8-b47e-d54a9082156c" parent="9 La Grammaire">
 <label>
 <form lang="en"><text>Semantic constituents related to verbs</text></form>
 <form lang="fr"><text>Constituants sémantiques verbaux</text></form>
@@ -22405,7 +22685,7 @@
 </range-element>
 <range-element id="9.4.2.3 Nécessité" guid="47feee3e-80e1-469a-911c-0c550b37a2f8" parent="9.4.2 Modalités concernant l’agent">
 <label>
-<form lang="en"><text>Necessary</text></form>
+<form lang="en"><text>Necessary </text></form>
 <form lang="fr"><text>Nécessité</text></form>
 </label>
 <abbrev>
@@ -22431,7 +22711,7 @@
 </range-element>
 <range-element id="9.4.3.1 Impératif" guid="965c6a0b-3034-4e2f-a00b-ed2eb3119a5d" parent="9.4.3 Mode">
 <label>
-<form lang="en"><text>Imperative</text></form>
+<form lang="en"><text>Imperative </text></form>
 <form lang="fr"><text>Impératif</text></form>
 </label>
 <abbrev>
@@ -22457,7 +22737,7 @@
 </range-element>
 <range-element id="9.4.3.3 Interrogation" guid="6fa33de6-00f4-44d5-b6b3-b3c4a4f671e5" parent="9.4.3 Mode">
 <label>
-<form lang="en"><text>Interrogative</text></form>
+<form lang="en"><text>Interrogative </text></form>
 <form lang="fr"><text>Interrogation</text></form>
 </label>
 <abbrev>
@@ -22509,7 +22789,7 @@
 </range-element>
 <range-element id="9.4.4.3 Probablement" guid="84eb31d3-b932-4b3b-b945-85884ea856c7" parent="9.4.4 Mode épistémique">
 <label>
-<form lang="en"><text>Probably</text></form>
+<form lang="en"><text>Probably </text></form>
 <form lang="fr"><text>Probablement</text></form>
 </label>
 <abbrev>
@@ -22741,7 +23021,7 @@
 <form lang="fr"><text>Classer dans cette partie les auxiliaires, affixes, adverbes ou particules qui indiquent une proposition adverbiale. Les définitions suivantes sont tirées de BYBEE (Joan), PERKINS (Revere) et PAGLIUCA (William), The evolution of grammar, Chicago et Londres, University of Chicago Press, 1994.</text></form>
 </description>
 </range-element>
-<range-element id="9.5 Rôle sémantique" guid="aab82dc7-de9f-44b3-845e-0c926f47cfb6" parent="9 La grammaire">
+<range-element id="9.5 Rôle sémantique" guid="aab82dc7-de9f-44b3-845e-0c926f47cfb6" parent="9 La Grammaire">
 <label>
 <form lang="en"><text>Case</text></form>
 <form lang="fr"><text>Rôle sémantique</text></form>
@@ -22750,7 +23030,8 @@
 <form lang="en"><text>9.5</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Each verb has a set of semantic case relations. For instance in the sentence 'I gave flowers to my wife' the verb give has three case relations. 'I' is the Agent, 'flowers' is the Patient, and 'my wife is the 'Recipient'. In this sentence the only word that marks a case relation is 'to'. English often marks case relations by their position in the sentence. Some languages mark case relations by affixes, prepositions, postpositions, and sometimes special verbs. To completely describe a language, each verb must be investigated, all its case relations must be identified, and all the ways in which these relations are marked must be described. Since verbs are often unique and unpredictable in their case relations, this information should go into the dictionary. This section should be used to classify the words and affixes that are used to mark case relations. This domain should be used for technical terms that refer to case.</text></form>
+<form lang="en"><text>Each verb has a set of semantic case relations. For instance in the sentence 'I gave flowers to my wife' the verb give has three case relations. 'I' is the Agent,
+'flowers' is the Patient, and 'my wife is the 'Recipient'. In this sentence the only word that marks a case relation is 'to'. English often marks case relations by their position in the sentence. Some languages mark case relations by affixes, prepositions, postpositions, and sometimes special verbs. To completely describe a language, each verb must be investigated, all its case relations must be identified, and all the ways in which these relations are marked must be described. Since verbs are often unique and unpredictable in their case relations, this information should go into the dictionary. This section should be used to classify the words and affixes that are used to mark case relations. This domain should be used for technical terms that refer to case.</text></form>
 <form lang="fr"><text>À chaque verbe correspond un ensemble de rôles sémantiques qui sont les fonctions remplies par les autres mots de la phrase. Par exemple, dans la phrase « Je donne des fleurs à ma femme », le verbe donner est associé à trois rôles sémantiques. « Je » est l'Agent, « des fleurs » est le Régime, et « ma femme » est le Destinataire. Dans cette phrase le seul mot qui indique un rôle sémantique est le mot « à ». Les rôles sémantiques sont souvent indiqués par la position des mots dans la phrase en français. Certaines langues indiquent les rôles sémantiques par des affixes, des prépositions, des postpositions, et parfois des verbes spéciaux. Pour décrire entièrement une langue, chaque verbe doit être étudié, tous ses rôles sémantiques doivent être identifiés, et toutes les manières de les indiquer doivent être décrites. Puisque les verbes sont souvent uniques et que leurs rôles sémantiques sont souvent imprévisibles, cette information doit entrer dans le dictionnaire. Cette section doit servir à classer les mots et les affixes qui sont utilisés pour indiquer les rôles sémantiques. Il faut classer dans ce champ lexical les termes techniques qui font référence à ce rôle sémantique.</text></form>
 </description>
 </range-element>
@@ -22997,7 +23278,8 @@
 <form lang="en"><text>9.5.3.1</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain for words that mark the beneficiary of the Patient of an activity. The Patient is often expressed as the object of a sentence. In the sentence "John built a house for his parents," the house is the Patient. It is the house that benefits the parents, not the building of the house.</text></form>
+<form lang="en"><text>Use this domain for words that mark the beneficiary of the Patient of an activity. The Patient is often expressed as the object of a sentence. In the sentence
+"John built a house for his parents," the house is the Patient. It is the house that benefits the parents, not the building of the house.</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui indique le bénéficiaire de l’objet d’une action. L’objet de l’action se trouve souvent dans le complément d’objet de la phrase. Dans la phrase, « Jean a bâti une maison pour ses parents », la maison est l’objet de l’action et les bénéficiaires de la maison sont les parents, non la construction de la maison.</text></form>
 </description>
 </range-element>
@@ -23027,9 +23309,9 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui indique un second objet qui accompagne le principal objet d’une action. Dans ce type de phrase, il y a en fait deux objets, mais l’un d’eux est plus important que l’autre. L’objet principal de l’action se trouve souvent dans le complément d’objet de la phrase tandis que le second objet est indiqué par un autre cas, une préposition ou une postposition. Il peut, par exemple, être conçu comme accompagnant le premier objet.</text></form>
 </description>
 </range-element>
-<range-element id="9.6 En relation avec" guid="7f7fc197-5064-43c0-af51-2919fb7355c9" parent="9 La grammaire">
+<range-element id="9.6 En relation avec" guid="7f7fc197-5064-43c0-af51-2919fb7355c9" parent="9 La Grammaire">
 <label>
-<form lang="en"><text>Connected with, related</text></form>
+<form lang="en"><text>Connected with, related </text></form>
 <form lang="fr"><text>En relation avec</text></form>
 </label>
 <abbrev>
@@ -23198,7 +23480,7 @@
 </range-element>
 <range-element id="9.6.2.1 Dérivation" guid="66dedb31-dd2a-4e94-825e-331590ac59a9" parent="9.6.2 Relations de dépendance">
 <label>
-<form lang="en"><text>Derivation</text></form>
+<form lang="en"><text>Derivation </text></form>
 <form lang="fr"><text>Dérivation</text></form>
 </label>
 <abbrev>
@@ -23315,7 +23597,7 @@
 </range-element>
 <range-element id="9.6.2.6.1 Sans résultat" guid="139409c3-7860-4586-897f-85ba3226046c" parent="9.6.2.6 Résultat">
 <label>
-<form lang="en"><text>Without result</text></form>
+<form lang="en"><text>Without result </text></form>
 <form lang="fr"><text>Sans résultat</text></form>
 </label>
 <abbrev>
@@ -23328,7 +23610,7 @@
 </range-element>
 <range-element id="9.6.2.7 But" guid="18bf6c79-6399-4977-be3d-93135302d8c4" parent="9.6.2 Relations de dépendance">
 <label>
-<form lang="en"><text>Purpose</text></form>
+<form lang="en"><text>Purpose </text></form>
 <form lang="fr"><text>But</text></form>
 </label>
 <abbrev>
@@ -23341,7 +23623,7 @@
 </range-element>
 <range-element id="9.6.2.7.1 Sans but" guid="4fdf3cf1-0808-4f11-acdd-9db71550baab" parent="9.6.2.7 But">
 <label>
-<form lang="en"><text>Without purpose</text></form>
+<form lang="en"><text>Without purpose </text></form>
 <form lang="fr"><text>Sans but</text></form>
 </label>
 <abbrev>
@@ -23393,7 +23675,7 @@
 </range-element>
 <range-element id="9.6.3.1 Marqueurs de transition" guid="638679c7-1c7c-41da-ab60-0ac7e98fcd72" parent="9.6.3 Marqueurs du discours">
 <label>
-<form lang="en"><text>Markers of transition</text></form>
+<form lang="en"><text>Markers of transition </text></form>
 <form lang="fr"><text>Marqueurs de transition</text></form>
 </label>
 <abbrev>
@@ -23406,7 +23688,7 @@
 </range-element>
 <range-element id="9.6.3.2 Marqueurs de l’emphase" guid="7c1c3730-3b35-4150-b54e-bf6d344546b3" parent="9.6.3 Marqueurs du discours">
 <label>
-<form lang="en"><text>Markers of emphasis</text></form>
+<form lang="en"><text>Markers of emphasis </text></form>
 <form lang="fr"><text>Marqueurs de l’emphase</text></form>
 </label>
 <abbrev>
@@ -23419,7 +23701,7 @@
 </range-element>
 <range-element id="9.6.3.3 Marqueurs pour attirer l’attention" guid="c103d339-24f2-45c6-8539-d3c445e15c49" parent="9.6.3 Marqueurs du discours">
 <label>
-<form lang="en"><text>Prompters of attention</text></form>
+<form lang="en"><text>Prompters of attention </text></form>
 <form lang="fr"><text>Marqueurs pour attirer l’attention</text></form>
 </label>
 <abbrev>
@@ -23432,7 +23714,7 @@
 </range-element>
 <range-element id="9.6.3.4 Marqueurs d’adresse directe" guid="577a9f51-263a-4c80-a439-84ce45b9c7cc" parent="9.6.3 Marqueurs du discours">
 <label>
-<form lang="en"><text>Markers of direct address</text></form>
+<form lang="en"><text>Markers of direct address </text></form>
 <form lang="fr"><text>Marqueurs d’adresse directe</text></form>
 </label>
 <abbrev>
@@ -23445,7 +23727,7 @@
 </range-element>
 <range-element id="9.6.3.5 Marqueurs de propositions déterminatives ou explicatives" guid="fbf40f2e-e743-479d-80b2-63325407d5d1" parent="9.6.3 Marqueurs du discours">
 <label>
-<form lang="en"><text>Markers of identificational and explanatory clauses</text></form>
+<form lang="en"><text>Markers of identificational and explanatory clauses </text></form>
 <form lang="fr"><text>Marqueurs de propositions déterminatives ou explicatives</text></form>
 </label>
 <abbrev>
@@ -23484,7 +23766,7 @@
 </range-element>
 <range-element id="9.6.3.8 Marqueurs honorifiques" guid="2e5a80f9-35ae-4850-9627-be530832a781" parent="9.6.3 Marqueurs du discours">
 <label>
-<form lang="en"><text>Honorifics</text></form>
+<form lang="en"><text>Honorifics </text></form>
 <form lang="fr"><text>Marqueurs honorifiques</text></form>
 </label>
 <abbrev>
@@ -23495,7 +23777,7 @@
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui indique qu’on montre du respect ou un manque de respect à la personne à laquelle on s’adresse.  Certaines langues ont des systèmes d’honneur complexes, d’autres n’en ont aucun. Dans les cultures très hiérarchisées, les langues ont souvent des expressions honorifiques alors que les sociétés égalitaires n’en ont pas, en général, mais il y a des exceptions. Par exemple, en nahuatl, il y a quatre niveaux d’honneur. Au niveau 1, on s’adresse à des intimes, de jeunes enfants et des animaux domestiques. Le niveau 2 est pour les étrangers et les personnes auxquelles on s’adresse poliment. On se sert du niveau 3 pour les personnes respectées, les morts et Dieu. Quant au niveau 4, il est employé pour montrer un respect exagéré, par servilité ou hypocrisie, tel que dans l’entretien d’un archevêque avec un prêtre ou pour des rituels familiaux. [HILL (Jane H.) et HILL (Kenneth C.), « Honorific usage in modern Nahuatl : the expression of social distance and respect in the Nahuatl of the Malinche Volcano area », Language, n° 54, p. 123-155, 1978.] Au Japon, où la société est très hiérarchisée, on emploie en japonais une série de mots et d’affixes quand on s’adresse à quelqu’un d’un rang social inférieur, par exemple, sa femme, ses enfants, ses animaux. Il y a une autre série de mots et d’affixes pour s’adresser à ses pairs et une autre pour parler à des supérieurs. Enfin, une quatrième série sert à s’adresser à l’empereur. En français, il y a trois pronoms pour s’adresser à une personne : tu (quand la personne est plus jeune ou égale à soi), vous (pour quelqu’un de supérieur à soi, inconnu ou âgé), monsieur ou madame (quand une personne s’adresse à un ambassadeur, ou quand du personnel de maison s’adresse à un employeur qui est de haut rang social, ou lorsque l’on s’adresse à un adulte que l’on ne connaît pas du tout). Il peut y avoir dans votre langue des mots honorifiques qui sont des pronoms (1), des affixes (2), des particules (3), des termes d’adresse (4), des salutations (5), des demandes (6), des excuses (7).</text></form>
 </description>
 </range-element>
-<range-element id="9.7 Nom" guid="5b7666bd-c6c1-45e7-aa2e-1799fcb16d97" parent="9 La grammaire">
+<range-element id="9.7 Nom" guid="5b7666bd-c6c1-45e7-aa2e-1799fcb16d97" parent="9 La Grammaire">
 <label>
 <form lang="en"><text>Name</text></form>
 <form lang="fr"><text>Nom</text></form>
@@ -23570,7 +23852,7 @@
 </abbrev>
 <description>
 <form lang="en"><text>Use this domain for the proper names of the tribes that exist around the language community, including the name of your own tribe. These tribal names may or may not correspond with the names of countries.</text></form>
-<form lang="fr"><text>Classer dans ce champ lexical les noms qui désignent les tribus dans votre région, sans oublier le nom de votre tribu. Les noms de tribus peuvent correspondre ou non au nom des pays.</text></form>
+<form lang="fr"><text>Classer dans ce champ lexical les noms qui désignent les tribus de votre groupe linguistique, sans oublier le nom de votre tribu. Les noms de tribus peuvent correspondre ou non au nom des pays.</text></form>
 </description>
 </range-element>
 <range-element id="9.7.1.5 Nom de langue" guid="dd3e872a-fb50-4204-9646-7a24c644013b" parent="9.7.1 Nom de personne">
@@ -23634,7 +23916,8 @@
 <form lang="en"><text>9.7.2.1</text></form>
 </abbrev>
 <description>
-<form lang="en"><text>Use this domain for the proper names of the countries that exist around the language community, especially those countries where your language is spoken. Include the name of your own country. Do not list every country in the world, unless your language has developed special names or pronunciations for those countries. Include any country that you refer to in your language, especially those names whose pronunciation you have adapted to fit your language. Give the form of the name that you use, rather than the official spelling. For instance the Japanese refer to their country as 'Nihon', but in English will call it 'Japan'. So 'Japan' is an English word and should go into an English dictionary. But 'Nihon' is not an English word and should not go in the dictionary.</text></form>
+<form lang="en"><text>Use this domain for the proper names of the countries that exist around the language community, especially those countries where your language is spoken. Include the name of your own country. Do not list every country in the world, unless your language has developed special names or pronunciations for those countries. Include any country that you refer to in your language, especially those names whose pronunciation you have adapted to fit your language. Give the form of the name that you use, rather than the official spelling. For instance the Japanese refer to their country as 'Nihon', but in English will call it 'Japan'. So
+'Japan' is an English word and should go into an English dictionary. But 'Nihon' is not an English word and should not go in the dictionary.</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical les noms des pays situés aux alentours de votre groupe linguistique, en particulier ceux des pays où votre langue est parlée. Ne pas oublier de citer votre pays. Ne pas citer tous les pays du monde, à moins qu’il n’existe dans votre langue des noms ou des prononciations spécifiques. Inclure dans cette liste tous les pays dont on parle dans votre langue, notamment ceux dont la prononciation a été modifiée pour s’adapter à votre langue. Donner le nom usité dans votre langue, plutôt que sa formulation officielle. Ainsi, les Japonais appellent leur pays « Nihon », alors qu’en français, il s’appelle « Japon ». Un dictionnaire français doit donc avoir une entrée « Japon » et ne doit pas avoir le mot « Nihon ».  En effet « Japon » est le mot français, non « Nihon ».</text></form>
 </description>
 </range-element>
@@ -23780,30 +24063,6 @@
 <form lang="en"><text>Use this domain for words referring to the name of a building.</text></form>
 <form lang="fr"><text>Classer dans ce champ lexical le vocabulaire qui se rapporte au nom propre d’un édifice.</text></form>
 </description>
-</range-element>
-<range-element id="4.2.3.5 Instrument de musique 4.2.3.5 Instrument de musique" guid="a5c526d0-bf3b-4ce2-88f3-51263c1da89f">
-<label>
-<form lang="fr"><text>4.2.3.5 Instrument de musique</text></form>
-</label>
-<abbrev>
-<form lang="fr"><text>4.2.3.5 Instrument de musique</text></form>
-</abbrev>
-</range-element>
-<range-element id="1.3.2.3 Goutter 1.3.2.3 Goutter" guid="c3cad193-15f1-40fe-909a-e2c160d7294b">
-<label>
-<form lang="fr"><text>1.3.2.3 Goutter</text></form>
-</label>
-<abbrev>
-<form lang="fr"><text>1.3.2.3 Goutter</text></form>
-</abbrev>
-</range-element>
-<range-element id="1.5.5 Parties d’un végétal ou d’une plante 1.5.5 Parties d’un végétal ou d’une plante" guid="aea3fccc-d2f0-4d21-9830-ce51dcd69b84">
-<label>
-<form lang="fr"><text>1.5.5 Parties d’un végétal ou d’une plante</text></form>
-</label>
-<abbrev>
-<form lang="fr"><text>1.5.5 Parties d’un végétal ou d’une plante</text></form>
-</abbrev>
 </range-element>
 </range>
 <range id="status">
@@ -30815,6 +31074,21 @@
 </description>
 <trait name="catalog-source-id" value="Pronoun"/>
 </range-element>
+<range-element id="Pronom interrogatif" guid="e5e7d0cb-36c5-497d-831c-cb614e283d7c" parent="Proforme">
+<label>
+<form lang="en"><text>Interrogative pro-form</text></form>
+<form lang="fr"><text>Pronom interrogatif</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>interrog</text></form>
+<form lang="fr"><text>pron.int</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An interrogative pro-form is a pro-form that is used in questions to stand for the item questioned.</text></form>
+<form lang="fr"><text>Une proforme interrogatif (pronom interrogatif) est une proforme (un pronom) remplaçant le terme sur lequel porte l’interrogation [Qui a-t-il vu ? Que voit-il ? Où va-t-il ?, etc.].</text></form>
+</description>
+<trait name="catalog-source-id" value="InterrogativeProform"/>
+</range-element>
 <range-element id="Verbe" guid="86ff66f6-0774-407a-a0dc-3eeaf873daf7">
 <label>
 <form lang="en"><text>Verb</text></form>
@@ -30830,94 +31104,260 @@
 </description>
 <trait name="catalog-source-id" value="Verb"/>
 </range-element>
-<range-element id="adj" guid="8553d089-f072-4a19-ad4b-fd8229b2a4f5">
+<range-element id="Temps_aspect_mode" guid="f5447e4d-216d-499d-84ee-ef8a4d37185c" parent="Verbe">
 <label>
-<form lang="en"><text>adj</text></form>
+<form lang="en"><text>Tense_aspect_modality</text></form>
+<form lang="fr"><text>Temps_aspect_mode</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>adj</text></form>
+<form lang="fr"><text>TAM</text></form>
 </abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="nbre" guid="f4fb33a3-56af-4c47-9106-5bb53c2dcd87">
+<range-element id="Formule" guid="707f0102-0600-4054-8c74-be5956120874">
 <label>
-<form lang="en"><text>nbre</text></form>
+<form lang="en"><text>Complex form</text></form>
+<form lang="fr"><text>Formule</text></form>
+</label>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Formule d&apos;acceptation" guid="4069545a-46a8-422c-af6f-394298be6014" parent="Formule">
+<label>
+<form lang="fr"><text>Formule d'acceptation</text></form>
+</label>
+<description>
+<form lang="fr"><text>Rep</text></form>
+</description>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Formule de desapprobation" guid="bc48c48c-0f1a-401b-a45b-9e6add07a75b" parent="Formule">
+<label>
+<form lang="fr"><text>Formule de desapprobation</text></form>
+</label>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Idéophone" guid="d6c41504-67ec-4bbf-b8e6-cf99af2eca1d" parent="Formule">
+<label>
+<form lang="de"><text>Ideophon</text></form>
+<form lang="en"><text>Ideophone</text></form>
+<form lang="fr"><text>Idéophone</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>nbre</text></form>
+<form lang="de"><text>Ideo</text></form>
+<form lang="en"><text>Ideo</text></form>
+<form lang="fr"><text>Idéo</text></form>
 </abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="indef" guid="65045777-c043-4ffe-945e-c32347177b57">
+<range-element id="Particule" guid="6e758bbc-2b40-427d-b79f-bf14a7c96c6a">
 <label>
-<form lang="en"><text>indef</text></form>
+<form lang="en"><text>Particle</text></form>
+<form lang="fr"><text>Particule</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>indef</text></form>
+<form lang="en"><text>prt</text></form>
+<form lang="fr"><text>partic</text></form>
 </abbrev>
+<description>
+<form lang="en"><text>A particle is a part of speech whose members do not belong to one of the main classes of words, is invariable, and typically has grammatical or pragmatic meaning.</text></form>
+<form lang="fr"><text>Une particule est une partie du discours qui n’appartient pas aux classes majeures de mot, qui est invariable et qui a généralement un sens grammatical ou pragmatique.</text></form>
+</description>
+<trait name="catalog-source-id" value="Particle"/>
+</range-element>
+<range-element id="Superlatif" guid="b69164e9-e482-49ba-99fc-74981e296fe8" parent="Particule">
+<label>
+<form lang="en"><text>Superlative</text></form>
+<form lang="fr"><text>Superlatif</text></form>
+</label>
+<abbrev>
+<form lang="fr"><text>sup</text></form>
+</abbrev>
+<description>
+<form lang="fr"><text>Particle qui determine le degre d'un adjectif</text></form>
+</description>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="Question particle" guid="9293f6fa-a875-4fb1-a191-e9364f217248">
+<range-element id="Particule nominale" guid="c6853f58-a74c-483e-9494-732002a7ab5b" parent="Particule">
+<label>
+<form lang="en"><text>Nominal particle</text></form>
+<form lang="fr"><text>Particule nominale</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>nomprt</text></form>
+<form lang="fr"><text>partic.nom</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A nominal particle is a member of a closed class of particles that co-occur with nouns.</text></form>
+<form lang="fr"><text>Une particule nominale est une particule qui modifie un nominal.</text></form>
+</description>
+<trait name="catalog-source-id" value="NominalParticle"/>
+</range-element>
+<range-element id="Particule interrogative" guid="07455e91-118a-4d7d-848c-39bedd355a3d" parent="Particule">
 <label>
 <form lang="en"><text>Question particle</text></form>
+<form lang="fr"><text>Particule interrogative</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>Question particle</text></form>
+<form lang="en"><text>q</text></form>
+<form lang="fr"><text>partic.interr</text></form>
 </abbrev>
-<trait name="catalog-source-id" value=""/>
+<description>
+<form lang="en"><text>A question particle is a part of speech whose members signal a yes/no question.</text></form>
+<form lang="fr"><text>Une particule interrogative est une particule indiquant une question polaire (réponse par oui ou par non).</text></form>
+</description>
+<trait name="catalog-source-id" value="QuestionParticle"/>
 </range-element>
-<range-element id="unknown" guid="c24fe609-7eae-493c-a044-64d82b58e30b">
+<range-element id="Adjectif" guid="30d07580-5052-4d91-bc24-469b8b2d7df9">
 <label>
-<form lang="en"><text>unknown</text></form>
+<form lang="en"><text>Adjective</text></form>
+<form lang="fr"><text>Adjectif</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>unknown</text></form>
+<form lang="en"><text>adj</text></form>
+<form lang="fr"><text>adj</text></form>
 </abbrev>
-<trait name="catalog-source-id" value=""/>
+<description>
+<form lang="en"><text>An adjective is a part of speech whose members modify nouns. An adjective specifies the attributes of a noun referent. Note: this is one case among many. Adjectives are a class of modifiers.</text></form>
+<form lang="fr"><text>Un adjectif est un modificateur du nom.</text></form>
+</description>
+<trait name="catalog-source-id" value="Adjective"/>
 </range-element>
-<range-element id="Numeral" guid="65ffffaf-46bc-4ffb-a57f-b3e84a2d9a5f">
+<range-element id="Relativiseur" guid="c5f222a3-e1aa-4250-b196-d94f0eb0d47b">
 <label>
-<form lang="en"><text>Numeral</text></form>
+<form lang="en"><text>Relativizer</text></form>
+<form lang="fr"><text>Relativiseur</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>Numeral</text></form>
+<form lang="en"><text>rel</text></form>
+<form lang="fr"><text>relativis</text></form>
 </abbrev>
-<trait name="catalog-source-id" value=""/>
+<description>
+<form lang="en"><text>A relativizer is a subordinating connective that links a relative clause to its head noun. It is distinguishable from a relative pronoun in that it does not have a nominal function within the relative clause.</text></form>
+<form lang="fr"><text>Un relativiseur est un connecteur subordonnant qui relie une proposition relative à son antécédent, mais qui se distingue d’un pronom relatif en ce qu’il n’assume aucune fonction dans la proposition relative.</text></form>
+</description>
+<trait name="catalog-source-id" value="Relativizer"/>
 </range-element>
-<range-element id="preposition" guid="d7f55c7f-daad-44c5-8095-c3296cee75be">
-<label>
-<form lang="en"><text>preposition</text></form>
-</label>
-<abbrev>
-<form lang="en"><text>preposition</text></form>
-</abbrev>
-<trait name="catalog-source-id" value=""/>
-</range-element>
-<range-element id="Connective" guid="a7a24f30-c95d-4331-89a7-ea45c57264e1">
+<range-element id="Connecteur" guid="6e0682a7-efd4-43c9-b083-22c4ce245419">
 <label>
 <form lang="en"><text>Connective</text></form>
+<form lang="fr"><text>Connecteur</text></form>
 </label>
 <abbrev>
-<form lang="en"><text>Connective</text></form>
+<form lang="en"><text>conn</text></form>
+<form lang="fr"><text>conn</text></form>
 </abbrev>
+<description>
+<form lang="en"><text>Also known as a conjunction, a connective is a class of parts of speech whose members syntactically link words or larger constituents, and expresses a semantic relationship between them. A conjunction is positionally fixed relative to one or more of the elements related by it, thus distinguishing it from constituents such as English conjunctive adverbs.</text></form>
+<form lang="fr"><text>Appelé aussi conjonction, un connecteur est une partie du discours qui lie syntaxiquement des mots ou des constituants plus vastes. La place du connecteur est fixe par rapport à un ou plusieurs des éléments qu’elle relie.</text></form>
+</description>
+<trait name="catalog-source-id" value="Connective"/>
+</range-element>
+<range-element id="Connecteur subordonnant" guid="09052f32-bf65-400a-8179-6a1c54ef30c9" parent="Connecteur">
+<label>
+<form lang="en"><text>Subordinating connective</text></form>
+<form lang="fr"><text>Connecteur subordonnant</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>subordconn</text></form>
+<form lang="fr"><text>conn.subord</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A subordinating connective is a connective that links constructions by making one of them a constituent of another. The subordinating conjunction typically marks the incorporated constituent.</text></form>
+<form lang="fr"><text>Un connecteur subordonnant est un connecteur qui relie des constituants entre eux en faisant de l’un d’entre eux le constituant de l’autre. Le plus souvent, le connecteur subordonnant marque le constituant qui est incorporé dans l’autre.</text></form>
+</description>
+<trait name="catalog-source-id" value="SubordinatingConnective"/>
+</range-element>
+<range-element id="Adverbialisateur" guid="a0a9906d-d987-42cb-8a65-f549462b16fc" parent="Connecteur subordonnant">
+<label>
+<form lang="en"><text>Adverbializer</text></form>
+<form lang="fr"><text>Adverbialisateur</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>advlizer</text></form>
+<form lang="fr"><text>adverbialisateur</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An adverbializer is a subordinating connective that links a subordinate clause to a main clause, and indicates that the subordinate clause has an 'adverbial' or interpropositional relation to the main clause, indicating purpose, condition, time, and location.</text></form>
+</description>
+<trait name="catalog-source-id" value="Adverbializer"/>
+</range-element>
+<range-element id="Connecteur coordonnant" guid="75ac4332-a445-4ce8-918e-b27b04073745" parent="Connecteur">
+<label>
+<form lang="en"><text>Coordinating connective</text></form>
+<form lang="fr"><text>Connecteur coordonnant</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>coordconn</text></form>
+<form lang="fr"><text>conn.coord</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A coordinating connective is a connective that links constituents without syntactically subordinating one to the other.</text></form>
+<form lang="fr"><text>Un connecteur coordonnant est un connecteur qui relie des constituants entre eux sans établir une subordination de l’un ou de l’autre.</text></form>
+</description>
+<trait name="catalog-source-id" value="CoordinatingConnective"/>
+</range-element>
+<range-element id="Prenom" guid="f1ac9eab-5f8c-41cf-b234-e53405aaaac5">
+<label>
+<form lang="en"><text>Prenom</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>prenom</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An element which may be compounded to the front of a noun to signal information such as size, color, etc..</text></form>
+</description>
+<trait name="catalog-source-id" value="Prenoun"/>
+</range-element>
+<range-element id="Marqueur existentiel" guid="25b2ef8c-d87e-4868-898c-8f5375afeeb3">
+<label>
+<form lang="en"><text>Existential marker</text></form>
+<form lang="fr"><text>Marqueur existentiel</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>existmrkr</text></form>
+<form lang="fr"><text>marq.exist</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An existential marker is a part of speech whose members are found in distinct clause types and which mark a referent's existence.</text></form>
+</description>
+<trait name="catalog-source-id" value="ExistentialMarker"/>
+</range-element>
+<range-element id="Postposition" guid="18f1b2b8-0ce3-4889-90e9-003fed6a969f">
+<label>
+<form lang="en"><text>Postposition</text></form>
+<form lang="fr"><text>Postposition</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>post</text></form>
+<form lang="fr"><text>post</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A postposition is an adposition that occurs after its complement.</text></form>
+</description>
+<trait name="catalog-source-id" value="Postposition"/>
+</range-element>
+<range-element id="Compléments" guid="ee6903f2-647a-45ff-ad4a-0ea673315f24">
+<label>
+<form lang="en"><text>Object</text></form>
+<form lang="fr"><text>Compléments</text></form>
+</label>
+<description>
+<form lang="fr"><text>Cplmt</text></form>
+</description>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="adjective" guid="c5189799-b542-44bc-be7f-71b3182cef34">
+<range-element id="Complément du lieu" guid="e0d5d24b-acfc-4253-96ab-38b9294f57b1" parent="Compléments">
 <label>
-<form lang="en"><text>adjective</text></form>
+<form lang="en"><text>Locative</text></form>
+<form lang="fr"><text>Complément du lieu</text></form>
 </label>
-<abbrev>
-<form lang="en"><text>adjective</text></form>
-</abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
-<range-element id="Demonstrative" guid="2ee89137-4836-46e4-991a-34a561e42380">
+<range-element id="Preposition" guid="956e2da0-bd77-4645-a9bb-b144d0ce2fa8">
 <label>
-<form lang="en"><text>Demonstrative</text></form>
+<form lang="en"><text>Preposition</text></form>
+<form lang="fr"><text>Preposition</text></form>
 </label>
-<abbrev>
-<form lang="en"><text>Demonstrative</text></form>
-</abbrev>
 <trait name="catalog-source-id" value=""/>
 </range-element>
 <range-element id="Interjection" guid="d32dff62-4117-4762-a887-96478406769b">
@@ -30934,6 +31374,98 @@
 <form lang="fr"><text>Une interjection est une partie du discours, généralement de forme brève (p.ex. une syllabe [Zut !], un mot [Ciel !]), indécomposable en morphèmes distincts, et qui est utilisée pour exprimer une réaction affective vive du locuteur. De façon générale, l’interjection n’est reliée syntaxiquement à aucun élément d’une phrase, mais forme à elle seule une phrase. Il n’est pas rare que certains sons ou certaines combinaisons de sons soient propres aux interjections.</text></form>
 </description>
 <trait name="catalog-source-id" value="Interjection"/>
+</range-element>
+<range-element id="Marqueur d&apos;hypothese" guid="3fb7cb6f-da06-43fe-80e5-303b538e0458">
+<label>
+<form lang="fr"><text>Marqueur d'hypothese</text></form>
+</label>
+<trait name="catalog-source-id" value=""/>
+</range-element>
+<range-element id="Preverb" guid="4e676ad2-542d-461d-9d78-1dbcb55ec456">
+<label>
+<form lang="en"><text>Preverb</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>preverb</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An element which may be compounded to the front of a verb, to signal information such as tense, direction, etc..</text></form>
+</description>
+<trait name="catalog-source-id" value="Preverb"/>
+</range-element>
+<range-element id="Numéral" guid="e680330e-2b41-4bec-b96b-514743c47cae">
+<label>
+<form lang="en"><text>Numeral</text></form>
+<form lang="fr"><text>Numéral</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>num</text></form>
+<form lang="fr"><text>num</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A numeral is a part of speech whose members function most typically as adjectives or pronouns and express a number, or relation to the number, such as one of the following: quantity, sequence, frequency, fraction.</text></form>
+<form lang="fr"><text>Un numéral est une sous-classe de nominaux fonctionnant généralement comme adjectifs ou pronoms et exprimant un nombre ou une relation à un nombre comme par exemple une quantité, une séquence, une fréquence ou une fraction.</text></form>
+</description>
+<trait name="catalog-source-id" value="Numeral"/>
+</range-element>
+<range-element id="Démonstratif" guid="093264d7-06c3-42e1-bc4d-5a965ce63887">
+<label>
+<form lang="en"><text>Demonstrative</text></form>
+<form lang="fr"><text>Démonstratif</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>dem</text></form>
+<form lang="fr"><text>dém</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A demonstrative is a determiner that is used deictically to indicate a referent's spatial, temporal, or discourse location. A demonstrative functions as a modifier of a noun, or a pronoun.</text></form>
+<form lang="fr"><text>Un démonstratif est un déterminant déictique indiquant la situation spatiale, temporelle ou discursive du référent. Il fonctionne comme modificateur d’un nom ou d’un pronom.</text></form>
+</description>
+<trait name="catalog-source-id" value="Demonstrative"/>
+</range-element>
+<range-element id="Quantificateur" guid="a4a759b4-5a10-4d7a-80a3-accf5bd840b1">
+<label>
+<form lang="en"><text>Quantifier</text></form>
+<form lang="fr"><text>Quantificateur</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>quant</text></form>
+<form lang="fr"><text>quant</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>A quantifier is a determiner that expresses a referent's definite or indefinite number or amount. A quantifier functions as a modifier of a noun, or a pronoun.</text></form>
+<form lang="fr"><text>Un quantificateur est un déterminant qui précise la quantité précise ou non par laquelle le nom est défini. Il fonctionne comme modificateur d’un nom ou d’un pronom.</text></form>
+</description>
+<trait name="catalog-source-id" value="Quantifier"/>
+</range-element>
+<range-element id="Adposition" guid="ae115ea8-2cd7-4501-8ae7-dc638e4f17c5">
+<label>
+<form lang="en"><text>Adposition</text></form>
+<form lang="fr"><text>Adposition</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>adp</text></form>
+<form lang="fr"><text>adpos</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An adposition is a part of speech whose members are of a closed set and occur before or after a complement composed of a noun phrase, noun, pronoun, or clause that functions as a noun phrase and forms a single structure with the complement to express its grammatical and semantic relation to another unit within a clause.</text></form>
+</description>
+<trait name="catalog-source-id" value="Adposition"/>
+</range-element>
+<range-element id="Article" guid="af3f65de-b0d5-4243-a196-53b67bd6a4df">
+<label>
+<form lang="en"><text>Article</text></form>
+<form lang="fr"><text>Article</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>art</text></form>
+<form lang="fr"><text>art</text></form>
+</abbrev>
+<description>
+<form lang="en"><text>An article is a member of a small class of determiners that identify a noun's definite or indefinite reference, and new or given status.</text></form>
+<form lang="fr"><text>Un article est un déterminant qui modifie le nom en apportant des précisions quant à la définitude (défini, indéfini) ou quant à la structure d’information (nouvelle, donnée).</text></form>
+</description>
+<trait name="catalog-source-id" value="Article"/>
 </range-element>
 </range>
 <range id="morph-type">
@@ -31238,6 +31770,269 @@
 </label>
 <abbrev>
 <form lang="en"><text>Main</text></form>
+</abbrev>
+</range-element>
+</range>
+<!-- This is a custom list or other list which is not output by default but if referenced in the data of a field.  -->
+<range id="usage-type" guid="af542404-ea5e-11de-8bde-0013722f8dec">
+<range-element id="vieux" guid="af600fb2-ea5e-11de-82b5-0013722f8dec">
+<label>
+<form lang="en"><text>archaic</text></form>
+<form lang="fr"><text>vieux</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>arch</text></form>
+<form lang="fr"><text>vx</text></form>
+</abbrev>
+</range-element>
+<range-element id="familier" guid="af699910-ea5e-11de-8d20-0013722f8dec">
+<label>
+<form lang="en"><text>colloquial</text></form>
+<form lang="fr"><text>familier</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>col</text></form>
+<form lang="fr"><text>fam</text></form>
+</abbrev>
+</range-element>
+<range-element id="soutenu" guid="af7584c8-ea5e-11de-82a4-0013722f8dec">
+<label>
+<form lang="en"><text>formal</text></form>
+<form lang="fr"><text>soutenu</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>form</text></form>
+<form lang="fr"><text>sout</text></form>
+</abbrev>
+</range-element>
+<range-element id="historique" guid="af817076-ea5e-11de-9a46-0013722f8dec">
+<label>
+<form lang="en"><text>historical</text></form>
+<form lang="fr"><text>historique</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>hist</text></form>
+<form lang="fr"><text>hist</text></form>
+</abbrev>
+</range-element>
+<range-element id="honorifique" guid="af8af9d4-ea5e-11de-932a-0013722f8dec">
+<label>
+<form lang="en"><text>honorific</text></form>
+<form lang="fr"><text>honorifique</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>hon</text></form>
+<form lang="fr"><text>hon</text></form>
+</abbrev>
+</range-element>
+<range-element id="populaire" guid="af96e582-ea5e-11de-910f-0013722f8dec">
+<label>
+<form lang="en"><text>informal</text></form>
+<form lang="fr"><text>populaire</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>inform</text></form>
+<form lang="fr"><text>pop</text></form>
+</abbrev>
+</range-element>
+<range-element id="non-standard" guid="afa2d13a-ea5e-11de-94da-0013722f8dec">
+<label>
+<form lang="en"><text>non-standard</text></form>
+<form lang="fr"><text>non-standard</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>non std</text></form>
+<form lang="fr"><text>non std</text></form>
+</abbrev>
+</range-element>
+<range-element id="vieilli" guid="afaebce8-ea5e-11de-97b5-0013722f8dec">
+<label>
+<form lang="en"><text>obsolete</text></form>
+<form lang="fr"><text>vieilli</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>obso</text></form>
+<form lang="fr"><text>vieilli</text></form>
+</abbrev>
+</range-element>
+<range-element id="anciennement" guid="afb84646-ea5e-11de-94e6-0013722f8dec">
+<label>
+<form lang="en"><text>old-fashioned</text></form>
+<form lang="fr"><text>anciennement</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>oldfash</text></form>
+<form lang="fr"><text>anct</text></form>
+</abbrev>
+</range-element>
+<range-element id="rare" guid="afc431fe-ea5e-11de-8921-0013722f8dec">
+<label>
+<form lang="en"><text>rare</text></form>
+<form lang="fr"><text>rare</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>rare</text></form>
+<form lang="fr"><text>rare</text></form>
+</abbrev>
+</range-element>
+<range-element id="niveau" guid="afd01dac-ea5e-11de-9787-0013722f8dec">
+<label>
+<form lang="en"><text>register</text></form>
+<form lang="fr"><text>niveau</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>reg</text></form>
+<form lang="fr"><text>niv</text></form>
+</abbrev>
+</range-element>
+<range-element id="de base, courant" guid="afd9a70a-ea5e-11de-9e37-0013722f8dec" parent="niveau">
+<label>
+<form lang="en"><text>basic</text></form>
+<form lang="fr"><text>de base, courant</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>bas reg</text></form>
+<form lang="fr"><text>cour</text></form>
+</abbrev>
+</range-element>
+<range-element id="haut" guid="afe592c2-ea5e-11de-9d77-0013722f8dec" parent="niveau">
+<label>
+<form lang="en"><text>high</text></form>
+<form lang="fr"><text>haut</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>hi reg</text></form>
+<form lang="fr"><text>niv.ht</text></form>
+</abbrev>
+</range-element>
+<range-element id="bas" guid="aff17e70-ea5e-11de-94be-0013722f8dec" parent="niveau">
+<label>
+<form lang="en"><text>low</text></form>
+<form lang="fr"><text>bas</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>low reg</text></form>
+<form lang="fr"><text>niv.bs</text></form>
+</abbrev>
+</range-element>
+<range-element id="moyen" guid="affb07ce-ea5e-11de-997d-0013722f8dec" parent="niveau">
+<label>
+<form lang="en"><text>mid</text></form>
+<form lang="fr"><text>moyen</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>mid reg</text></form>
+<form lang="fr"><text>niv.moy</text></form>
+</abbrev>
+</range-element>
+<range-element id="restrictif" guid="b006f37c-ea5e-11de-8cd8-0013722f8dec">
+<label>
+<form lang="en"><text>restrictive</text></form>
+<form lang="fr"><text>restrictif</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>rest</text></form>
+<form lang="fr"><text>restr</text></form>
+</abbrev>
+</range-element>
+<range-element id="animal" guid="b012df34-ea5e-11de-833e-0013722f8dec" parent="restrictif">
+<label>
+<form lang="en"><text>animal</text></form>
+<form lang="fr"><text>animal</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>anml</text></form>
+<form lang="fr"><text>anim</text></form>
+</abbrev>
+</range-element>
+<range-element id="humain" guid="b01c6892-ea5e-11de-9e52-0013722f8dec" parent="restrictif">
+<label>
+<form lang="en"><text>human</text></form>
+<form lang="fr"><text>humain</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>hum</text></form>
+<form lang="fr"><text>hum</text></form>
+</abbrev>
+</range-element>
+<range-element id="féminin" guid="b0285440-ea5e-11de-894b-0013722f8dec" parent="humain">
+<label>
+<form lang="en"><text>female</text></form>
+<form lang="fr"><text>féminin</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>f</text></form>
+<form lang="fr"><text>f</text></form>
+</abbrev>
+</range-element>
+<range-element id="masculin" guid="b0343ff8-ea5e-11de-9132-0013722f8dec" parent="humain">
+<label>
+<form lang="en"><text>male</text></form>
+<form lang="fr"><text>masculin</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>m</text></form>
+<form lang="fr"><text>m</text></form>
+</abbrev>
+</range-element>
+<range-element id="frère ou sœur (germain) du même sexe" guid="b03dc94c-ea5e-11de-87b4-0013722f8dec" parent="humain">
+<label>
+<form lang="en"><text>same sex sibling</text></form>
+<form lang="fr"><text>frère ou sœur (germain) du même sexe</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>sib</text></form>
+<form lang="fr"><text>germ.msx</text></form>
+</abbrev>
+</range-element>
+<range-element id="vulgaire" guid="b049b504-ea5e-11de-9bb7-0013722f8dec" parent="restrictif">
+<label>
+<form lang="en"><text>obscene</text></form>
+<form lang="fr"><text>vulgaire</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>obsc</text></form>
+<form lang="fr"><text>vulg</text></form>
+</abbrev>
+</range-element>
+<range-element id="trivial" guid="b055a0b2-ea5e-11de-9b16-0013722f8dec" parent="restrictif">
+<label>
+<form lang="en"><text>offensive</text></form>
+<form lang="fr"><text>trivial</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>off</text></form>
+<form lang="fr"><text>triv</text></form>
+</abbrev>
+</range-element>
+<range-element id="tabou" guid="b05f2a10-ea5e-11de-8593-0013722f8dec" parent="restrictif">
+<label>
+<form lang="en"><text>taboo</text></form>
+<form lang="fr"><text>tabou</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>tab</text></form>
+<form lang="fr"><text>tab</text></form>
+</abbrev>
+</range-element>
+<range-element id="argot" guid="b06b15c8-ea5e-11de-8d8b-0013722f8dec">
+<label>
+<form lang="en"><text>slang</text></form>
+<form lang="fr"><text>argot</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>slg</text></form>
+<form lang="fr"><text>arg</text></form>
+</abbrev>
+</range-element>
+<range-element id="traditionnel" guid="b0770176-ea5e-11de-88f6-0013722f8dec">
+<label>
+<form lang="en"><text>traditional</text></form>
+<form lang="fr"><text>traditionnel</text></form>
+</label>
+<abbrev>
+<form lang="en"><text>trad</text></form>
+<form lang="fr"><text>trad</text></form>
 </abbrev>
 </range-element>
 </range>

@@ -18,7 +18,7 @@ class TestFieldDefn(unittest.TestCase):
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//field')  # noqa: E501
         self.obj = header.FieldDefn(self.xml_tree)
 
-    def test_fielddefn_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
@@ -31,7 +31,7 @@ class TestFieldDefns(unittest.TestCase):
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//fields')  # noqa: E501
         self.obj = header.FieldDefns(self.xml_tree)
 
-    def test_fielddefns_items(self):
+    def test_items(self):
         self.assertTrue(len(self.obj) > 0)
 
 
@@ -41,10 +41,10 @@ class TestHeader(unittest.TestCase):
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//header')  # noqa: E501
         self.obj = header.Header(self.xml_tree)
 
-    def test_header_attribs(self):
+    def test_attribs(self):
         pass  # no attributes to test
 
-    def test_header_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -57,7 +57,7 @@ class TestLiftRanges(unittest.TestCase):
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//ranges')  # noqa: E501
         self.obj = header.LiftRanges(self.xml_tree)
 
-    def test_liftranges_items(self):
+    def test_items(self):
         self.assertTrue(len(self.obj) > 0)
 
 
@@ -67,13 +67,13 @@ class TestRange(unittest.TestCase):
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//range')  # noqa: E501
         self.obj = header.Range(self.xml_tree)
 
-    def test_range_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_range_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
@@ -86,13 +86,13 @@ class TestRangeElement(unittest.TestCase):
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//range-element')  # noqa: E501
         self.obj = header.RangeElement(self.xml_tree)
 
-    def test_range_attribs(self):
+    def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
         test_attribs(self, self.obj, required)
         optional = [p.name for p in self.obj.props.attributes if not p.required]  # noqa: E501
         test_attribs(self, self.obj, optional)
 
-    def test_range_elems(self):
+    def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
