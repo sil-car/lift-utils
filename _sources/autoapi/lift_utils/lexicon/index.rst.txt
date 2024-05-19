@@ -132,7 +132,7 @@ Classes
        given by the ``value`` attribute.
 
 
-.. py:class:: Lexicon(path: Optional[pathlib.Path] = None, xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Lexicon(path: Optional[Union[pathlib.Path, str]] = None, xml_tree: Optional[lxml.etree.ElementTree] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
