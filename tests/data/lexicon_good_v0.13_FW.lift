@@ -63,6 +63,9 @@
         </lexical-unit>
         <trait  name="morph-type" value="phrase"/>
         <relation type="_component-lexeme" ref="3b2e3f52-85fe-42b0-a6db-2e2207228397" order="0">
+            <usage type="source">
+                <form lang="en"><text>tl</text></form>
+            </usage>
             <trait name="is-primary" value="true"/>
             <trait  name="complex-form-type" value="Expr."/>
         </relation>

@@ -442,13 +442,16 @@ class Relation(Extensible):
             Prop('type', required=True),
             Prop('ref', required=True),
             Prop('order'),
-            Prop('usage'),
+        ]
+        self.props.elements = [
+            Prop('usages')
         ]
         # attributes
         self.type: Key = None
         self.ref: RefId = None
         self.order: Optional[int] = None
-        self.usage: Optional[Multitext] = None
+        # elements
+        self.usages: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -470,9 +473,13 @@ class Relation(Extensible):
                 self.ref = RefId(v)
             elif k == 'order':
                 self.order = int(v)
-            elif k == 'usage':
-                # TODO: How can an attrib value be a Multitext?
-                self.usage = v
+
+        for c in xml_tree.getchildren():
+            if c.tag == 'usage':
+                if not self.usages:
+                    self.usages = [Multitext(c)]
+                else:
+                    self.usages.append(Multitext(c))
 
 
 class Variant(Multitext, Extensible):
