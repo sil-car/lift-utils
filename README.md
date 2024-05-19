@@ -11,3 +11,4 @@ To be released on PyPI...
 | --: | --- |
 | v0.1 | read support for LIFT files |
 | v0.2 | write support for LIFT files |
+| v0.3 | add helper methods (get, set, add, list, etc.) |
