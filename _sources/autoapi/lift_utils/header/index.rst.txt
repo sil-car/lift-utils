@@ -48,7 +48,7 @@ Classes
    It may be used by an application to add information not part of the LIFT
    standard.
 
-   .. note:: Used by LIFT v0.13 (FieldWorks).
+   .. note:: Used by LIFT v0.13 (FieldWorks) instead of ``FieldDefinition``.
 
 
 .. py:class:: FieldDefns(xml_tree: Optional[lxml.etree.ElementTree] = None)
@@ -56,9 +56,9 @@ Classes
 
    Bases: :py:obj:`list`, :py:obj:`lift_utils.base.LIFTUtilsBase`
 
-   This is a simple list of ``field-defn``.
+   This is a simple list of ``field-defn`` elements.
 
-   .. note:: Used by LIFT v0.13 (FieldWorks).
+   .. note:: Used by LIFT v0.13 (FieldWorks) instead of ``Fields``.
 
 
 .. py:class:: Fields(xml_tree: Optional[lxml.etree.ElementTree] = None)
