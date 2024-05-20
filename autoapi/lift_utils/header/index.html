@@ -59,14 +59,14 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#lift_utils.header.Header" title="lift_utils.header.Header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Header</span></code></a></p></td>
 <td><p>The header information for a LIFT file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#lift_utils.header.LiftRanges" title="lift_utils.header.LiftRanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LiftRanges</span></code></a></p></td>
-<td><p>The root element in a Lift Ranges file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#lift_utils.header.Range" title="lift_utils.header.Range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Range</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#lift_utils.header.Range" title="lift_utils.header.Range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Range</span></code></a></p></td>
 <td><p>A set of <code class="docutils literal notranslate"><span class="pre">range-elements</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#lift_utils.header.RangeElement" title="lift_utils.header.RangeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RangeElement</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lift_utils.header.RangeElement" title="lift_utils.header.RangeElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RangeElement</span></code></a></p></td>
 <td><p>The description of a particular range element found in a <code class="docutils literal notranslate"><span class="pre">range</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lift_utils.header.Ranges" title="lift_utils.header.Ranges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ranges</span></code></a></p></td>
+<td><p>The root element in a Lift Ranges file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -95,7 +95,7 @@ standard.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.header.FieldDefns">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.header.</span></span><span class="sig-name descname"><span class="pre">FieldDefns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree.ElementTree</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.header.FieldDefns" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code>, <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
 <p>This is a simple list of <code class="docutils literal notranslate"><span class="pre">field-defn</span></code> elements.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -106,7 +106,7 @@ standard.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.header.Fields">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.header.</span></span><span class="sig-name descname"><span class="pre">Fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree.ElementTree</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.header.Fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code>, <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
 <p>This is a simple list of <code class="docutils literal notranslate"><span class="pre">field-definition</span></code> elements.</p>
 </dd></dl>
 
@@ -121,7 +121,7 @@ It includes range information and added field definitions.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>description</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="../base/index.html#lift_utils.base.Multitext" title="lift_utils.base.Multitext"><em>Multitext</em></a><em>]</em>) – Contains a multilingual description
 of the lexicon for information purposes only.</p></li>
-<li><p><strong>ranges</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#lift_utils.header.LiftRanges" title="lift_utils.header.LiftRanges"><em>LiftRanges</em></a><em>[</em><a class="reference internal" href="#lift_utils.header.Range" title="lift_utils.header.Range"><em>Range</em></a><em>]</em><em>]</em>) – Contains all the <code class="docutils literal notranslate"><span class="pre">range</span></code>
+<li><p><strong>ranges</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#lift_utils.header.Ranges" title="lift_utils.header.Ranges"><em>Ranges</em></a><em>[</em><a class="reference internal" href="#lift_utils.header.Range" title="lift_utils.header.Range"><em>Range</em></a><em>]</em><em>]</em>) – Contains all the <code class="docutils literal notranslate"><span class="pre">range</span></code>
 information.</p></li>
 <li><p><strong>fields</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#lift_utils.header.Fields" title="lift_utils.header.Fields"><em>Fields</em></a><em>]</em>) – <cite>Used by LIFT v0.13 (FieldWorks).</cite>
 Contains definitions for all the <code class="docutils literal notranslate"><span class="pre">field</span></code> types used in the document.</p></li>
@@ -130,13 +130,6 @@ types used in the document.</p></li>
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="lift_utils.header.LiftRanges">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.header.</span></span><span class="sig-name descname"><span class="pre">LiftRanges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree.ElementTree</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.header.LiftRanges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code>, <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
-<p>The root element in a Lift Ranges file.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -153,6 +146,13 @@ some extent their type.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.header.</span></span><span class="sig-name descname"><span class="pre">RangeElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree.ElementTree</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.header.RangeElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>The description of a particular range element found in a <code class="docutils literal notranslate"><span class="pre">range</span></code>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lift_utils.header.Ranges">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.header.</span></span><span class="sig-name descname"><span class="pre">Ranges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree.ElementTree</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.header.Ranges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
+<p>The root element in a Lift Ranges file.</p>
 </dd></dl>
 
 </section>

@@ -22,9 +22,9 @@ Classes
    lift_utils.header.FieldDefns
    lift_utils.header.Fields
    lift_utils.header.Header
-   lift_utils.header.LiftRanges
    lift_utils.header.Range
    lift_utils.header.RangeElement
+   lift_utils.header.Ranges
 
 
 
@@ -54,7 +54,7 @@ Classes
 .. py:class:: FieldDefns(xml_tree: Optional[lxml.etree.ElementTree] = None)
 
 
-   Bases: :py:obj:`list`, :py:obj:`lift_utils.base.LIFTUtilsBase`
+   Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
 
    This is a simple list of ``field-defn`` elements.
 
@@ -64,7 +64,7 @@ Classes
 .. py:class:: Fields(xml_tree: Optional[lxml.etree.ElementTree] = None)
 
 
-   Bases: :py:obj:`list`, :py:obj:`lift_utils.base.LIFTUtilsBase`
+   Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
 
    This is a simple list of ``field-definition`` elements.
        
@@ -80,21 +80,12 @@ Classes
 
    :ivar Optional[Multitext] description: Contains a multilingual description
        of the lexicon for information purposes only.
-   :ivar Optional[LiftRanges[Range]] ranges: Contains all the ``range``
+   :ivar Optional[Ranges[Range]] ranges: Contains all the ``range``
        information.
    :ivar Optional[FieldDefns] fields: `Used by LIFT v0.13 (FieldWorks).`
        Contains definitions for all the ``field`` types used in the document.
    :ivar Optional[Fields] fields: Contains definitions for all the ``field``
        types used in the document.
-
-
-.. py:class:: LiftRanges(xml_tree: Optional[lxml.etree.ElementTree] = None)
-
-
-   Bases: :py:obj:`list`, :py:obj:`lift_utils.base.LIFTUtilsBase`
-
-   The root element in a Lift Ranges file.
-       
 
 
 .. py:class:: Range(xml_tree: Optional[lxml.etree.ElementTree] = None)
@@ -113,6 +104,15 @@ Classes
    Bases: :py:obj:`lift_utils.base.Extensible`
 
    The description of a particular range element found in a ``range``.
+       
+
+
+.. py:class:: Ranges(xml_tree: Optional[lxml.etree.ElementTree] = None)
+
+
+   Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
+
+   The root element in a Lift Ranges file.
        
 
 
