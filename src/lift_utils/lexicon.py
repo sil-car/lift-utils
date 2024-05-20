@@ -49,7 +49,7 @@ class Note(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type', ptype=Key),
+            Prop('type', prop_type=Key),
         ]
         # attributes
         self.type: Optional[Key] = None
@@ -95,10 +95,14 @@ class Phonetic(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('medias', ptype=list, ltype=URLRef),
+            Prop('medias', prop_type=list, item_type=URLRef),
         ]
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop('forms', ptype=list, ltype=Span))
+            self.props.elements.append(Prop(
+                'forms',
+                prop_type=list,
+                item_type=Span
+            ))
         # elements
         self.medias: Optional[List[URLRef]] = None
         if config.LIFT_VERSION == '0.13':
@@ -147,12 +151,12 @@ class Etymology(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type', required=True, ptype=Key),
-            Prop('source', required=True, ptype=str),
+            Prop('type', required=True, prop_type=Key),
+            Prop('source', required=True, prop_type=str),
         ]
         self.props.elements = [
-            Prop('glosses', ptype=list, ltype=Gloss),
-            Prop('form', ptype=Form),
+            Prop('glosses', prop_type=list, item_type=Gloss),
+            Prop('form', prop_type=Form),
         ]
         # attributes
         self.type: Key = None
@@ -198,10 +202,10 @@ class GrammaticalInfo(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('value', required=True, ptype=Key),
+            Prop('value', required=True, prop_type=Key),
         ]
         self.props.elements = [
-            Prop('traits', ptype=list, ltype=Trait),
+            Prop('traits', prop_type=list, item_type=Trait),
         ]
         # attributes
         self.value: Key = None
@@ -246,11 +250,11 @@ class Reversal(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type', ptype=Key),
+            Prop('type', prop_type=Key),
         ]
         self.props.elements = [
-            Prop('main', ptype=Reversal),
-            Prop('grammatical_info', ptype=GrammaticalInfo),
+            Prop('main', prop_type=Reversal),
+            Prop('grammatical_info', prop_type=GrammaticalInfo),
         ]
         # attributes
         self.type: Optional[Key] = None
@@ -288,7 +292,7 @@ class Translation(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type', ptype=Key),
+            Prop('type', prop_type=Key),
         ]
         # attributes
         self.type: Optional[Key] = None
@@ -329,13 +333,17 @@ class Example(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('source', ptype=Key),
+            Prop('source', prop_type=Key),
         ]
         self.props.elements = [
-            Prop('translations', ptype=list, ltype=Translation),
+            Prop('translations', prop_type=list, item_type=Translation),
         ]
         if config.LIFT_VERSION in ['0.15']:
-            self.props.elements.append(Prop('notes', ptype=list, ltype=Note))
+            self.props.elements.append(Prop(
+                'notes',
+                prop_type=list,
+                item_type=Note
+            ))
         # attributes
         self.source: Optional[Key] = None
         # elements
@@ -385,12 +393,12 @@ class Relation(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type', required=True, ptype=Key),
-            Prop('ref', required=True, ptype=RefId),
-            Prop('order', ptype=int),
+            Prop('type', required=True, prop_type=Key),
+            Prop('ref', required=True, prop_type=RefId),
+            Prop('order', prop_type=int),
         ]
         self.props.elements = [
-            Prop('usages', ptype=list, ltype=Multitext)
+            Prop('usages', prop_type=list, item_type=Multitext)
         ]
         # attributes
         self.type: Key = None
@@ -440,11 +448,11 @@ class Variant(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('ref', ptype=RefId),
+            Prop('ref', prop_type=RefId),
         ]
         self.props.elements = [
-            Prop('pronunciations', ptype=list, ltype=Phonetic),
-            Prop('relations', ptype=list, ltype=Relation),
+            Prop('pronunciations', prop_type=list, item_type=Phonetic),
+            Prop('relations', prop_type=list, item_type=Relation),
         ]
         # attributes
         self.ref: Optional[RefId] = None
@@ -512,23 +520,31 @@ class Sense(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id', ptype=RefId),
-            Prop('order', ptype=int),
+            Prop('id', prop_type=RefId),
+            Prop('order', prop_type=int),
         ]
         self.props.elements = [
-            Prop('grammatical_info', ptype=GrammaticalInfo),
-            Prop('definition', ptype=Multitext),
-            Prop('relations', ptype=list, ltype=Relation),
-            Prop('notes', ptype=list, ltype=Note),
-            Prop('examples', ptype=list, ltype=Example),
-            Prop('reversals', ptype=list, ltype=Reversal),
-            Prop('illustrations', ptype=list, ltype=URLRef),
-            Prop('subsenses', ptype=list, ltype=Sense),
+            Prop('grammatical_info', prop_type=GrammaticalInfo),
+            Prop('definition', prop_type=Multitext),
+            Prop('relations', prop_type=list, item_type=Relation),
+            Prop('notes', prop_type=list, item_type=Note),
+            Prop('examples', prop_type=list, item_type=Example),
+            Prop('reversals', prop_type=list, item_type=Reversal),
+            Prop('illustrations', prop_type=list, item_type=URLRef),
+            Prop('subsenses', prop_type=list, item_type=Sense),
         ]
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop('glosses', ptype=list, ltype=Form))
+            self.props.elements.append(Prop(
+                'glosses',
+                prop_type=list,
+                item_type=Form
+            ))
         else:
-            self.props.elements.append(Prop('glosses', ptype=list, ltype=Gloss))  # noqa: E501
+            self.props.elements.append(Prop(
+                'glosses',
+                prop_type=list,
+                item_type=Gloss
+            ))
 
         # attributes
         self.id: Optional[RefId] = None
@@ -637,20 +653,20 @@ class Entry(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id', ptype=RefId),
-            Prop('guid', ptype=str),
-            Prop('order', ptype=str),
-            Prop('date_deleted', ptype=DateTime),
+            Prop('id', prop_type=RefId),
+            Prop('guid', prop_type=str),
+            Prop('order', prop_type=str),
+            Prop('date_deleted', prop_type=DateTime),
         ]
         self.props.elements = [
-            Prop('lexical_unit', ptype=Multitext),
-            Prop('citation', ptype=Multitext),
-            Prop('pronunciations', ptype=list, ltype=Phonetic),
-            Prop('variants', ptype=list, ltype=Variant),
-            Prop('senses', ptype=list, ltype=Sense),
-            Prop('notes', ptype=list, ltype=Note),
-            Prop('relations', ptype=list, ltype=Relation),
-            Prop('etymologies', ptype=list, ltype=Etymology),
+            Prop('lexical_unit', prop_type=Multitext),
+            Prop('citation', prop_type=Multitext),
+            Prop('pronunciations', prop_type=list, item_type=Phonetic),
+            Prop('variants', prop_type=list, item_type=Variant),
+            Prop('senses', prop_type=list, item_type=Sense),
+            Prop('notes', prop_type=list, item_type=Note),
+            Prop('relations', prop_type=list, item_type=Relation),
+            Prop('etymologies', prop_type=list, item_type=Etymology),
         ]
         # attributes
         self.id: Optional[RefId] = None
@@ -764,12 +780,12 @@ class Lexicon(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('version', required=True, ptype=str),
-            Prop('producer', ptype=str),
+            Prop('version', required=True, prop_type=str),
+            Prop('producer', prop_type=str),
         ]
         self.props.elements = [
-            Prop('header', ptype=Header),
-            Prop('entries', ptype=list, ltype=Entry),
+            Prop('header', prop_type=Header),
+            Prop('entries', prop_type=list, item_type=Entry),
         ]
         self.path = Path(path)
         # attributes

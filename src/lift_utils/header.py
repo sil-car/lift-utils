@@ -33,7 +33,7 @@ class FieldDefn(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('tag', required=True, ptype=Key),
+            Prop('tag', required=True, prop_type=Key),
         ]
         # attributes
         self.tag: Key = None
@@ -72,15 +72,15 @@ class FieldDefinition(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('name', required=True, ptype=Key),
-            Prop('class_', ptype=str),
-            Prop('type', ptype=str),
-            Prop('option_range', ptype=Key),
-            Prop('writing_system', ptype=str),
+            Prop('name', required=True, prop_type=Key),
+            Prop('class_', prop_type=str),
+            Prop('type', prop_type=str),
+            Prop('option_range', prop_type=Key),
+            Prop('writing_system', prop_type=str),
         ]
         self.props.elements = [
-            Prop('label', ptype=Multitext),
-            Prop('description', ptype=Multitext),
+            Prop('label', prop_type=Multitext),
+            Prop('description', prop_type=Multitext),
         ]
         # attributes
         self.name: Key = None
@@ -119,14 +119,14 @@ class RangeElement(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id', required=True, ptype=Key),
-            Prop('parent', ptype=Key),
-            Prop('guid', ptype=str),
+            Prop('id', required=True, prop_type=Key),
+            Prop('parent', prop_type=Key),
+            Prop('guid', prop_type=str),
         ]
         self.props.elements = [
-            Prop('descriptions', ptype=list, ltype=Multitext),
-            Prop('labels', ptype=list, ltype=Multitext),
-            Prop('abbrevs', ptype=list, ltype=Multitext),
+            Prop('descriptions', prop_type=list, item_type=Multitext),
+            Prop('labels', prop_type=list, item_type=Multitext),
+            Prop('abbrevs', prop_type=list, item_type=Multitext),
         ]
         # attributes
         self.id: Key = None
@@ -167,20 +167,20 @@ class Range(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id', required=True, ptype=Key),
-            Prop('guid', ptype=str),
-            Prop('href', ptype=URL),
+            Prop('id', required=True, prop_type=Key),
+            Prop('guid', prop_type=str),
+            Prop('href', prop_type=URL),
         ]
         self.props.elements = [
             Prop(
                 'range_elements',
                 required=True,
-                ptype=list,
-                ltype=RangeElement
+                prop_type=list,
+                item_type=RangeElement
             ),
-            Prop('description', ptype=Multitext),
-            Prop('labels', ptype=list, ltype=Multitext),
-            Prop('abbrevs', ptype=list, ltype=Multitext),
+            Prop('description', prop_type=Multitext),
+            Prop('labels', prop_type=list, item_type=Multitext),
+            Prop('abbrevs', prop_type=list, item_type=Multitext),
         ]
         # attributes
         self.id: Key = None
@@ -280,14 +280,14 @@ class Fields(list, LIFTUtilsBase):
         if config.LIFT_VERSION == '0.13':
             self.props.elements.append(Prop(
                 'field_definitions',
-                ptype=list,
-                ltype=FieldDefn
+                prop_type=list,
+                item_type=FieldDefn
             ))
         else:
             self.props.elements.append(Prop(
                 'field_definitions',
-                ptype=list,
-                ltype=FieldDefinition
+                prop_type=list,
+                item_type=FieldDefinition
             ))
 
         # elements
@@ -330,13 +330,13 @@ class Header(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('description', ptype=Multitext),
-            Prop('ranges', ptype=LiftRanges, ltype=Range),
+            Prop('description', prop_type=Multitext),
+            Prop('ranges', prop_type=LiftRanges, item_type=Range),
         ]
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop('fields', ptype=FieldDefns))
+            self.props.elements.append(Prop('fields', prop_type=FieldDefns))
         else:
-            self.props.elements.append(Prop('fields', ptype=Fields))
+            self.props.elements.append(Prop('fields', prop_type=Fields))
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[LiftRanges[Range]] = None

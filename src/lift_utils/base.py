@@ -63,13 +63,13 @@ class Span(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('lang', ptype=Lang),
-            Prop('href', ptype=URL),
-            Prop('class_', ptype=str),
+            Prop('lang', prop_type=Lang),
+            Prop('href', prop_type=URL),
+            Prop('class_', prop_type=str),
         ]
         self.props.elements = [
-            Prop('pcdata', required=True, ptype=PCData),
-            Prop('spans', ptype=list, ltype=Span),
+            Prop('pcdata', required=True, prop_type=PCData),
+            Prop('spans', prop_type=list, item_type=Span),
         ]
         # attributes
         self.lang: Optional[Lang] = None
@@ -124,12 +124,12 @@ class Trait(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('name', required=True, ptype=Key),
-            Prop('value', required=True, ptype=Key),
-            Prop('id', ptype=Key),
+            Prop('name', required=True, prop_type=Key),
+            Prop('value', required=True, prop_type=Key),
+            Prop('id', prop_type=Key),
         ]
         self.props.elements = [
-            Prop('annotations', ptype=list, ltype=Annotation),
+            Prop('annotations', prop_type=list, item_type=Annotation),
         ]
         # attributes
         self.name: Key = None
@@ -210,11 +210,11 @@ class Form(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('lang', required=True, ptype=Lang),
+            Prop('lang', required=True, prop_type=Lang),
         ]
         self.props.elements = [
-            Prop('text', required=True, ptype=Text),
-            Prop('annotations', ptype=list, ltype=Annotation),
+            Prop('text', required=True, prop_type=Text),
+            Prop('annotations', prop_type=list, item_type=Annotation),
         ]
         # attributes
         self.lang: Lang = None
@@ -257,8 +257,8 @@ class Text(Form):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('pcdata', required=True, ptype=PCData),
-            Prop('spans', ptype=list, ltype=Span),
+            Prop('pcdata', required=True, prop_type=PCData),
+            Prop('spans', prop_type=list, item_type=Span),
         ]
         # elements
         self.pcdata: str = None
@@ -301,8 +301,8 @@ class Multitext(Text):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('forms', ptype=list, ltype=Form),
-            Prop('text', ptype=str),
+            Prop('forms', prop_type=list, item_type=Form),
+            Prop('text', prop_type=str),
         ]
         # elements
         self.forms: Optional[List[Form]] = None
@@ -353,7 +353,7 @@ class Gloss(Form):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('traits', ptype=list, ltype=Trait),
+            Prop('traits', prop_type=list, item_type=Trait),
         ]
         # elements
         self.traits: Optional[List[Trait]] = None
@@ -389,10 +389,10 @@ class URLRef(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('href', required=True, ptype=URL),
+            Prop('href', required=True, prop_type=URL),
         ]
         self.props.elements = [
-            Prop('label', ptype=Multitext),
+            Prop('label', prop_type=Multitext),
         ]
         # attributes
         self.href: URL = None
@@ -423,10 +423,10 @@ class Annotation(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('name', required=True, ptype=Key),
-            Prop('value', required=True, ptype=Key),
-            Prop('who', ptype=Key),
-            Prop('when', ptype=DateTime),
+            Prop('name', required=True, prop_type=Key),
+            Prop('value', required=True, prop_type=Key),
+            Prop('who', prop_type=Key),
+            Prop('when', prop_type=DateTime),
         ]
         # attributes
         self.name: Key = None
@@ -464,29 +464,41 @@ class Field(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('date_created', ptype=DateTime),
-            Prop('date_modified', ptype=DateTime),
+            Prop('date_created', prop_type=DateTime),
+            Prop('date_modified', prop_type=DateTime),
         ]
         if config.LIFT_VERSION == '0.13':
             self.props.attributes.append(Prop(
                 'type',
                 required=True,
-                ptype=Key
+                prop_type=Key
             ))
         else:
             self.props.attributes.append(Prop(
                 'name',
                 required=True,
-                ptype=Key
+                prop_type=Key
             ))
         self.props.elements = [
-            Prop('annotations', ptype=list, ltype=Annotation),
+            Prop('annotations', prop_type=list, item_type=Annotation),
         ]
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop('traits', ptype=list, ltype=Flag))
-            self.props.elements.append(Prop('forms', ptype=list, ltype=Span))
+            self.props.elements.append(Prop(
+                'traits',
+                prop_type=list,
+                item_type=Flag
+            ))
+            self.props.elements.append(Prop(
+                'forms',
+                prop_type=list,
+                item_type=Span
+            ))
         else:
-            self.props.elements.append(Prop('traits', ptype=list, ltype=Trait))
+            self.props.elements.append(Prop(
+                'traits',
+                prop_type=list,
+                item_type=Trait
+            ))
         # attributes
         if config.LIFT_VERSION == '0.13':
             self.type: Key = None
@@ -539,13 +551,13 @@ class Extensible(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('date_created', ptype=DateTime),
-            Prop('date_modified', ptype=DateTime),
+            Prop('date_created', prop_type=DateTime),
+            Prop('date_modified', prop_type=DateTime),
         ]
         self.props.elements = [
-            Prop('fields', ptype=list, ltype=Field),
-            Prop('traits', ptype=list, ltype=Trait),
-            Prop('annotations', ptype=list, ltype=Annotation),
+            Prop('fields', prop_type=list, item_type=Field),
+            Prop('traits', prop_type=list, item_type=Trait),
+            Prop('annotations', prop_type=list, item_type=Annotation),
         ]
         # attributes
         self.date_created: Optional[DateTime] = None
