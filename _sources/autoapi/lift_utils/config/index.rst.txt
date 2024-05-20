@@ -12,6 +12,11 @@
 Module Contents
 ---------------
 
+.. py:data:: LIB_VERSION
+   :value: '0.1'
+
+   
+
 .. py:data:: LIFT_VERSION
 
    
