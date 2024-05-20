@@ -25,31 +25,25 @@ def etree_to_obj_attributes(xml_tree, obj):
             if not key:
                 key = p.name
             if key in obj.xml_tree.attrib.keys():
-                obj.__dict__[p.name] = p.type(obj.xml_tree.attrib.get(key))
+                obj.__dict__[p.name] = p.prop_type(obj.xml_tree.attrib.get(key))  # noqa: E501
 
     if obj.props.elements:
         for p in obj.props.elements:
             if p.name == 'pcdata' and obj.xml_tree.text:
                 obj.__dict__[p.name] = obj.xml_tree.text
             for c in obj.xml_tree.getchildren():
-                tag = config.XML_NAMES.get(p.name)
-                if not tag:
+                tag = config.XML_NAMES.get(p.name, p.name)
+                if p.name in ['fields', 'ranges'] and p.item_type is None:
+                    # These elements are plural but have explicit tags.
                     tag = p.name
-                if c.tag == 'fields' and tag == 'field':
-                    # Tag for Extensible should remain 'fields', but otherwise
-                    # it should be 'field' (e.g. for Header)
-                    tag = 'fields'
                 if tag == c.tag:
-                    if hasattr(p.type, 'append') and tag != 'fields':
-                        # List-like object; special exception for
-                        # header.Header.fields attribute.
-                        list_item = p.item_type(c)
+                    if hasattr(p.prop_type, 'append'):  # list-like object
                         if not obj.__dict__.get(p.name):
-                            obj.__dict__[p.name] = [list_item]
-                        else:
-                            obj.__dict__[p.name].append(list_item)
+                            # Instantiate object.
+                            obj.__dict__[p.name] = p.prop_type()
+                        obj.__dict__[p.name].append(p.item_type(c))
                     else:  # single element
-                        obj.__dict__[p.name] = p.type(c)
+                        obj.__dict__[p.name] = p.prop_type(c)
 
 
 def get_xml_parser():

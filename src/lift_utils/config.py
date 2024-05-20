@@ -32,6 +32,7 @@ XML_NAMES = {
     'pcdata': 'text',
     'pronunciations': 'pronunciation',
     'range_elements': 'range-element',
+    'ranges': 'range',
     'relations': 'relation',
     'reversals': 'reversal',
     'senses': 'sense',

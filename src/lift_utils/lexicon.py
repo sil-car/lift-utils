@@ -61,16 +61,15 @@ class Note(Multitext, Extensible):
         return super().__str__()
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -115,16 +114,15 @@ class Phonetic(Multitext, Extensible):
         return super().__str__()
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -172,12 +170,12 @@ class Etymology(Extensible):
         return f"{self.type} ({self.source})"
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -222,8 +220,8 @@ class GrammaticalInfo(LIFTUtilsBase):
         return f"{self.value}{traits}"
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -266,12 +264,12 @@ class Reversal(Multitext):
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -301,12 +299,12 @@ class Translation(Multitext):
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -357,16 +355,13 @@ class Example(Multitext, Extensible):
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -469,16 +464,13 @@ class Variant(Multitext, Extensible):
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -607,12 +599,10 @@ class Sense(Extensible):
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -747,12 +737,10 @@ class Entry(Extensible):
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -837,7 +825,7 @@ class Lexicon(LIFTUtilsBase):
         config.LIFT_VERSION = self.version
         # Update header range data from external file(s).
         ext_hrefs = set()
-        for r in self.header.ranges[:]:
+        for r in self.header.ranges.ranges:
             if r.href:
                 ext_hrefs.add(r.href)
         for p in ext_hrefs:
@@ -854,9 +842,8 @@ class Lexicon(LIFTUtilsBase):
             xml_tree = xml_to_etree(relpath)
 
         for _range in xml_tree.getchildren():
-            for i, r in enumerate(self.header.ranges[:]):
+            for i, r in enumerate(self.header.ranges.ranges):
                 if _range.attrib.get('id') == r.id:
-                    # print(f'matched {r.id}')
                     href = r.href
-                    self.header.ranges[i] = Range(_range)
-                    self.header.ranges[i].href = href  # add href back in
+                    self.header.ranges.ranges[i] = Range(_range)
+                    self.header.ranges.ranges[i].href = href  # add href back

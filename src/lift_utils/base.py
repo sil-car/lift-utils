@@ -501,7 +501,7 @@ class Field(Multitext):
             ))
         # attributes
         if config.LIFT_VERSION == '0.13':
-            self.type: Key = None
+            self.prop_type: Key = None
         else:
             self.name: Key = None
         self.date_created: Optional[DateTime] = None

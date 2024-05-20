@@ -53,7 +53,7 @@ class Prop:
     ):
         self.name = name
         self.required = required
-        self.type = prop_type
+        self.prop_type = prop_type
         self.item_type = item_type
 
 
