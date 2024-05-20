@@ -12,6 +12,7 @@ from .datatypes import Key
 from .datatypes import Prop
 from .datatypes import Props
 from .datatypes import URL
+from .utils import etree_to_obj_attributes
 
 
 class FieldDefn(Multitext):
@@ -32,7 +33,7 @@ class FieldDefn(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('tag', required=True),
+            Prop('tag', required=True, ptype=Key),
         ]
         # attributes
         self.tag: Key = None
@@ -51,9 +52,8 @@ class FieldDefn(Multitext):
         m._update_other_from_self(self)
         del m
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'tag':
-                self.tag = Key(v)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class FieldDefinition(LIFTUtilsBase):
@@ -72,19 +72,19 @@ class FieldDefinition(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('name', required=True),
-            Prop('fd_class'),
-            Prop('type'),
-            Prop('option_range'),
-            Prop('writing_system'),
+            Prop('name', required=True, ptype=Key),
+            Prop('class_', ptype=str),
+            Prop('type', ptype=str),
+            Prop('option_range', ptype=Key),
+            Prop('writing_system', ptype=str),
         ]
         self.props.elements = [
-            Prop('label'),
-            Prop('description'),
+            Prop('label', ptype=Multitext),
+            Prop('description', ptype=Multitext),
         ]
         # attributes
         self.name: Key = None
-        self.fd_class: Optional[str] = None
+        self.class_: Optional[str] = None
         self.type: Optional[str] = None
         self.option_range: Optional[Key] = None
         self.writing_system: Optional[str] = None
@@ -101,23 +101,8 @@ class FieldDefinition(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'name':
-                self.name = Key(v)
-            elif k == 'class':
-                self.fd_class = v
-            elif k == 'type':
-                self.type = v
-            elif k == 'option-range':
-                self.option_range = Key(v)
-            elif k == 'writing-system':
-                self.writing_system = v
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'label':
-                self.label = Multitext(c)
-            elif c.tag == 'description':
-                self.description = Multitext(c)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class RangeElement(Extensible):
@@ -134,14 +119,14 @@ class RangeElement(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id', required=True),
-            Prop('parent'),
-            Prop('guid'),
+            Prop('id', required=True, ptype=Key),
+            Prop('parent', ptype=Key),
+            Prop('guid', ptype=str),
         ]
         self.props.elements = [
-            Prop('descriptions'),
-            Prop('labels'),
-            Prop('abbrevs'),
+            Prop('descriptions', ptype=list, ltype=Multitext),
+            Prop('labels', ptype=list, ltype=Multitext),
+            Prop('abbrevs', ptype=list, ltype=Multitext),
         ]
         # attributes
         self.id: Key = None
@@ -162,33 +147,8 @@ class RangeElement(Extensible):
         ext._update_other_from_self(self)
         del ext
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'id':
-                self.id = Key(v)
-            elif k == 'parent':
-                self.parent = Key(v)
-            elif k == 'guid':
-                self.guid = v
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'description':
-                m = Multitext(c)
-                if not self.descriptions:
-                    self.descriptions = [m]
-                else:
-                    self.descriptions.append(m)
-            elif c.tag == 'label':
-                m = Multitext(c)
-                if not self.labels:
-                    self.labels = [m]
-                else:
-                    self.labels.append(m)
-            elif c.tag == 'abbrev':
-                m = Multitext(c)
-                if not self.abbrevs:
-                    self.abbrevs = [m]
-                else:
-                    self.abbrevs.append(m)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Range(Extensible):
@@ -207,15 +167,20 @@ class Range(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id', required=True),
-            Prop('guid'),
-            Prop('href'),
+            Prop('id', required=True, ptype=Key),
+            Prop('guid', ptype=str),
+            Prop('href', ptype=URL),
         ]
         self.props.elements = [
-            Prop('range_elements', required=True),
-            Prop('description'),
-            Prop('labels'),
-            Prop('abbrevs'),
+            Prop(
+                'range_elements',
+                required=True,
+                ptype=list,
+                ltype=RangeElement
+            ),
+            Prop('description', ptype=Multitext),
+            Prop('labels', ptype=list, ltype=Multitext),
+            Prop('abbrevs', ptype=list, ltype=Multitext),
         ]
         # attributes
         self.id: Key = None
@@ -237,35 +202,8 @@ class Range(Extensible):
         ext._update_other_from_self(self)
         del ext
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'id':
-                self.id = Key(v)
-            elif k == 'guid':
-                self.guid = v
-            elif k == 'href':
-                self.href = URL(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'description':
-                self.description = Multitext(c)
-            elif c.tag == 'range-element':
-                r = RangeElement(c)
-                if not self.range_elements:
-                    self.range_elements = [r]
-                else:
-                    self.range_elements.append(r)
-            elif c.tag == 'label':
-                m = Multitext(c)
-                if not self.labels:
-                    self.labels = [m]
-                else:
-                    self.labels.append(m)
-            elif c.tag == 'abbrev':
-                m = Multitext(c)
-                if not self.abbrevs:
-                    self.abbrevs = [c]
-                else:
-                    self.abbrevs.append(c)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class LiftRanges(list, LIFTUtilsBase):
@@ -338,9 +276,20 @@ class Fields(list, LIFTUtilsBase):
             super()._update_from_xml(xml_tree)
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.elements = [
-            Prop('field_definitions'),
-        ]
+        self.props.elements = []
+        if config.LIFT_VERSION == '0.13':
+            self.props.elements.append(Prop(
+                'field_definitions',
+                ptype=list,
+                ltype=FieldDefn
+            ))
+        else:
+            self.props.elements.append(Prop(
+                'field_definitions',
+                ptype=list,
+                ltype=FieldDefinition
+            ))
+
         # elements
         if config.LIFT_VERSION == '0.13':
             self.field_definitions: Optional[List[FieldDefn]] = None
@@ -353,15 +302,8 @@ class Fields(list, LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for c in xml_tree.getchildren():
-            if config.LIFT_VERSION == '0.13':
-                f = FieldDefn(c)
-            else:
-                f = FieldDefinition(c)
-            if not self.field_definitions:
-                self.field_definitions = [f]
-            else:
-                self.field_definitions.append(f)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Header(LIFTUtilsBase):
@@ -388,10 +330,13 @@ class Header(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('description'),
-            Prop('ranges'),
-            Prop('fields'),
+            Prop('description', ptype=Multitext),
+            Prop('ranges', ptype=LiftRanges, ltype=Range),
         ]
+        if config.LIFT_VERSION == '0.13':
+            self.props.elements.append(Prop('fields', ptype=FieldDefns))
+        else:
+            self.props.elements.append(Prop('fields', ptype=Fields))
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[LiftRanges[Range]] = None
@@ -416,13 +361,5 @@ class Header(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for c in xml_tree.getchildren():
-            if c.tag == 'description':
-                self.description = Multitext(c)
-            elif c.tag in ['ranges', 'lift-ranges']:
-                self.ranges = LiftRanges(c)
-            elif c.tag == 'fields':
-                if config.LIFT_VERSION == '0.13':
-                    self.fields = FieldDefns(c)
-                else:
-                    self.fields = Fields(c)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)

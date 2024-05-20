@@ -1,6 +1,5 @@
 """Manipulate lexicon entries and their dependent elements."""
 
-import logging
 from lxml import etree
 from pathlib import Path
 from typing import List
@@ -28,6 +27,7 @@ from .datatypes import URL
 from .header import Header
 from .header import Range
 from .utils import xml_to_etree
+from .utils import etree_to_obj_attributes
 
 
 class Note(Multitext, Extensible):
@@ -49,7 +49,7 @@ class Note(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type'),
+            Prop('type', ptype=Key),
         ]
         # attributes
         self.type: Optional[Key] = None
@@ -71,9 +71,8 @@ class Note(Multitext, Extensible):
         mul._update_other_from_self(self)
         del mul
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'type':
-                self.type = Key(v)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Phonetic(Multitext, Extensible):
@@ -96,8 +95,10 @@ class Phonetic(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('medias'),
+            Prop('medias', ptype=list, ltype=URLRef),
         ]
+        if config.LIFT_VERSION == '0.13':
+            self.props.elements.append(Prop('forms', ptype=list, ltype=Span))
         # elements
         self.medias: Optional[List[URLRef]] = None
         if config.LIFT_VERSION == '0.13':
@@ -120,21 +121,8 @@ class Phonetic(Multitext, Extensible):
         mul._update_other_from_self(self)
         del mul
 
-        for c in xml_tree.getchildren():
-            if c.tag == 'media':
-                r = URLRef()
-                r._update_from_xml(c)
-                if not self.medias:
-                    self.medias = [r]
-                else:
-                    self.medias.append(r)
-            if c.tag == 'form':
-                if config.LIFT_VERSION == '0.13':
-                    f = Form(c)
-                    if not self.forms:
-                        self.forms = [f]
-                    else:
-                        self.forms.append(f)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Etymology(Extensible):
@@ -159,12 +147,12 @@ class Etymology(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type', required=True),
-            Prop('source', required=True),
+            Prop('type', required=True, ptype=Key),
+            Prop('source', required=True, ptype=str),
         ]
         self.props.elements = [
-            Prop('glosses'),
-            Prop('form'),
+            Prop('glosses', ptype=list, ltype=Gloss),
+            Prop('form', ptype=Form),
         ]
         # attributes
         self.type: Key = None
@@ -186,21 +174,8 @@ class Etymology(Extensible):
         ext._update_other_from_self(self)
         del ext
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'type':
-                self.type = Key(v)
-            elif k == 'source':
-                self.source = v
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'gloss':
-                g = Gloss(c)
-                if not self.glosses:
-                    self.glosses = [g]
-                else:
-                    self.glosses.append(g)
-            if c.tag == 'form':
-                self.form = Form(c)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class GrammaticalInfo(LIFTUtilsBase):
@@ -223,10 +198,10 @@ class GrammaticalInfo(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('value', required=True),
+            Prop('value', required=True, ptype=Key),
         ]
         self.props.elements = [
-            Prop('traits'),
+            Prop('traits', ptype=list, ltype=Trait),
         ]
         # attributes
         self.value: Key = None
@@ -245,18 +220,8 @@ class GrammaticalInfo(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'value':
-                self.value = Key(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'trait':
-                t = Trait()
-                t._update_from_xml(c)
-                if not self.traits:
-                    self.traits = [t]
-                else:
-                    self.traits.append(t)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Reversal(Multitext):
@@ -281,16 +246,16 @@ class Reversal(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type'),
+            Prop('type', ptype=Key),
         ]
         self.props.elements = [
-            Prop('main'),
-            Prop('grammatical_info'),
+            Prop('main', ptype=Reversal),
+            Prop('grammatical_info', ptype=GrammaticalInfo),
         ]
         # attributes
         self.type: Optional[Key] = None
         # elements
-        self.main: Optional[str] = None  # Type should be 'Reversal'
+        self.main: Optional[Reversal] = None
         self.grammatical_info: Optional[GrammaticalInfo] = None
 
         if xml_tree is not None:
@@ -303,15 +268,8 @@ class Reversal(Multitext):
         mul._update_other_from_self(self)
         del mul
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'type':
-                self.type = Key(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'main':
-                self.main = v
-            elif c.tag == 'grammatical-info':
-                self.grammatical_info = GrammaticalInfo(c)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Translation(Multitext):
@@ -330,7 +288,7 @@ class Translation(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type'),
+            Prop('type', ptype=Key),
         ]
         # attributes
         self.type: Optional[Key] = None
@@ -345,9 +303,8 @@ class Translation(Multitext):
         mul._update_other_from_self(self)
         del mul
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'type':
-                self.type = Key(v)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Example(Multitext, Extensible):
@@ -372,12 +329,13 @@ class Example(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('source'),
+            Prop('source', ptype=Key),
         ]
         self.props.elements = [
-            Prop('translations'),
-            Prop('notes'),
+            Prop('translations', ptype=list, ltype=Translation),
         ]
+        if config.LIFT_VERSION in ['0.15']:
+            self.props.elements.append(Prop('notes', ptype=list, ltype=Note))
         # attributes
         self.source: Optional[Key] = None
         # elements
@@ -389,8 +347,10 @@ class Example(Multitext, Extensible):
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
 
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -399,22 +359,8 @@ class Example(Multitext, Extensible):
         mul._update_other_from_self(self)
         del mul
 
-        for c in xml_tree.getchildren():
-            if c.tag == 'source':
-                self.source = Key(c.text)
-            elif c.tag == 'translation':
-                t = Translation(c)
-                if not self.translations:
-                    self.translations = [t]
-                else:
-                    self.translations.append(t)
-            elif c.tag == 'note':
-                if config.LIFT_VERSION in ['0.15']:
-                    n = Note(c)
-                    if not self.notes:
-                        self.notes = [n]
-                    else:
-                        self.notes.append(n)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Relation(Extensible):
@@ -439,12 +385,12 @@ class Relation(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('type', required=True),
-            Prop('ref', required=True),
-            Prop('order'),
+            Prop('type', required=True, ptype=Key),
+            Prop('ref', required=True, ptype=RefId),
+            Prop('order', ptype=int),
         ]
         self.props.elements = [
-            Prop('usages')
+            Prop('usages', ptype=list, ltype=Multitext)
         ]
         # attributes
         self.type: Key = None
@@ -460,26 +406,14 @@ class Relation(Extensible):
         return f"{self.type}: {self.ref}"
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
-
-        for k, v in xml_tree.attrib.items():
-            if k == 'type':
-                self.type = Key(v)
-            elif k == 'ref':
-                self.ref = RefId(v)
-            elif k == 'order':
-                self.order = int(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'usage':
-                if not self.usages:
-                    self.usages = [Multitext(c)]
-                else:
-                    self.usages.append(Multitext(c))
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Variant(Multitext, Extensible):
@@ -506,11 +440,11 @@ class Variant(Multitext, Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('ref'),
+            Prop('ref', ptype=RefId),
         ]
         self.props.elements = [
-            Prop('pronunciations'),
-            Prop('relations'),
+            Prop('pronunciations', ptype=list, ltype=Phonetic),
+            Prop('relations', ptype=list, ltype=Relation),
         ]
         # attributes
         self.ref: Optional[RefId] = None
@@ -525,8 +459,10 @@ class Variant(Multitext, Extensible):
         return self.ref if self.ref else 'variant'
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
 
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
@@ -535,23 +471,8 @@ class Variant(Multitext, Extensible):
         mul._update_other_from_self(self)
         del mul
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'ref':
-                self.ref = RefId(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'pronunciation':
-                p = Phonetic(c)
-                if not self.pronunciations:
-                    self.pronunciations = [p]
-                else:
-                    self.pronunciations.append(p)
-            elif c.tag == 'relation':
-                r = Relation(c)
-                if not self.relations:
-                    self.relations = [r]
-                else:
-                    self.relations.append(r)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Sense(Extensible):
@@ -591,20 +512,24 @@ class Sense(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id'),
-            Prop('order'),
+            Prop('id', ptype=RefId),
+            Prop('order', ptype=int),
         ]
         self.props.elements = [
-            Prop('grammatical_info'),
-            Prop('glosses'),
-            Prop('definition'),
-            Prop('relations'),
-            Prop('notes'),
-            Prop('examples'),
-            Prop('reversals'),
-            Prop('illustrations'),
-            Prop('subsenses'),
+            Prop('grammatical_info', ptype=GrammaticalInfo),
+            Prop('definition', ptype=Multitext),
+            Prop('relations', ptype=list, ltype=Relation),
+            Prop('notes', ptype=list, ltype=Note),
+            Prop('examples', ptype=list, ltype=Example),
+            Prop('reversals', ptype=list, ltype=Reversal),
+            Prop('illustrations', ptype=list, ltype=URLRef),
+            Prop('subsenses', ptype=list, ltype=Sense),
         ]
+        if config.LIFT_VERSION == '0.13':
+            self.props.elements.append(Prop('glosses', ptype=list, ltype=Form))
+        else:
+            self.props.elements.append(Prop('glosses', ptype=list, ltype=Gloss))  # noqa: E501
+
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
@@ -664,69 +589,16 @@ class Sense(Extensible):
         print(self.__str__())
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
 
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'id':
-                self.id = v
-            elif k == 'order':
-                self.order = v
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'grammatical-info':
-                self.grammatical_info = GrammaticalInfo(c)
-            elif c.tag == 'gloss':
-                if config.LIFT_VERSION == '0.13':
-                    g = Form(c)
-                else:
-                    g = Gloss(c)
-                if not self.glosses:
-                    self.glosses = [g]
-                else:
-                    self.glosses.append(g)
-            elif c.tag == 'definition':
-                m = Multitext(c)
-                self.definition = m
-            elif c.tag == 'relation':
-                r = Relation(c)
-                if not self.relations:
-                    self.relations = [r]
-                else:
-                    self.relations.append(r)
-            elif c.tag == 'note':
-                n = Note(c)
-                if not self.notes:
-                    self.notes = [n]
-                else:
-                    self.notes.append(n)
-            elif c.tag == 'example':
-                e = Example(c)
-                if not self.examples:
-                    self.examples = [e]
-                else:
-                    self.examples.append(e)
-            elif c.tag == 'reversal':
-                r = Reversal(c)
-                if not self.reversals:
-                    self.reversals = [r]
-                else:
-                    self.reversals.append(r)
-            elif c.tag == 'illustration':
-                r = URLRef(c)
-                if not self.illustrations:
-                    self.illustrations = [r]
-                else:
-                    self.illustrations.append(r)
-            elif c.tag == 'subsense':
-                s = Sense(c)
-                if not self.subsenses:
-                    self.subsenses = [s]
-                else:
-                    self.subsenses.append(s)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Entry(Extensible):
@@ -765,20 +637,20 @@ class Entry(Extensible):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('id'),
-            Prop('guid'),
-            Prop('order'),
-            Prop('date_deleted'),
+            Prop('id', ptype=RefId),
+            Prop('guid', ptype=str),
+            Prop('order', ptype=str),
+            Prop('date_deleted', ptype=DateTime),
         ]
         self.props.elements = [
-            Prop('lexical_unit'),
-            Prop('citation'),
-            Prop('pronunciations'),
-            Prop('variants'),
-            Prop('senses'),
-            Prop('notes'),
-            Prop('relations'),
-            Prop('etymologies'),
+            Prop('lexical_unit', ptype=Multitext),
+            Prop('citation', ptype=Multitext),
+            Prop('pronunciations', ptype=list, ltype=Phonetic),
+            Prop('variants', ptype=list, ltype=Variant),
+            Prop('senses', ptype=list, ltype=Sense),
+            Prop('notes', ptype=list, ltype=Note),
+            Prop('relations', ptype=list, ltype=Relation),
+            Prop('etymologies', ptype=list, ltype=Etymology),
         ]
         # attributes
         self.id: Optional[RefId] = None
@@ -857,63 +729,16 @@ class Entry(Extensible):
         print('\n'.join(text))
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
 
+        # Update super class attributes.
         ext = Extensible(xml_tree)
         ext._update_other_from_self(self)
         del ext
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'id':
-                self.id = v
-            elif k == 'guid':
-                self.guid = v
-            elif k == 'order':
-                self.order = v
-            elif k == 'dateDeleted':
-                self.date_deleted = v
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'lexical-unit':
-                self.lexical_unit = Multitext(c)
-            elif c.tag == 'citation':
-                self.citation = Multitext(c)
-            elif c.tag == 'pronunciation':
-                p = Phonetic(c)
-                if not self.pronunciations:
-                    self.pronunciations = [p]
-                else:
-                    self.pronunciations.append(p)
-            elif c.tag == 'variant':
-                v = Variant(c)
-                if not self.variants:
-                    self.variants = [v]
-                else:
-                    self.variants.append(v)
-            elif c.tag == 'sense':
-                s = Sense(c)
-                if not self.senses:
-                    self.senses = [s]
-                else:
-                    self.senses.append(s)
-            elif c.tag == 'note':
-                n = Note(c)
-                if not self.notes:
-                    self.notes = [n]
-                else:
-                    self.notes.append(n)
-            elif c.tag == 'relation':
-                r = Relation(c)
-                if not self.relations:
-                    self.relations = [r]
-                else:
-                    self.relations.append(r)
-            elif c.tag == 'etymology':
-                e = Etymology(c)
-                if not self.etymologies:
-                    self.etymologies = [e]
-                else:
-                    self.etymologies.append(e)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Lexicon(LIFTUtilsBase):
@@ -939,12 +764,12 @@ class Lexicon(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('version', required=True),
-            Prop('producer'),
+            Prop('version', required=True, ptype=str),
+            Prop('producer', ptype=str),
         ]
         self.props.elements = [
-            Prop('header'),
-            Prop('entries'),
+            Prop('header', ptype=Header),
+            Prop('entries', ptype=list, ltype=Entry),
         ]
         self.path = Path(path)
         # attributes
@@ -988,34 +813,19 @@ class Lexicon(LIFTUtilsBase):
                         return sense
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
-        for k, v in xml_tree.attrib.items():
-            if k == 'version':
-                self.version = v
-                config.LIFT_VERSION = self.version  # allow global access
-            elif k == 'producer':
-                self.producer = v
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'header':
-                # Get initial header info from LIFT file.
-                self.header = Header(c)
-                # Update header range data from external file(s).
-                ext_hrefs = set()
-                for r in self.header.ranges[:]:
-                    if r.href:
-                        ext_hrefs.add(r.href)
-                for p in ext_hrefs:
-                    self._update_header_from_href(p)
-            elif c.tag == 'entry':
-                entry = Entry(c)
-                if not self.entries:
-                    self.entries = [entry]
-                else:
-                    self.entries.append(entry)
-            else:
-                logging.warning(f"{__class__}: Unhandled XML tag: {c.tag}")
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
+        # Allow global access to version number.
+        config.LIFT_VERSION = self.version
+        # Update header range data from external file(s).
+        ext_hrefs = set()
+        for r in self.header.ranges[:]:
+            if r.href:
+                ext_hrefs.add(r.href)
+        for p in ext_hrefs:
+            self._update_header_from_href(p)
 
     def _update_header_from_href(self, href: URL):
         filepath = unquote(urlparse(href).path)

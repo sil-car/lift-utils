@@ -13,6 +13,7 @@ from .datatypes import Lang
 from .datatypes import Prop
 from .datatypes import Props
 from .datatypes import URL
+from .utils import etree_to_obj_attributes
 
 
 class LIFTUtilsBase:
@@ -62,21 +63,21 @@ class Span(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('lang'),
-            Prop('href'),
-            Prop('style_class'),
+            Prop('lang', ptype=Lang),
+            Prop('href', ptype=URL),
+            Prop('class_', ptype=str),
         ]
         self.props.elements = [
-            Prop('pcdata', required=True),
-            Prop('spans'),
+            Prop('pcdata', required=True, ptype=PCData),
+            Prop('spans', ptype=list, ltype=Span),
         ]
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
-        self.style_class: Optional[str] = None
+        self.class_: Optional[str] = None
         # elements
-        self.pcdata = None
-        self.spans: Optional[List[str]] = None  # Type should be 'Span'
+        self.pcdata: PCData = None
+        self.spans: Optional[List[Span]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -84,24 +85,8 @@ class Span(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'lang':
-                self.lang = Lang(k)
-            elif k == 'href':
-                self.href = URL(v)
-            elif k == 'class':
-                self.style_class = v
-
-        if xml_tree.text is not None:
-            self.pcdata = PCData(xml_tree.text)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'span':
-                s = Span(c)
-                if not self.spans:
-                    self.spans = [s]
-                else:
-                    self.spans.append(s)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
     def _build_xml_tree(self):
         # This is basically the reverse function of _update_from_xml.
@@ -139,12 +124,12 @@ class Trait(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('name', required=True),
-            Prop('value', required=True),
-            Prop('id'),
+            Prop('name', required=True, ptype=Key),
+            Prop('value', required=True, ptype=Key),
+            Prop('id', ptype=Key),
         ]
         self.props.elements = [
-            Prop('annotations'),
+            Prop('annotations', ptype=list, ltype=Annotation),
         ]
         # attributes
         self.name: Key = None
@@ -162,21 +147,8 @@ class Trait(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'name':
-                self.name = Key(v)
-            elif k == 'value':
-                self.value = Key(v)
-            elif k == 'id':
-                self.id = Key(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'annotation':
-                a = Annotation(c)
-                if not self.annotations:
-                    self.annotations = [a]
-                else:
-                    self.annotations.append(a)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
     def _build_xml_tree(self):
         # This is basically the reverse function of _update_from_xml.
@@ -238,17 +210,17 @@ class Form(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('lang', required=True),
+            Prop('lang', required=True, ptype=Lang),
         ]
         self.props.elements = [
-            Prop('text', required=True),
-            Prop('annotations'),
+            Prop('text', required=True, ptype=Text),
+            Prop('annotations', ptype=list, ltype=Annotation),
         ]
         # attributes
         self.lang: Lang = None
         # elements
         self.text: Text = None
-        self.annotations: Optional[List] = None
+        self.annotations: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -259,19 +231,8 @@ class Form(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'lang':
-                self.lang = Lang(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'text':
-                self.text = Text(c.text)
-            elif c.tag == 'annotation':
-                a = Annotation(c)
-                if not self.annotations:
-                    self.annotations = [a]
-                else:
-                    self.annotations.append(a)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.lang = self.lang
@@ -296,8 +257,8 @@ class Text(Form):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('pcdata', required=True),
-            Prop('spans'),
+            Prop('pcdata', required=True, ptype=PCData),
+            Prop('spans', ptype=list, ltype=Span),
         ]
         # elements
         self.pcdata: str = None
@@ -314,16 +275,8 @@ class Text(Form):
         f._update_other_from_self(self)
         del f
 
-        if xml_tree.text:
-            self.text = PCData(xml_tree.text)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'span':
-                if not self.spans:
-                    s = Span(c)
-                    self.spans = [s]
-                else:
-                    self.spans.append(s)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
     def __str__(self):
         return str(self.pcdata)
@@ -348,12 +301,12 @@ class Multitext(Text):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('forms'),
-            Prop('text'),
+            Prop('forms', ptype=list, ltype=Form),
+            Prop('text', ptype=str),
         ]
         # elements
-        self.forms = None
-        self.text = None  # deprecated in v0.15
+        self.forms: Optional[List[Form]] = None
+        self.text: Optional[str] = None  # deprecated in v0.15
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -376,16 +329,8 @@ class Multitext(Text):
             txt._update_other_from_self(self)
             del txt
 
-        for c in xml_tree.getchildren():
-            if c.tag == 'form':
-                f = Form(c)
-                if not self.forms:
-                    self.forms = [f]
-                else:
-                    self.forms.append(f)
-            elif c.tag == 'text':
-                if config.LIFT_VERSION == '0.13':
-                    self.text = c.text
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.forms = self.forms
@@ -408,7 +353,7 @@ class Gloss(Form):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
-            Prop('traits'),
+            Prop('traits', ptype=list, ltype=Trait),
         ]
         # elements
         self.traits: Optional[List[Trait]] = None
@@ -426,13 +371,8 @@ class Gloss(Form):
         form._update_other_from_self(self)
         del form
 
-        for c in xml_tree.getchildren():
-            if c.tag == 'trait':
-                t = Trait(c)
-                if not self.traits:
-                    self.traits = [t]
-                else:
-                    self.traits.append(t)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class URLRef(LIFTUtilsBase):
@@ -449,10 +389,10 @@ class URLRef(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('href', required=True),
+            Prop('href', required=True, ptype=URL),
         ]
         self.props.elements = [
-            Prop('label'),
+            Prop('label', ptype=Multitext),
         ]
         # attributes
         self.href: URL = None
@@ -465,13 +405,8 @@ class URLRef(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'href':
-                self.href = URL(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'label':
-                self.label = Multitext(c)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Annotation(Multitext):
@@ -488,10 +423,10 @@ class Annotation(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('name', required=True),
-            Prop('value', required=True),
-            Prop('who'),
-            Prop('when'),
+            Prop('name', required=True, ptype=Key),
+            Prop('value', required=True, ptype=Key),
+            Prop('who', ptype=Key),
+            Prop('when', ptype=DateTime),
         ]
         # attributes
         self.name: Key = None
@@ -509,15 +444,8 @@ class Annotation(Multitext):
         mul._update_other_from_self(self)
         del mul
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'name':
-                self.name = Key(v)
-            elif k == 'value':
-                self.value = Key(v)
-            elif k == 'who':
-                self.who = Key(v)
-            elif k == 'when':
-                self.when = DateTime(v)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Field(Multitext):
@@ -536,19 +464,29 @@ class Field(Multitext):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('date_created'),
-            Prop('date_modified'),
+            Prop('date_created', ptype=DateTime),
+            Prop('date_modified', ptype=DateTime),
         ]
         if config.LIFT_VERSION == '0.13':
-            self.props.attributes.append(Prop('type', required=True))
+            self.props.attributes.append(Prop(
+                'type',
+                required=True,
+                ptype=Key
+            ))
         else:
-            self.props.attributes.append(Prop('name', required=True))
+            self.props.attributes.append(Prop(
+                'name',
+                required=True,
+                ptype=Key
+            ))
         self.props.elements = [
-            Prop('traits'),
-            Prop('annotations'),
+            Prop('annotations', ptype=list, ltype=Annotation),
         ]
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop('forms'))
+            self.props.elements.append(Prop('traits', ptype=list, ltype=Flag))
+            self.props.elements.append(Prop('forms', ptype=list, ltype=Span))
+        else:
+            self.props.elements.append(Prop('traits', ptype=list, ltype=Trait))
         # attributes
         if config.LIFT_VERSION == '0.13':
             self.type: Key = None
@@ -574,39 +512,8 @@ class Field(Multitext):
         mul._update_other_from_self(self)
         del mul
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'type':
-                self.type = v
-            elif k == 'name':
-                self.name = v
-            elif k == 'dateCreated':
-                self.date_created = DateTime(v)
-            elif k == 'dateModified':
-                self.date_modified = DateTime(v)
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'trait':
-                if config.LIFT_VERSION == '0.13':
-                    t = Flag(c)
-                else:
-                    t = Trait(c)
-                if not self.traits:
-                    self.traits = [t]
-                else:
-                    self.traits.append(t)
-            elif c.tag == 'form':
-                if config.LIFT_VERSION == '0.13':
-                    s = Span(c)
-                    if not self.forms:
-                        self.forms = [s]
-                    else:
-                        self.forms.append(s)
-            elif c.tag == 'annotation':
-                a = Annotation(c)
-                if not self.annotations:
-                    self.annotations = [a]
-                else:
-                    self.annotations.append(a)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Extensible(LIFTUtilsBase):
@@ -632,13 +539,13 @@ class Extensible(LIFTUtilsBase):
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
-            Prop('date_created'),
-            Prop('date_modified'),
+            Prop('date_created', ptype=DateTime),
+            Prop('date_modified', ptype=DateTime),
         ]
         self.props.elements = [
-            Prop('fields'),
-            Prop('traits'),
-            Prop('annotations'),
+            Prop('fields', ptype=list, ltype=Field),
+            Prop('traits', ptype=list, ltype=Trait),
+            Prop('annotations', ptype=list, ltype=Annotation),
         ]
         # attributes
         self.date_created: Optional[DateTime] = None
@@ -659,31 +566,8 @@ class Extensible(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         self.xml_tree = xml_tree
 
-        for k, v in xml_tree.attrib.items():
-            if k == 'dateCreated':
-                self.date_created = v
-            elif k == 'dateModified':
-                self.date_modified = v
-
-        for c in xml_tree.getchildren():
-            if c.tag == 'field':
-                f = Field(c)
-                if not self.fields:
-                    self.fields = [f]
-                else:
-                    self.fields.append(f)
-            elif c.tag == 'trait':
-                t = Trait(c)
-                if not self.traits:
-                    self.traits = [t]
-                else:
-                    self.traits.append(t)
-            elif c.tag == 'annotation':
-                a = Annotation(c)
-                if not self.annotations:
-                    self.annotations = [a]
-                else:
-                    self.annotations.append(a)
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.date_created = self.date_created

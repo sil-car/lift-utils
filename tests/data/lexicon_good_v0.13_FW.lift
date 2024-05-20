@@ -54,7 +54,7 @@
             </field>
         </fields>
     </header>
-    <entry dateCreated="2019-03-05T12:19:45Z" dateModified="2022-05-04T11:17:08Z" id="kêtê ngû sô asua pëpe_000d9e27-d103-4601-a4b1-6c3ee5ef4c01" guid="000d9e27-d103-4601-a4b1-6c3ee5ef4c01" order="0" dateDeleted=''>
+    <entry dateCreated="2019-03-05T12:19:45Z" dateModified="2022-05-04T11:17:08Z" id="kêtê ngû sô asua pëpe_000d9e27-d103-4601-a4b1-6c3ee5ef4c01" guid="000d9e27-d103-4601-a4b1-6c3ee5ef4c01" order="0" dateDeleted='1'>
         <citation>
             <form lang="en"><text>TestCitation</text></form>
         </citation>
@@ -77,20 +77,30 @@
             <trait name="is-primary" value="true"/>
             <trait  name="complex-form-type" value="Expr."/>
         </relation>
-        <pronunciation/>
+        <pronunciation>
+            <media/>
+            <form/>
+        </pronunciation>
         <variant ref="TestRefId">
             <pronunciation/>
             <relation/>
         </variant>
-        <note/>
-        <etymology/>
+        <note type="TestType"/>
+        <etymology type="TestType" source="TestSource">
+            <form/>
+            <gloss/>
+        </etymology>
         <sense id="27bb9896-e413-4c14-8cdc-cbe26ecbc148" order="0">
-            <grammatical-info value="Nom"/>
+            <grammatical-info value="Nom">
+                <trait name ="TestTrait"/>
+            </grammatical-info>
             <gloss lang="de"><text>Teich</text></gloss>
             <gloss lang="en"><text>pool</text></gloss>
             <gloss lang="fr"><text>étang</text></gloss>
             <definition/>
-            <example/>
+            <example source="ExampleSource">
+                <translation type="TestType"/>
+            </example>
             <illustration/>
             <relation/>
             <subsense/>
@@ -98,7 +108,11 @@
             <note type="source">
                 <form lang="en"><text>tl</text></form>
             </note>
-            <reversal type="fr"><form lang="fr"><text>étang</text></form></reversal>
+            <reversal type="fr">
+                <form lang="fr"><text>étang</text></form>
+                <main/>
+                <grammatical-info/>
+            </reversal>
             <reversal type="en"><form lang="en"><text>pool</text></form></reversal>
             <reversal type="de"><form lang="de"><text>Teich</text></form></reversal>
             <trait  name="status" value="Confirmed"/>

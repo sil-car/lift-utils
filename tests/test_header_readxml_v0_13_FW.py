@@ -35,6 +35,22 @@ class TestFieldDefns(unittest.TestCase):
         self.assertTrue(len(self.obj) > 0)
 
 
+class TestFields(unittest.TestCase):
+    def setUp(self):
+        config.LIFT_VERSION = LIFT_VERSION
+        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//fields')  # noqa: E501
+        self.obj = header.Fields(self.xml_tree)
+
+    def test_attribs(self):
+        pass  # no attributes to test
+
+    def test_elems(self):
+        required = [p.name for p in self.obj.props.elements if p.required]
+        test_elems(self, self.obj, required)
+        optional = [p.name for p in self.obj.props.elements if not p.required]
+        test_elems(self, self.obj, optional)
+
+
 class TestHeader(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION

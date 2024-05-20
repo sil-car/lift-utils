@@ -48,9 +48,13 @@ class Prop:
         self,
         name: str = None,
         required: bool = False,
+        ptype=None,
+        ltype=None,
     ):
         self.name = name
         self.required = required
+        self.type = ptype
+        self.list_type = ltype
 
 
 class Props:
