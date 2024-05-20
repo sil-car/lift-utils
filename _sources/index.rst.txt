@@ -7,7 +7,7 @@ LIFT Utils documentation
 ========================
 
 **LIFT Utils** is a Python library for manipulating linguistic lexicon files in
-the XML-based `LIFT <https://github.com/sillsdev/lift-standard> format`_.
+the XML-based `LIFT format<https://github.com/sillsdev/lift-standard>`_.
 
 >>> from lift_utils import lift
 >>> lex = lift.LIFTFile("sango.lift").to_lexicon()
