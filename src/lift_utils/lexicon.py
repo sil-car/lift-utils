@@ -819,10 +819,11 @@ class Lexicon(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
+        self.version = xml_tree.attrib.get('version')
         # Allow global access to version number.
         config.LIFT_VERSION = self.version
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
         # Update header range data from external file(s).
         ext_hrefs = set()
         for r in self.header.ranges.ranges:
