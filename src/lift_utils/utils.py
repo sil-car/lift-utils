@@ -43,10 +43,11 @@ def etree_to_obj_attributes(xml_tree, obj):
                     if hasattr(p.type, 'append') and tag != 'fields':
                         # List-like object; special exception for
                         # header.Header.fields attribute.
+                        list_item = p.item_type(c)
                         if not obj.__dict__.get(p.name):
-                            obj.__dict__[p.name] = [p.list_type(c)]
+                            obj.__dict__[p.name] = [list_item]
                         else:
-                            obj.__dict__[p.name].append(p.list_type(c))
+                            obj.__dict__[p.name].append(list_item)
                     else:  # single element
                         obj.__dict__[p.name] = p.type(c)
 

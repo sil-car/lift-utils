@@ -54,7 +54,7 @@ class Prop:
         self.name = name
         self.required = required
         self.type = prop_type
-        self.list_type = item_type
+        self.item_type = item_type
 
 
 class Props:
