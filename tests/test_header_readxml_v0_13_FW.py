@@ -40,6 +40,9 @@ class TestFieldDefns(unittest.TestCase):
         optional = [p.name for p in self.obj.props.elements if not p.required]
         test_elems(self, self.obj, optional)
 
+    def test_items(self):
+        self.assertTrue(len(self.obj.fields) > 1)
+
 
 class TestHeader(unittest.TestCase):
     def setUp(self):
@@ -71,6 +74,9 @@ class TestRanges(unittest.TestCase):
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
         test_elems(self, self.obj, optional)
+
+    def test_items(self):
+        self.assertTrue(len(self.obj.ranges) > 1)
 
 
 class TestRange(unittest.TestCase):

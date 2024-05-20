@@ -14,5 +14,11 @@ class TestLIFTFile(unittest.TestCase):
         self.lift_file = lift.LIFTFile(LIFT_GOOD)
         self.lexicon = self.lift_file.to_lexicon()
 
-    # def test_lexicon_header_ranges(self):
-    #     print(len(self.lexicon.header.ranges))
+    def test_lexicon_header_fields(self):
+        self.assertTrue(len(self.lexicon.header.fields.fields) > 1)
+
+    def test_lexicon_header_ranges(self):
+        self.assertTrue(len(self.lexicon.header.ranges.ranges) > 1)
+
+    def test_lexicon_entries(self):
+        self.assertTrue(len(self.lexicon.entries) > 1)

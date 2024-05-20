@@ -29,6 +29,9 @@ class TestLexicon(unittest.TestCase):
         optional = [p.name for p in self.obj.props.elements if not p.required]
         test_elems(self, self.obj, optional)
 
+    def test_entries(self):
+        self.assertTrue(len(self.obj.entries) > 0)
+
     def test_update_header_from_file(self):
         self.assertTrue(len(self.obj.header.ranges.ranges) > 1)
 
