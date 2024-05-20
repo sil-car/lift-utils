@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lift_utils"
+description = "Read and write LIFT files in Python."
+readme = "README.md"
+authors = [
+  { name="Nate Marti", email="nate_marti@sil.org" },
+]
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "lxml",
+    "Unidecode",
+]
+dynamic = ["version"]
+
+#[project.scripts]
+#exe-check = "silcar_it_tools.exe_check:cli_exe_check"
+#get-usb-files = "silcar_it_tools.usb_utils:cli_get_usb_files"
+
+[project.urls]
+Homepage = "https://github.com/sil-car/lift-utils"
+Issues = "https://github.com/sil-car/lift-utils/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "lift_utils.config.LIB_VERSION"}

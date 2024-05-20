@@ -49,7 +49,6 @@ def etree_to_obj_attributes(xml_tree, obj):
                             obj.__dict__[p.name].append(p.list_type(c))
                     else:  # single element
                         obj.__dict__[p.name] = p.type(c)
-                    break
 
 
 def get_xml_parser():
