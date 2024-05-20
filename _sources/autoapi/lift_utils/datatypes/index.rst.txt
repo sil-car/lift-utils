@@ -97,7 +97,7 @@ Classes
    errors defaults to 'strict'.
 
 
-.. py:class:: Prop(name: str = None, required: bool = False)
+.. py:class:: Prop(name: str = None, required: bool = False, ptype=None, ltype=None)
 
 
 

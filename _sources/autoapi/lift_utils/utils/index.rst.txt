@@ -19,6 +19,7 @@ Functions
 .. autoapisummary::
 
    lift_utils.utils.ellipsize
+   lift_utils.utils.etree_to_obj_attributes
    lift_utils.utils.get_xml_parser
    lift_utils.utils.unicode_sort
    lift_utils.utils.xml_to_etree
@@ -26,6 +27,9 @@ Functions
 
 
 .. py:function:: ellipsize(string, length)
+
+
+.. py:function:: etree_to_obj_attributes(xml_tree, obj)
 
 
 .. py:function:: get_xml_parser()
