@@ -6,7 +6,7 @@ from typing import Union
 
 from .lexicon import Lexicon
 from .base import LIFTUtilsBase
-from .utils import xml_to_etree
+from .utils import xmlfile_to_etree
 
 
 class LIFTFile(LIFTUtilsBase):
@@ -27,7 +27,7 @@ class LIFTFile(LIFTUtilsBase):
 
     def _read_to_etree(self) -> etree:
         # Remove existing line breaks to allow pretty_print to work properly.
-        return xml_to_etree(self.path)
+        return xmlfile_to_etree(self.path)
 
     def to_lexicon(self) -> Lexicon:
         """Parse LIFT data to a Lexicon object."""

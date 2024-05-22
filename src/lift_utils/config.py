@@ -31,6 +31,7 @@ XML_NAMES = {
     'option_range': 'option-range',
     'pcdata': 'text',
     'pronunciations': 'pronunciation',
+    'prop_type': 'type',
     'range_elements': 'range-element',
     'ranges': 'range',
     'relations': 'relation',

@@ -231,7 +231,6 @@ class Ranges(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -296,8 +295,7 @@ class Fields(LIFTUtilsBase):
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
-
-        # # Update object attributes.
+        # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
 

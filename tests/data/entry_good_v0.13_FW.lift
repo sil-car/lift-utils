@@ -4,8 +4,9 @@
             <text>abat</text>
             <annotation name="TestFormAnno" value="TestValue" who="unknown" when="sometime">
                 <form lang="en">
-                    <text>A test annotation.</text>
+                    <text>A test annotation <span class="underline" lang="en" href="//home/user">with</span> a tail.</text>
                 </form>
+                <trait name="paradigm" value="sing"/>
                 <text>Deprecated in v0.15, but still valid in v0.13</text>
             </annotation>
         </form>

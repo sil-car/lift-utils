@@ -17,7 +17,12 @@ def etree_to_obj_attributes(xml_tree, obj):
     obj.xml_tree = xml_tree
 
     if xml_tree.text:
-        obj.text = xml_tree.text
+        if hasattr(obj, 'pcdata'):
+            obj.pcdata = xml_tree.text
+        else:
+            obj.text = xml_tree.text
+    if xml_tree.tail:
+        obj.tail = xml_tree.tail
 
     if obj.props.attributes:
         for p in obj.props.attributes:
@@ -46,6 +51,36 @@ def etree_to_obj_attributes(xml_tree, obj):
                         obj.__dict__[p.name] = p.prop_type(c)
 
 
+def obj_attributes_to_etree(obj, root_tag):
+    if not isinstance(root_tag, etree._Element):
+        xml_tree = etree.Element(root_tag)
+    else:
+        xml_tree = root_tag
+
+    if obj.props.attributes:
+        for attrib in obj.props.attributes:
+            a = attrib.name
+            x = config.XML_NAMES.get(a, a)
+            xml_tree.set(x, obj.__dict__.get(a))
+
+    if obj.props.elements:
+        for elem in obj.props.elements:
+            e = elem.name
+            x = config.XML_NAMES.get(e, e)
+            if hasattr(obj.__dict__.get(e), 'append'):
+                for i in obj.__dict__.get(e):
+                    etree.SubElement(xml_tree, x)
+            # elif hasattr(obj.__dict__.get(e), 'xml_tree'):
+            #     e._build_xml_tree()
+            elif e == 'pcdata':
+                xml_tree.text = obj.__dict__.get(e)
+            elif e == 'tail':
+                xml_tree.tail = obj.__dict__.get(e)
+            elif obj.__dict__.get(e):
+                etree.SubElement(xml_tree, x)
+    return xml_tree
+
+
 def get_xml_parser():
     return etree.XMLParser(remove_blank_text=True)
 
@@ -56,5 +91,20 @@ def unicode_sort(in_list):
     return sorted(in_list, key=fmt)
 
 
-def xml_to_etree(filepath):
+def xmlfile_to_etree(filepath):
     return etree.parse(str(filepath), get_xml_parser()).getroot()
+
+
+def xmlstring_to_etree(xmlstring):
+    return etree.fromstring(xmlstring, get_xml_parser())
+
+
+def get_dict_key_from_value(dictionary, value, idx=0):
+    keys = []
+    for k, v in dictionary.items():
+        if v == value:
+            keys.append(k)
+    if keys:
+        return keys[idx]
+    else:
+        return None

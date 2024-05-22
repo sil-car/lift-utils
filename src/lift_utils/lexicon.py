@@ -26,7 +26,7 @@ from .datatypes import Props
 from .datatypes import URL
 from .header import Header
 from .header import Range
-from .utils import xml_to_etree
+from .utils import xmlfile_to_etree
 from .utils import etree_to_obj_attributes
 
 
@@ -835,12 +835,12 @@ class Lexicon(LIFTUtilsBase):
     def _update_header_from_href(self, href: URL):
         filepath = unquote(urlparse(href).path)
         try:
-            xml_tree = xml_to_etree(filepath)
+            xml_tree = xmlfile_to_etree(filepath)
         except OSError:
             # Probably absolute URI from a different device.
             # Try same file name, but in same dir as current LIFT file.
             relpath = self.path.parent / Path(filepath).name
-            xml_tree = xml_to_etree(relpath)
+            xml_tree = xmlfile_to_etree(relpath)
 
         for _range in xml_tree.getchildren():
             for i, r in enumerate(self.header.ranges.ranges):

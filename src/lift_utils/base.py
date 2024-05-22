@@ -14,6 +14,7 @@ from .datatypes import Prop
 from .datatypes import Props
 from .datatypes import URL
 from .utils import etree_to_obj_attributes
+from .utils import obj_attributes_to_etree
 
 
 class LIFTUtilsBase:
@@ -46,6 +47,7 @@ class LIFTUtilsBase:
             sys.stdout = None
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
 
 
@@ -69,6 +71,7 @@ class Span(LIFTUtilsBase):
         ]
         self.props.elements = [
             Prop('pcdata', required=True, prop_type=PCData),
+            Prop('tail', prop_type=PCData),
             Prop('spans', prop_type=list, item_type=Span),
         ]
         # attributes
@@ -77,36 +80,21 @@ class Span(LIFTUtilsBase):
         self.class_: Optional[str] = None
         # elements
         self.pcdata: PCData = None
+        self.tail: Optional[PCData] = None
         self.spans: Optional[List[Span]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
-    def _build_xml_tree(self):
-        # This is basically the reverse function of _update_from_xml.
-        root_tag = 'span'
-        root = etree.Element(root_tag)
-        for attrib in self.props.attributes:
-            a = attrib.name
-            root.set(a, self.__dict__.get(a))
-        for elem in self.props.elements:
-            e = elem.name
-            if isinstance(self.__dict__.get(e), list):
-                for i in self.__dict__.get(e):
-                    etree.SubElement(root, e[:-1])
-            elif hasattr(self.__dict__.get(e), 'xml_tree'):
-                e._build_xml_tree()
-            elif e == 'pcdata':
-                root.text = self.__dict__.get(e)
-            elif self.__dict__.get(e):
-                etree.SubElement(root, e)
-        return root
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'span')
+        return xml_tree
 
 
 class Trait(LIFTUtilsBase):
@@ -145,37 +133,14 @@ class Trait(LIFTUtilsBase):
         return f"{self.name}: {self.value}"
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
-    def _build_xml_tree(self):
-        # This is basically the reverse function of _update_from_xml.
-        root_tag = 'trait'
-        root = etree.Element(root_tag)
-        for attrib in self.props.attributes:
-            a = attrib.name
-            root.set(a, self.__dict__.get(a))
-        for elem in self.props.elements:
-            e = elem.name
-            if isinstance(self.__dict__.get(e), list):
-                # list element
-                for i in self.__dict__.get(e):
-                    if hasattr(self.__dict__.get(e), 'xml_tree'):
-                        root.append(e._build_xml_tree())
-                    else:
-                        etree.SubElement(root, e[:-1])
-            elif hasattr(self.__dict__.get(e), 'xml_tree'):
-                # element with own xml_tree to be generated
-                root.append(e._build_xml_tree())
-            elif e == 'pcdata':
-                # text data
-                root.text = self.__dict__.get(e)
-                # new empty element
-            elif self.__dict__.get(e):
-                etree.SubElement(root, e)
-        return root
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'trait')
+        return xml_tree
 
 
 class Flag(Trait):
@@ -229,8 +194,8 @@ class Form(LIFTUtilsBase):
         return str(self.text)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -239,8 +204,12 @@ class Form(LIFTUtilsBase):
         other.text = self.text
         other.annotations = self.annotations
 
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'form')
+        return xml_tree
 
-class Text(Form):
+
+class Text(LIFTUtilsBase):
     """Contains textual data mixed with ``span`` elements only.
 
     .. note:: It only inherits from ``Form`` in LIFT v0.13 (FieldWorks).
@@ -261,29 +230,33 @@ class Text(Form):
             Prop('spans', prop_type=list, item_type=Span),
         ]
         # elements
-        self.pcdata: str = None
+        self.pcdata: PCData = None
         if text is not None:
             self.pcdata = PCData(text)
         self.spans: Optional[List[Span]] = None
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
-    def _update_from_xml(self, xml_tree):
-        self.xml_tree = xml_tree
+    def __str__(self):
+        return f"{str(self.pcdata)}{''.join(str(s) for s in self.spans)}"
 
+    def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
+        self.xml_tree = xml_tree
+        # Update super class attributes.
         f = Form(xml_tree)
         f._update_other_from_self(self)
         del f
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
-
-    def __str__(self):
-        return str(self.pcdata)
 
     def _update_other_from_self(self, other):
         other.pcdata = self.pcdata
         other.spans = self.spans
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'text')
+        return xml_tree
 
 
 class Multitext(Text):
@@ -302,11 +275,11 @@ class Multitext(Text):
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.elements = [
             Prop('forms', prop_type=list, item_type=Form),
-            Prop('text', prop_type=str),
+            Prop('traits', prop_type=list, item_type=Trait),
         ]
         # elements
         self.forms: Optional[List[Form]] = None
-        self.text: Optional[str] = None  # deprecated in v0.15
+        self.traits: Optional[List[Trait]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -322,19 +295,23 @@ class Multitext(Text):
         return s
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
-        if config.LIFT_VERSION == '0.13':
-            txt = Text(xml_tree)
-            txt._update_other_from_self(self)
-            del txt
-
+        # Update super class attributes.
+        # if config.LIFT_VERSION == '0.13':
+        #     txt = Text(xml_tree)
+        #     txt._update_other_from_self(self)
+        #     del txt
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.forms = self.forms
         other.text = self.text
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'multitext')
+        return xml_tree
 
 
 class Gloss(Form):
@@ -365,14 +342,18 @@ class Gloss(Form):
         return f"{self.text} ({self.lang})"
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         form = Form(xml_tree)
         form._update_other_from_self(self)
         del form
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'gloss')
+        return xml_tree
 
 
 class URLRef(LIFTUtilsBase):
@@ -403,10 +384,14 @@ class URLRef(LIFTUtilsBase):
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'urlref')
+        return xml_tree
 
 
 class Annotation(Multitext):
@@ -438,14 +423,18 @@ class Annotation(Multitext):
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'annotation')
+        return xml_tree
 
 
 class Field(Multitext):
@@ -469,7 +458,7 @@ class Field(Multitext):
         ]
         if config.LIFT_VERSION == '0.13':
             self.props.attributes.append(Prop(
-                'type',
+                'prop_type',
                 required=True,
                 prop_type=Key
             ))
@@ -518,14 +507,18 @@ class Field(Multitext):
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
+        # Update super class attributes.
         mul = Multitext(xml_tree)
         mul._update_other_from_self(self)
         del mul
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'field')
+        return xml_tree
 
 
 class Extensible(LIFTUtilsBase):
@@ -576,8 +569,8 @@ class Extensible(LIFTUtilsBase):
             self._update_from_xml(xml_tree)
 
     def _update_from_xml(self, xml_tree):
+        # Set initial xml_tree.
         self.xml_tree = xml_tree
-
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
@@ -587,3 +580,10 @@ class Extensible(LIFTUtilsBase):
         other.fields = self.fields
         other.traits = self.traits
         other.annotations = self.annotations
+
+    def _add_attribs_to_xml_tree(self, xml_tree):
+        for attrib in self.props.attributes:
+            a = attrib.name
+            x = config.XML_NAMES.get(a, a)
+            xml_tree.set(x, self.__dict__.get(a))
+        return xml_tree

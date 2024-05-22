@@ -6,6 +6,7 @@
                 <form lang="en">
                     <text>A test annotation.</text>
                 </form>
+                <trait name="paradigm" value="sing"/>
                 <text>Deprecated in v0.15, but still valid in v0.13</text>
             </annotation>
         </form>

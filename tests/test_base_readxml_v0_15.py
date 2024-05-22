@@ -109,8 +109,8 @@ class TestMultitext(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        if config.LIFT_VERSION != config.LIFT_VERSION_FIELDWORKS:
-            optional.remove('text')  # remove deprecated element
+        # if config.LIFT_VERSION != config.LIFT_VERSION_FIELDWORKS:
+        #     optional.remove('text')  # remove deprecated element
         test_elems(self, self.obj, optional)
 
 
