@@ -69,6 +69,9 @@ def obj_attributes_to_etree(obj, root_tag):
             x = config.XML_NAMES.get(e, e)
             if hasattr(obj.__dict__.get(e), 'append'):
                 for i in obj.__dict__.get(e):
+                    # TODO: Rather than create an empty subelement, this should
+                    # recursively call itself, which means it should also take
+                    # a parent node as input rather than a tag name.
                     etree.SubElement(xml_tree, x)
             # elif hasattr(obj.__dict__.get(e), 'xml_tree'):
             #     e._build_xml_tree()

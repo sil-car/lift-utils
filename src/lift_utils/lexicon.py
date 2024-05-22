@@ -28,6 +28,7 @@ from .header import Header
 from .header import Range
 from .utils import xmlfile_to_etree
 from .utils import etree_to_obj_attributes
+from .utils import obj_attributes_to_etree
 
 
 class Note(Multitext, Extensible):
@@ -72,6 +73,10 @@ class Note(Multitext, Extensible):
         del mul
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'field')
+        return xml_tree
 
 
 class Phonetic(Multitext, Extensible):
