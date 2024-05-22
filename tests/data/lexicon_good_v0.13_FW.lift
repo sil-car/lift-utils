@@ -86,9 +86,12 @@
             <relation/>
         </variant>
         <note type="TestType"/>
-        <etymology type="TestType" source="TestSource">
+        <etymology dateCreated="0000-00-00" dateModified="0000-00-00" type="TestType" source="TestSource">
             <form/>
             <gloss/>
+            <field/>
+            <trait/>
+            <annotation/>
         </etymology>
         <sense id="27bb9896-e413-4c14-8cdc-cbe26ecbc148" order="0">
             <grammatical-info value="Nom">
