@@ -54,28 +54,33 @@ def obj_attributes_to_etree(obj, root_tag):
 
     if obj.props.attributes:
         for attrib in obj.props.attributes:
-            a = attrib.name
-            x = config.XML_NAMES.get(a, a)
-            xml_tree.set(x, obj.__dict__.get(a))
+            attr = attrib.name
+            val = obj.__dict__.get(attr)
+            name = config.XML_NAMES.get(attr, attr)
+            if val:
+                xml_tree.set(name, val)
 
     if obj.props.elements:
         for elem in obj.props.elements:
-            e = elem.name
-            x = config.XML_NAMES.get(e, e)
-            if hasattr(obj.__dict__.get(e), 'append'):
-                for i in obj.__dict__.get(e):
+            attr = elem.name
+            name = config.XML_NAMES.get(attr, attr)
+            val = obj.__dict__.get(attr)
+            if hasattr(val, 'append'):  # list-like element
+                for o in obj.__dict__.get(attr):
                     # TODO: Rather than create an empty subelement, this should
                     # recursively call itself, which means it should also take
                     # a parent node as input rather than a tag name.
-                    etree.SubElement(xml_tree, x)
-            # elif hasattr(obj.__dict__.get(e), 'xml_tree'):
-            #     e._build_xml_tree()
-            elif e == 'pcdata':
-                xml_tree.text = obj.__dict__.get(e)
-            elif e == 'tail':
-                xml_tree.tail = obj.__dict__.get(e)
-            elif obj.__dict__.get(e):
-                etree.SubElement(xml_tree, x)
+                    # etree.SubElement(xml_tree, x)
+                    xml_tree.append(obj_attributes_to_etree(o, name))
+            elif val and attr == 'pcdata':
+                xml_tree.text = val
+            elif val and attr == 'tail':
+                xml_tree.tail = val
+            elif val:  # single element
+                # etree.SubElement(xml_tree, x)
+                xml_tree.append(
+                    obj_attributes_to_etree(obj.__dict__.get(attr), name)
+                )
     return xml_tree
 
 

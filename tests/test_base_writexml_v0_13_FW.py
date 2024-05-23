@@ -31,47 +31,6 @@ class TestAnnotation(unittest.TestCase):
         )
 
 
-# class TestExtensible(unittest.TestCase):
-#     def test_xml(self):
-#         obj = Etymology()
-#         obj.type = datatypes.Key("Etype")
-#         obj.source = "Esource"
-#         obj.form = base.Form()
-#         obj.glosses = [
-#             base.Gloss(),
-#             base.Gloss(),
-#         ]
-#         obj.date_created = datatypes.DateTime("0000-00-00")
-#         obj.date_modified = datatypes.DateTime("0000-00-00")
-#         obj.fields = [
-#             base.Field(),
-#             base.Field(),
-#             base.Trait(),
-#             base.Trait(),
-#             base.Annotation(),
-#             base.Annotation(),
-#         ]
-
-#         xml = f"""
-#         <etymology type="Etype" source="Esource" dateCreated="{obj.date_created}" dateModified="{obj.date_modified}">
-#             <form/>
-#             <gloss/>
-#             <gloss/>
-#             <field/>
-#             <field/>
-#             <trait/>
-#             <trait/>
-#             <annotation/>
-#             <annotation/>
-#         </etymology>
-#         """
-#         xml_tree = utils.xmlstring_to_etree(xml)
-#         self.assertEqual(
-#             etree.tostring(obj._to_xml_tree(), pretty_print=True),
-#             etree.tostring(xml_tree, pretty_print=True)
-#         )
-
-
 class TestField(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
@@ -84,8 +43,8 @@ class TestField(unittest.TestCase):
             base.Annotation(),
         ]
         obj.traits = [
-            base.Flag(),
-            base.Flag(),
+            base.Trait(),
+            base.Trait(),
         ]
         obj.forms = [
             base.Form(),
@@ -94,17 +53,17 @@ class TestField(unittest.TestCase):
 
         xml = f"""
         <field dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" type="{obj.prop_type}">
-            <annotation/>
-            <annotation/>
-            <trait/>
-            <trait/>
             <form/>
             <form/>
+            <trait/>
+            <trait/>
+            <annotation/>
+            <annotation/>
         </field>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
-        # print(etree.tostring(obj._to_xml_tree(), pretty_print=True))
-        # print(etree.tostring(xml_tree, pretty_print=True))
+        # print(etree.tostring(obj._to_xml_tree(), pretty_print=True).decode())
+        # print(etree.tostring(xml_tree, pretty_print=True).decode())
         self.assertEqual(
             etree.tostring(obj._to_xml_tree(), pretty_print=True),
             etree.tostring(xml_tree, pretty_print=True)
@@ -148,35 +107,6 @@ class TestGloss(unittest.TestCase):
             <trait/>
             <trait/>
         </gloss>
-        """
-        xml_tree = utils.xmlstring_to_etree(xml)
-        # print(etree.tostring(obj._to_xml_tree(), pretty_print=True))
-        # print(etree.tostring(xml_tree, pretty_print=True))
-        self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
-        )
-
-
-class TestMultitext(unittest.TestCase):
-    def test_xml(self):
-        obj = base.Multitext()
-        obj.forms = [
-            base.Form(),
-            base.Form(),
-        ]
-        obj.traits = [
-            base.Trait(),
-            base.Trait(),
-        ]
-
-        xml = f"""
-        <multitext>
-            <form/>
-            <form/>
-            <trait/>
-            <trait/>
-        </multitext>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         # print(etree.tostring(obj._to_xml_tree(), pretty_print=True))

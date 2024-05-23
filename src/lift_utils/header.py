@@ -27,9 +27,10 @@ class FieldDefn(Multitext):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
-            Prop('tag', required=True, prop_type=Key),
-        ])
+        self.props.add_to(
+            'attributes',
+            Prop('tag', required=True, prop_type=Key)
+        )
         # attributes
         self.tag: Key = None
 
@@ -53,17 +54,21 @@ class FieldDefinition(LIFTUtilsBase):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('name', required=True, prop_type=Key),
             Prop('class_', prop_type=str),
             Prop('type', prop_type=str),
             Prop('option_range', prop_type=Key),
             Prop('writing_system', prop_type=str),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        elems = [
             Prop('label', prop_type=Multitext),
             Prop('description', prop_type=Multitext),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.name: Key = None
         self.class_: Optional[str] = None
@@ -96,16 +101,20 @@ class RangeElement(Extensible, LIFTUtilsBase):
         else:
             Extensible.__init__(self, xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('id', required=True, prop_type=Key),
             Prop('parent', prop_type=Key),
             Prop('guid', prop_type=str),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        elems = [
             Prop('descriptions', prop_type=list, item_type=Multitext),
             Prop('labels', prop_type=list, item_type=Multitext),
             Prop('abbrevs', prop_type=list, item_type=Multitext),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.id: Key = None
         self.parent: Key = None
@@ -136,12 +145,14 @@ class Range(Extensible, LIFTUtilsBase):
         else:
             Extensible.__init__(self, xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('id', required=True, prop_type=Key),
             Prop('guid', prop_type=str),
             Prop('href', prop_type=URL),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        elems = [
             Prop(
                 'range_elements',
                 required=True,
@@ -151,7 +162,9 @@ class Range(Extensible, LIFTUtilsBase):
             Prop('description', prop_type=Multitext),
             Prop('labels', prop_type=list, item_type=Multitext),
             Prop('abbrevs', prop_type=list, item_type=Multitext),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.id: Key = None
         self.guid: Optional[str] = None
@@ -176,9 +189,10 @@ class Ranges(LIFTUtilsBase):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.elements.extend([
+        self.props.add_to(
+            'elements',
             Prop('ranges', required=True, prop_type=list, item_type=Range),
-        ])
+        )
         # elements
         self.ranges: List[Range] = None
 
@@ -198,9 +212,10 @@ class FieldDefns(LIFTUtilsBase):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.elements.extend([
+        self.props.add_to(
+            'elements',
             Prop('fields', prop_type=list, item_type=FieldDefn)
-        ])
+        )
         # elements
         self.fields: Optional[List[FieldDefn]] = None
 
@@ -218,13 +233,10 @@ class Fields(LIFTUtilsBase):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.elements.extend([
-            Prop(
-                'field_definitions',
-                prop_type=list,
-                item_type=FieldDefinition
-            ),
-        ])
+        self.props.add_to(
+            'elements',
+            Prop('field_definitions', prop_type=list, item_type=FieldDefinition)  # noqa: E501
+        )
         # elements
         self.field_definitions: Optional[List[FieldDefinition]] = None
 
@@ -252,20 +264,16 @@ class Header(LIFTUtilsBase):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.elements.extend([
+        elems = [
             Prop('description', prop_type=Multitext),
             Prop('ranges', prop_type=Ranges),
-        ])
+        ]
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop(
-                'fields',
-                prop_type=FieldDefns
-            ))
+            elems.append(Prop('fields', prop_type=FieldDefns))
         else:
-            self.props.elements.append(Prop(
-                'fields',
-                prop_type=Fields
-            ))
+            elems.append(Prop('fields', prop_type=Fields))
+        for e in elems:
+            self.props.add_to('elements', e)
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[Ranges] = None

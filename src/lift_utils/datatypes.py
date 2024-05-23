@@ -67,3 +67,8 @@ class Props:
         self.lift_version = lift_version
         self.attributes = attributes
         self.elements = elements
+
+    def add_to(self, prop_group_name, prop_obj):
+        prop_group = self.__dict__.get(prop_group_name)
+        if prop_obj.name not in [p.name for p in prop_group]:
+            prop_group.append(prop_obj)

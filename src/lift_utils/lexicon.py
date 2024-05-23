@@ -27,7 +27,6 @@ from .header import Header
 from .header import Range
 from .utils import xmlfile_to_etree
 from .utils import etree_to_obj_attributes
-from .utils import obj_attributes_to_etree
 
 
 class Note(Multitext, Extensible):
@@ -46,7 +45,7 @@ class Note(Multitext, Extensible):
         Extensible.__init__(self, xml_tree)
         Multitext.__init__(self, xml_tree)
         # properties
-        self.props.attributes.append(Prop('type', prop_type=Key))
+        self.props.add_to('attributes', Prop('type', prop_type=Key))
         # attributes
         self.type: Optional[Key] = None
 
@@ -55,10 +54,6 @@ class Note(Multitext, Extensible):
 
     def __str__(self):
         return super().__str__()
-
-    def _to_xml_tree(self):
-        xml_tree = obj_attributes_to_etree(self, 'field')
-        return xml_tree
 
 
 class Phonetic(Multitext, Extensible):
@@ -78,15 +73,15 @@ class Phonetic(Multitext, Extensible):
         Extensible.__init__(self, xml_tree)
         Multitext.__init__(self, xml_tree)
         # properties
-        self.props.elements.extend([
-            Prop('medias', prop_type=list, item_type=URLRef),
-        ])
+        self.props.add_to(
+            'elements',
+            Prop('medias', prop_type=list, item_type=URLRef)
+        )
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop(
-                'forms',
-                prop_type=list,
-                item_type=Span
-            ))
+            self.props.add_to(
+                'elements',
+                Prop('forms', prop_type=list, item_type=Span)
+            )
         # elements
         self.medias: Optional[List[URLRef]] = None
         if config.LIFT_VERSION == '0.13':
@@ -117,14 +112,18 @@ class Etymology(Extensible):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('type', required=True, prop_type=Key),
             Prop('source', required=True, prop_type=str),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        elems = [
             Prop('glosses', prop_type=list, item_type=Gloss),
             Prop('form', prop_type=Form),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.type: Key = None
         self.source: str = None
@@ -155,12 +154,14 @@ class GrammaticalInfo(LIFTUtilsBase):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
-            Prop('value', required=True, prop_type=Key),
-        ])
-        self.props.elements.extend([
-            Prop('traits', prop_type=list, item_type=Trait),
-        ])
+        self.props.add_to(
+            'attributes',
+            Prop('value', required=True, prop_type=Key)
+        )
+        self.props.add_to(
+            'elements',
+            Prop('traits', prop_type=list, item_type=Trait)
+        )
         # attributes
         self.value: Key = None
         # elements
@@ -194,13 +195,16 @@ class Reversal(Multitext):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
-            Prop('type', prop_type=Key),
-        ])
-        self.props.elements.extend([
+        self.props.add_to(
+            'attributes',
+            Prop('type', prop_type=Key)
+        )
+        elems = [
             Prop('main', prop_type=Reversal),
             Prop('grammatical_info', prop_type=GrammaticalInfo),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.type: Optional[Key] = None
         # elements
@@ -223,9 +227,10 @@ class Translation(Multitext):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
-            Prop('type', prop_type=Key),
-        ])
+        self.props.add_to(
+            'attributes',
+            Prop('type', prop_type=Key)
+        )
         # attributes
         self.type: Optional[Key] = None
 
@@ -252,18 +257,19 @@ class Example(Multitext, Extensible):
         Extensible.__init__(self, xml_tree)
         Multitext.__init__(self, xml_tree)
         # properties
-        self.props.attributes.extend([
-            Prop('source', prop_type=Key),
-        ])
-        self.props.elements.extend([
-            Prop('translations', prop_type=list, item_type=Translation),
-        ])
+        self.props.add_to(
+            'attributes',
+            Prop('source', prop_type=Key)
+        )
+        self.props.add_to(
+            'elements',
+            Prop('translations', prop_type=list, item_type=Translation)
+        )
         if config.LIFT_VERSION in ['0.15']:
-            self.props.elements.append(Prop(
-                'notes',
-                prop_type=list,
-                item_type=Note
-            ))
+            self.props.add_to(
+                'elements',
+                Prop('notes', prop_type=list, item_type=Note)
+            )
         # attributes
         self.source: Optional[Key] = None
         # elements
@@ -293,14 +299,17 @@ class Relation(Extensible):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('type', required=True, prop_type=Key),
             Prop('ref', required=True, prop_type=RefId),
             Prop('order', prop_type=int),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        self.props.add_to(
+            'elements',
             Prop('usages', prop_type=list, item_type=Multitext)
-        ])
+        )
         # attributes
         self.type: Key = None
         self.ref: RefId = None
@@ -336,13 +345,16 @@ class Variant(Multitext, Extensible):
         Extensible.__init__(self, xml_tree)
         Multitext.__init__(self, xml_tree)
         # properties
-        self.props.attributes.extend([
-            Prop('ref', prop_type=RefId),
-        ])
-        self.props.elements.extend([
+        self.props.add_to(
+            'attributes',
+            Prop('ref', prop_type=RefId)
+        )
+        elems = [
             Prop('pronunciations', prop_type=list, item_type=Phonetic),
             Prop('relations', prop_type=list, item_type=Relation),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.ref: Optional[RefId] = None
         # elements
@@ -389,11 +401,13 @@ class Sense(Extensible):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('id', prop_type=RefId),
             Prop('order', prop_type=int),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        elems = [
             Prop('grammatical_info', prop_type=GrammaticalInfo),
             Prop('definition', prop_type=Multitext),
             Prop('relations', prop_type=list, item_type=Relation),
@@ -402,20 +416,13 @@ class Sense(Extensible):
             Prop('reversals', prop_type=list, item_type=Reversal),
             Prop('illustrations', prop_type=list, item_type=URLRef),
             Prop('subsenses', prop_type=list, item_type=Sense),
-        ])
+        ]
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop(
-                'glosses',
-                prop_type=list,
-                item_type=Form
-            ))
+            elems.append(Prop('glosses', prop_type=list, item_type=Form))
         else:
-            self.props.elements.append(Prop(
-                'glosses',
-                prop_type=list,
-                item_type=Gloss
-            ))
-
+            elems.append(Prop('glosses', prop_type=list, item_type=Gloss))
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
@@ -507,13 +514,15 @@ class Entry(Extensible):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('id', prop_type=RefId),
             Prop('guid', prop_type=str),
             Prop('order', prop_type=str),
             Prop('date_deleted', prop_type=DateTime),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        elems = [
             Prop('lexical_unit', prop_type=Multitext),
             Prop('citation', prop_type=Multitext),
             Prop('pronunciations', prop_type=list, item_type=Phonetic),
@@ -522,7 +531,9 @@ class Entry(Extensible):
             Prop('notes', prop_type=list, item_type=Note),
             Prop('relations', prop_type=list, item_type=Relation),
             Prop('etymologies', prop_type=list, item_type=Etymology),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         # attributes
         self.id: Optional[RefId] = None
         self.guid: Optional[str] = None  # deprecated
@@ -619,14 +630,18 @@ class Lexicon(LIFTUtilsBase):
     ):
         super().__init__(xml_tree)
         # properties
-        self.props.attributes.extend([
+        attribs = [
             Prop('version', required=True, prop_type=str),
             Prop('producer', prop_type=str),
-        ])
-        self.props.elements.extend([
+        ]
+        for a in attribs:
+            self.props.add_to('attributes', a)
+        elems = [
             Prop('header', prop_type=Header),
             Prop('entries', prop_type=list, item_type=Entry),
-        ])
+        ]
+        for e in elems:
+            self.props.add_to('elements', e)
         self.path = Path(path)
         # attributes
         self.version: str = None
