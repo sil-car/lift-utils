@@ -23,32 +23,37 @@ class LIFTUtilsBase:
     :ivar etree xml_tree: The object's current data.
     """
     def __init__(self, xml_tree: etree = None):
-        self.xml_tree = None
-        if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+        self.xml_tree = xml_tree
+        self.props = Props(lift_version=config.LIFT_VERSION)
+        self.props.attributes = []
+        self.props.elements = []
 
     def to_xml(self):
         """Convert the object's data to XML."""
-        return etree.tostring(
-            self.xml_tree,
-            encoding='UTF-8',
-            pretty_print=True,
-            xml_declaration=True
-        ).decode().rstrip()
+        if self.xml_tree:
+            return etree.tostring(
+                self.xml_tree,
+                encoding='UTF-8',
+                pretty_print=True,
+                xml_declaration=True
+            ).decode().rstrip()
 
     def print(self, format='xml'):
         """Print the object's data to stdout; as XML by default."""
-        try:
-            if format == 'xml':
-                print(self.to_xml(), flush=True)
-            else:
-                return
-        except BrokenPipeError:
-            sys.stdout = None
+        if self.xml_tree:
+            try:
+                if format == 'xml':
+                    print(self.to_xml(), flush=True)
+                else:
+                    return
+            except BrokenPipeError:
+                sys.stdout = None
 
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
         self.xml_tree = xml_tree
+        # Update object attributes.
+        etree_to_obj_attributes(xml_tree, self)
 
 
 class Span(LIFTUtilsBase):
@@ -57,23 +62,20 @@ class Span(LIFTUtilsBase):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('lang', prop_type=Lang),
             Prop('href', prop_type=URL),
             Prop('class_', prop_type=str),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('pcdata', required=True, prop_type=PCData),
             Prop('tail', prop_type=PCData),
             Prop('spans', prop_type=list, item_type=Span),
-        ]
+        ])
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
@@ -85,12 +87,6 @@ class Span(LIFTUtilsBase):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _to_xml_tree(self):
         xml_tree = obj_attributes_to_etree(self, 'span')
@@ -104,21 +100,18 @@ class Trait(LIFTUtilsBase):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('name', required=True, prop_type=Key),
             Prop('value', required=True, prop_type=Key),
             Prop('id', prop_type=Key),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('annotations', prop_type=list, item_type=Annotation),
-        ]
+        ])
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -131,12 +124,6 @@ class Trait(LIFTUtilsBase):
 
     def __str__(self):
         return f"{self.name}: {self.value}"
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _to_xml_tree(self):
         xml_tree = obj_attributes_to_etree(self, 'trait')
@@ -153,7 +140,7 @@ class Flag(Trait):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
         if xml_tree is not None:
@@ -167,20 +154,17 @@ class Form(LIFTUtilsBase):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
-            Prop('lang', required=True, prop_type=Lang),
-        ]
-        self.props.elements = [
+        self.props.attributes.extend([
+            Prop('lang', required=True, prop_type=Lang)
+        ])
+        self.props.elements.extend([
             Prop('text', required=True, prop_type=Text),
             Prop('annotations', prop_type=list, item_type=Annotation),
-        ]
+        ])
         # attributes
         self.lang: Lang = None
         # elements
@@ -192,12 +176,6 @@ class Form(LIFTUtilsBase):
 
     def __str__(self):
         return str(self.text)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.lang = self.lang
@@ -211,44 +189,26 @@ class Form(LIFTUtilsBase):
 
 class Text(LIFTUtilsBase):
     """Contains textual data mixed with ``span`` elements only.
-
-    .. note:: It only inherits from ``Form`` in LIFT v0.13 (FieldWorks).
     """
 
     def __init__(
         self,
-        text=None,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.elements = [
+        self.props.elements.extend([
             Prop('pcdata', required=True, prop_type=PCData),
             Prop('spans', prop_type=list, item_type=Span),
-        ]
+        ])
         # elements
         self.pcdata: PCData = None
-        if text is not None:
-            self.pcdata = PCData(text)
         self.spans: Optional[List[Span]] = None
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
     def __str__(self):
         return f"{str(self.pcdata)}{''.join(str(s) for s in self.spans)}"
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        f = Form(xml_tree)
-        f._update_other_from_self(self)
-        del f
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.pcdata = self.pcdata
@@ -259,6 +219,35 @@ class Text(LIFTUtilsBase):
         return xml_tree
 
 
+class URLRef(LIFTUtilsBase):
+    """This is a URL with a caption.
+    """
+
+    def __init__(
+        self,
+        xml_tree: Optional[etree._Element] = None
+    ):
+        super().__init__(xml_tree)
+        # properties
+        self.props.attributes.extend([
+            Prop('href', required=True, prop_type=URL),
+        ])
+        self.props.elements.extend([
+            Prop('label', prop_type=Multitext),
+        ])
+        # attributes
+        self.href: URL = None
+        # elements
+        self.label: Optional[Multitext] = None
+
+        if xml_tree is not None:
+            self._update_from_xml(xml_tree)
+
+    def _to_xml_tree(self):
+        xml_tree = obj_attributes_to_etree(self, 'urlref')
+        return xml_tree
+
+
 class Multitext(Text):
     """Allows for different representations of the same information.
     It can be in a given language, or in multiple languages.
@@ -266,17 +255,14 @@ class Multitext(Text):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.elements = [
+        self.props.elements.extend([
             Prop('forms', prop_type=list, item_type=Form),
             Prop('traits', prop_type=list, item_type=Trait),
-        ]
+        ])
         # elements
         self.forms: Optional[List[Form]] = None
         self.traits: Optional[List[Trait]] = None
@@ -293,17 +279,6 @@ class Multitext(Text):
             if ct > 1:
                 s = f"{s} ({ct} forms)"
         return s
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        # if config.LIFT_VERSION == '0.13':
-        #     txt = Text(xml_tree)
-        #     txt._update_other_from_self(self)
-        #     del txt
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.forms = self.forms
@@ -322,16 +297,13 @@ class Gloss(Form):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.elements = [
+        self.props.elements.extend([
             Prop('traits', prop_type=list, item_type=Trait),
-        ]
+        ])
         # elements
         self.traits: Optional[List[Trait]] = None
 
@@ -341,56 +313,8 @@ class Gloss(Form):
     def __str__(self):
         return f"{self.text} ({self.lang})"
 
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        form = Form(xml_tree)
-        form._update_other_from_self(self)
-        del form
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
-
     def _to_xml_tree(self):
         xml_tree = obj_attributes_to_etree(self, 'gloss')
-        return xml_tree
-
-
-class URLRef(LIFTUtilsBase):
-    """This is a URL with a caption.
-    """
-
-    def __init__(
-        self,
-        xml_tree: Optional[etree.ElementTree] = None
-    ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
-        # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
-            Prop('href', required=True, prop_type=URL),
-        ]
-        self.props.elements = [
-            Prop('label', prop_type=Multitext),
-        ]
-        # attributes
-        self.href: URL = None
-        # elements
-        self.label: Optional[Multitext] = None
-
-        if xml_tree is not None:
-            self._update_from_xml(xml_tree)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
-
-    def _to_xml_tree(self):
-        xml_tree = obj_attributes_to_etree(self, 'urlref')
         return xml_tree
 
 
@@ -400,19 +324,16 @@ class Annotation(Multitext):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('name', required=True, prop_type=Key),
             Prop('value', required=True, prop_type=Key),
             Prop('who', prop_type=Key),
             Prop('when', prop_type=DateTime),
-        ]
+        ])
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -421,16 +342,6 @@ class Annotation(Multitext):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _to_xml_tree(self):
         xml_tree = obj_attributes_to_etree(self, 'annotation')
@@ -445,49 +356,34 @@ class Field(Multitext):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('date_created', prop_type=DateTime),
             Prop('date_modified', prop_type=DateTime),
-        ]
+        ])
         if config.LIFT_VERSION == '0.13':
-            self.props.attributes.append(Prop(
-                'prop_type',
-                required=True,
-                prop_type=Key
-            ))
+            self.props.attributes.extend([
+                Prop('prop_type', required=True, prop_type=Key),
+            ])
         else:
-            self.props.attributes.append(Prop(
-                'name',
-                required=True,
-                prop_type=Key
-            ))
-        self.props.elements = [
+            self.props.attributes.extend([
+                Prop('name', required=True, prop_type=Key),
+            ])
+        self.props.elements.extend([
             Prop('annotations', prop_type=list, item_type=Annotation),
-        ]
+        ])
         if config.LIFT_VERSION == '0.13':
-            self.props.elements.append(Prop(
-                'traits',
-                prop_type=list,
-                item_type=Flag
-            ))
-            self.props.elements.append(Prop(
-                'forms',
-                prop_type=list,
-                item_type=Span
-            ))
+            self.props.elements.extend([
+                Prop('traits', prop_type=list, item_type=Flag),
+                Prop('forms', prop_type=list, item_type=Span),
+            ])
         else:
-            self.props.elements.append(Prop(
-                'traits',
-                prop_type=list,
-                item_type=Trait
-            ))
+            self.props.elements.extend([
+                Prop('traits', prop_type=list, item_type=Trait),
+            ])
         # attributes
         if config.LIFT_VERSION == '0.13':
             self.prop_type: Key = None
@@ -505,16 +401,6 @@ class Field(Multitext):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _to_xml_tree(self):
         xml_tree = obj_attributes_to_etree(self, 'field')
@@ -536,11 +422,9 @@ class Extensible(LIFTUtilsBase):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = [
@@ -567,12 +451,6 @@ class Extensible(LIFTUtilsBase):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _update_other_from_self(self, other):
         other.date_created = self.date_created

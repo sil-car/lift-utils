@@ -61,6 +61,7 @@ class TestField(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('spans')
         test_elems(self, self.obj, optional)
 
 
@@ -96,7 +97,25 @@ class TestGloss(unittest.TestCase):
         test_elems(self, self.obj, optional)
 
 
-class TestMultitext(unittest.TestCase):
+class TestMultitextText(unittest.TestCase):
+    def setUp(self):
+        config.LIFT_VERSION = '0.13'
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().findall('.//annotation')[1]  # noqa: E501
+        self.obj = base.Multitext(self.xml_tree)
+
+    def test_attribs(self):
+        pass  # no attribs
+
+    def test_elems(self):
+        required = [p.name for p in self.obj.props.elements if p.required]
+        test_elems(self, self.obj, required)
+        optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('forms')
+        optional.remove('traits')
+        test_elems(self, self.obj, optional)
+
+
+class TestMultitextForm(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = '0.13'
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
@@ -107,8 +126,10 @@ class TestMultitext(unittest.TestCase):
 
     def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
+        required.remove('pcdata')
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('spans')
         test_elems(self, self.obj, optional)
 
 
@@ -135,14 +156,8 @@ class TestSpan(unittest.TestCase):
 class TestText(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = '0.13'
-        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
-        self.obj = None
-        for c in self.xml_tree.getchildren():
-            if c.tag == 'text':
-                self.obj = base.Text(c)
-                break
-        if not self.obj:
-            raise AssertionError
+        self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//text')
+        self.obj = base.Text(self.xml_tree)
 
     def test_attribs(self):
         pass  # no attribs
@@ -151,7 +166,6 @@ class TestText(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')  # already tested in TestSpan
         test_elems(self, self.obj, optional)
 
 

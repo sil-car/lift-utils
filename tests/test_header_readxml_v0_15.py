@@ -98,6 +98,9 @@ class TestRange(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('annotations')
+        optional.remove('fields')
+        optional.remove('traits')
         test_elems(self, self.obj, optional)
 
 
@@ -117,4 +120,7 @@ class TestRangeElement(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('annotations')
+        optional.remove('fields')
+        optional.remove('traits')
         test_elems(self, self.obj, optional)

@@ -22,7 +22,6 @@ from .datatypes import DateTime
 from .datatypes import Key
 from .datatypes import RefId
 from .datatypes import Prop
-from .datatypes import Props
 from .datatypes import URL
 from .header import Header
 from .header import Range
@@ -42,16 +41,12 @@ class Note(Multitext, Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        Extensible.__init__(self, xml_tree)
+        Multitext.__init__(self, xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
-            Prop('type', prop_type=Key),
-        ]
+        self.props.attributes.append(Prop('type', prop_type=Key))
         # attributes
         self.type: Optional[Key] = None
 
@@ -60,19 +55,6 @@ class Note(Multitext, Extensible):
 
     def __str__(self):
         return super().__str__()
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
     def _to_xml_tree(self):
         xml_tree = obj_attributes_to_etree(self, 'field')
@@ -91,16 +73,14 @@ class Phonetic(Multitext, Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        Extensible.__init__(self, xml_tree)
+        Multitext.__init__(self, xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.elements = [
+        self.props.elements.extend([
             Prop('medias', prop_type=list, item_type=URLRef),
-        ]
+        ])
         if config.LIFT_VERSION == '0.13':
             self.props.elements.append(Prop(
                 'forms',
@@ -118,19 +98,6 @@ class Phonetic(Multitext, Extensible):
     def __str__(self):
         return super().__str__()
 
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
-
 
 class Etymology(Extensible):
     """For describing lexical relations with a word not in the lexicon.
@@ -146,21 +113,18 @@ class Etymology(Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('type', required=True, prop_type=Key),
             Prop('source', required=True, prop_type=str),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('glosses', prop_type=list, item_type=Gloss),
             Prop('form', prop_type=Form),
-        ]
+        ])
         # attributes
         self.type: Key = None
         self.source: str = None
@@ -173,16 +137,6 @@ class Etymology(Extensible):
 
     def __str__(self):
         return f"{self.type} ({self.source})"
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
 
 class GrammaticalInfo(LIFTUtilsBase):
@@ -197,19 +151,16 @@ class GrammaticalInfo(LIFTUtilsBase):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('value', required=True, prop_type=Key),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('traits', prop_type=list, item_type=Trait),
-        ]
+        ])
         # attributes
         self.value: Key = None
         # elements
@@ -223,12 +174,6 @@ class GrammaticalInfo(LIFTUtilsBase):
         if self.traits:
             traits = f": {'; '.join([t for t in self.traits])}"
         return f"{self.value}{traits}"
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
 
 class Reversal(Multitext):
@@ -245,20 +190,17 @@ class Reversal(Multitext):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('type', prop_type=Key),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('main', prop_type=Reversal),
             Prop('grammatical_info', prop_type=GrammaticalInfo),
-        ]
+        ])
         # attributes
         self.type: Optional[Key] = None
         # elements
@@ -267,16 +209,6 @@ class Reversal(Multitext):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
 
 class Translation(Multitext):
@@ -287,31 +219,18 @@ class Translation(Multitext):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('type', prop_type=Key),
-        ]
+        ])
         # attributes
         self.type: Optional[Key] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
 
 class Example(Multitext, Extensible):
@@ -328,19 +247,17 @@ class Example(Multitext, Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        Extensible.__init__(self, xml_tree)
+        Multitext.__init__(self, xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('source', prop_type=Key),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('translations', prop_type=list, item_type=Translation),
-        ]
+        ])
         if config.LIFT_VERSION in ['0.15']:
             self.props.elements.append(Prop(
                 'notes',
@@ -357,19 +274,6 @@ class Example(Multitext, Extensible):
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
-
 
 class Relation(Extensible):
     """This element is used for lexical relations.
@@ -385,21 +289,18 @@ class Relation(Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('type', required=True, prop_type=Key),
             Prop('ref', required=True, prop_type=RefId),
             Prop('order', prop_type=int),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('usages', prop_type=list, item_type=Multitext)
-        ]
+        ])
         # attributes
         self.type: Key = None
         self.ref: RefId = None
@@ -412,16 +313,6 @@ class Relation(Extensible):
 
     def __str__(self):
         return f"{self.type}: {self.ref}"
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
 
 class Variant(Multitext, Extensible):
@@ -440,20 +331,18 @@ class Variant(Multitext, Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        Extensible.__init__(self, xml_tree)
+        Multitext.__init__(self, xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('ref', prop_type=RefId),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('pronunciations', prop_type=list, item_type=Phonetic),
             Prop('relations', prop_type=list, item_type=Relation),
-        ]
+        ])
         # attributes
         self.ref: Optional[RefId] = None
         # elements
@@ -465,19 +354,6 @@ class Variant(Multitext, Extensible):
 
     def __str__(self):
         return self.ref if self.ref else 'variant'
-
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        mul = Multitext(xml_tree)
-        mul._update_other_from_self(self)
-        del mul
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
 
 
 class Sense(Extensible):
@@ -509,18 +385,15 @@ class Sense(Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('id', prop_type=RefId),
             Prop('order', prop_type=int),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('grammatical_info', prop_type=GrammaticalInfo),
             Prop('definition', prop_type=Multitext),
             Prop('relations', prop_type=list, item_type=Relation),
@@ -529,7 +402,7 @@ class Sense(Extensible):
             Prop('reversals', prop_type=list, item_type=Reversal),
             Prop('illustrations', prop_type=list, item_type=URLRef),
             Prop('subsenses', prop_type=list, item_type=Sense),
-        ]
+        ])
         if config.LIFT_VERSION == '0.13':
             self.props.elements.append(Prop(
                 'glosses',
@@ -601,16 +474,6 @@ class Sense(Extensible):
         """Print an overview of the ``sense`` in the terminal window."""
         print(self.__str__())
 
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
-
 
 class Entry(Extensible):
     """This is the core of a lexicon. A lexicon is made up of a set of entries.
@@ -640,20 +503,17 @@ class Entry(Extensible):
 
     def __init__(
         self,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('id', prop_type=RefId),
             Prop('guid', prop_type=str),
             Prop('order', prop_type=str),
             Prop('date_deleted', prop_type=DateTime),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('lexical_unit', prop_type=Multitext),
             Prop('citation', prop_type=Multitext),
             Prop('pronunciations', prop_type=list, item_type=Phonetic),
@@ -662,7 +522,7 @@ class Entry(Extensible):
             Prop('notes', prop_type=list, item_type=Note),
             Prop('relations', prop_type=list, item_type=Relation),
             Prop('etymologies', prop_type=list, item_type=Etymology),
-        ]
+        ])
         # attributes
         self.id: Optional[RefId] = None
         self.guid: Optional[str] = None  # deprecated
@@ -739,16 +599,6 @@ class Entry(Extensible):
             text.append('; '.join(str(e) for e in self.etymologies))
         print('\n'.join(text))
 
-    def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
-        # Update super class attributes.
-        ext = Extensible(xml_tree)
-        ext._update_other_from_self(self)
-        del ext
-        # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
-
 
 class Lexicon(LIFTUtilsBase):
     """This is the main class of the lexicon.
@@ -765,21 +615,18 @@ class Lexicon(LIFTUtilsBase):
     def __init__(
         self,
         path: Optional[Union[Path, str]] = None,
-        xml_tree: Optional[etree.ElementTree] = None
+        xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__()
-        if xml_tree is not None:
-            super()._update_from_xml(xml_tree)
+        super().__init__(xml_tree)
         # properties
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = [
+        self.props.attributes.extend([
             Prop('version', required=True, prop_type=str),
             Prop('producer', prop_type=str),
-        ]
-        self.props.elements = [
+        ])
+        self.props.elements.extend([
             Prop('header', prop_type=Header),
             Prop('entries', prop_type=list, item_type=Entry),
-        ]
+        ])
         self.path = Path(path)
         # attributes
         self.version: str = None

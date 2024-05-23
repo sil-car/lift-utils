@@ -82,6 +82,7 @@ class TestExample(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('spans')
         test_elems(self, self.obj, optional)
 
 
@@ -130,6 +131,7 @@ class TestPhonetic(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('spans')
         test_elems(self, self.obj, optional)
 
 
@@ -166,6 +168,7 @@ class TestReversal(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('spans')
         test_elems(self, self.obj, optional)
 
 
@@ -217,4 +220,5 @@ class TestVariant(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
+        optional.remove('spans')
         test_elems(self, self.obj, optional)

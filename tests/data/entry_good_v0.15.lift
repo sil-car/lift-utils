@@ -1,14 +1,15 @@
 <entry id="6b7537f0-31c8-42f9-811c-1da97cc907b4" dateCreated="2008-04-03T03:09:11Z" dateModified="1990-02-26">
     <lexical-unit>
         <form lang="und-Latn">
-            <text>abat</text>
+            <text>A test form <span class="underline" lang="en" href="//home/user">with</span> a tail.</text>
             <annotation name="TestFormAnno" value="TestValue" who="unknown" when="sometime">
                 <form lang="en">
-                    <text>A test annotation.</text>
+                    <text>A test annotation <span class="underline" lang="en" href="//home/user">with</span> a tail.</text>
                 </form>
                 <trait name="paradigm" value="sing"/>
                 <text>Deprecated in v0.15, but still valid in v0.13</text>
             </annotation>
+            <annotation>A 2nd annotation <span class="underline" lang="en" href="//home/user">with</span> a tail.</annotation>
         </form>
     </lexical-unit>
     <citation>
@@ -47,6 +48,7 @@
         <gloss lang="en">
             <text>grove</text>
             <trait name="morph-type" value="phrase"/>
+            <annotation/>
         </gloss>
         <gloss lang="id">
             <text>dusun</text>

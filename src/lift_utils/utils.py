@@ -44,7 +44,6 @@ def etree_to_obj_attributes(xml_tree, obj):
                         obj.__dict__[p.name].append(p.item_type(c))
                     else:  # single element
                         obj.__dict__[p.name] = p.prop_type(c)
-                    break
 
 
 def obj_attributes_to_etree(obj, root_tag):
