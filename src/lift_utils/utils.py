@@ -16,26 +16,21 @@ def ellipsize(string, length):
 def etree_to_obj_attributes(xml_tree, obj):
     obj.xml_tree = xml_tree
 
-    if xml_tree.text:
-        if hasattr(obj, 'pcdata'):
-            obj.pcdata = xml_tree.text
-        else:
-            obj.text = xml_tree.text
-    if xml_tree.tail:
-        obj.tail = xml_tree.tail
-
     if obj.props.attributes:
         for p in obj.props.attributes:
-            key = config.XML_NAMES.get(p.name)
-            if not key:
-                key = p.name
+            key = config.XML_NAMES.get(p.name, p.name)
             if key in obj.xml_tree.attrib.keys():
                 obj.__dict__[p.name] = p.prop_type(obj.xml_tree.attrib.get(key))  # noqa: E501
 
     if obj.props.elements:
         for p in obj.props.elements:
             if p.name == 'pcdata' and obj.xml_tree.text:
-                obj.__dict__[p.name] = obj.xml_tree.text
+                obj.__dict__[p.name] = p.prop_type(obj.xml_tree.text)
+                continue
+            elif p.name == 'tail' and obj.xml_tree.tail:
+                obj.__dict__[p.name] = p.prop_type(obj.xml_tree.tail)
+                continue
+
             for c in obj.xml_tree.getchildren():
                 tag = config.XML_NAMES.get(p.name, p.name)
                 if p.name in ['fields', 'ranges'] and p.item_type is None:
@@ -43,12 +38,13 @@ def etree_to_obj_attributes(xml_tree, obj):
                     tag = p.name
                 if tag == c.tag:
                     if hasattr(p.prop_type, 'append'):  # list-like object
-                        if not obj.__dict__.get(p.name):
-                            # Instantiate object.
+                        if obj.__dict__.get(p.name) is None:
+                            # Instantiate list-like object.
                             obj.__dict__[p.name] = p.prop_type()
                         obj.__dict__[p.name].append(p.item_type(c))
                     else:  # single element
                         obj.__dict__[p.name] = p.prop_type(c)
+                    break
 
 
 def obj_attributes_to_etree(obj, root_tag):
