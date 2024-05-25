@@ -15,7 +15,7 @@ class TestAnnotation(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
-        self.obj = base.Annotation(self.xml_tree)
+        self.obj = base.Annotation(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -49,7 +49,7 @@ class TestField(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//field')
-        self.obj = base.Field(self.xml_tree)
+        self.obj = base.Field(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -61,7 +61,7 @@ class TestField(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')
+        optional.remove('span_items')
         test_elems(self, self.obj, optional)
 
 
@@ -69,7 +69,7 @@ class TestForm(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//form')
-        self.obj = base.Form(self.xml_tree)
+        self.obj = base.Form(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -88,7 +88,7 @@ class TestGloss(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//gloss')
-        self.obj = base.Gloss(self.xml_tree)
+        self.obj = base.Gloss(xml_tree=self.xml_tree)
 
     def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
@@ -101,7 +101,7 @@ class TestMultitext(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//annotation')  # noqa: E501
-        self.obj = base.Multitext(self.xml_tree)
+        self.obj = base.Multitext(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         pass  # no attribs
@@ -110,7 +110,7 @@ class TestMultitext(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')
+        optional.remove('span_items')
         test_elems(self, self.obj, optional)
 
 
@@ -118,7 +118,7 @@ class TestSpan(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//span')
-        self.obj = base.Span(self.xml_tree)
+        self.obj = base.Span(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -130,7 +130,7 @@ class TestSpan(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')  # hard to test optional span-in-span element
+        optional.remove('span_items')  # hard to test optional nested element
         test_elems(self, self.obj, optional)
 
 
@@ -153,7 +153,7 @@ class TestText(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')  # already tested in TestSpan
+        optional.remove('span_items')  # already tested in TestSpan
         test_elems(self, self.obj, optional)
 
 
@@ -161,7 +161,7 @@ class TestTrait(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('trait')
-        self.obj = base.Trait(self.xml_tree)
+        self.obj = base.Trait(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -180,7 +180,7 @@ class TestURLRef(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = config.LIFT_VERSION_LATEST
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find('.//urlref')  # noqa: E501
-        self.obj = base.URLRef(self.xml_tree)
+        self.obj = base.URLRef(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]

@@ -16,7 +16,7 @@ class TestFieldDefinition(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//field')  # noqa: E501
-        self.obj = header.FieldDefinition(self.xml_tree)
+        self.obj = header.FieldDefinition(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -35,7 +35,7 @@ class TestFields(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//fields')  # noqa: E501
-        self.obj = header.Fields(self.xml_tree)
+        self.obj = header.Fields(xml_tree=self.xml_tree)
 
     def test_elems(self):
         required = [p.name for p in self.obj.props.elements if p.required]
@@ -51,7 +51,7 @@ class TestHeader(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//header')  # noqa: E501
-        self.obj = header.Header(self.xml_tree)
+        self.obj = header.Header(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         pass  # no attributes to test
@@ -67,7 +67,7 @@ class TestRanges(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//ranges')  # noqa: E501
-        self.obj = header.Ranges(self.xml_tree)
+        self.obj = header.Ranges(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         pass  # no attributes
@@ -79,14 +79,14 @@ class TestRanges(unittest.TestCase):
         test_elems(self, self.obj, optional)
 
     def test_items(self):
-        self.assertTrue(len(self.obj.ranges) > 1)
+        self.assertTrue(len(self.obj.range_items) > 1)
 
 
 class TestRange(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//range')  # noqa: E501
-        self.obj = header.Range(self.xml_tree)
+        self.obj = header.Range(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -98,9 +98,9 @@ class TestRange(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('annotations')
-        optional.remove('fields')
-        optional.remove('traits')
+        optional.remove('annotation_items')
+        optional.remove('field_items')
+        optional.remove('trait_items')
         test_elems(self, self.obj, optional)
 
 
@@ -108,7 +108,7 @@ class TestRangeElement(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//range-element')  # noqa: E501
-        self.obj = header.RangeElement(self.xml_tree)
+        self.obj = header.RangeElement(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -120,7 +120,7 @@ class TestRangeElement(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('annotations')
-        optional.remove('fields')
-        optional.remove('traits')
+        optional.remove('annotation_items')
+        optional.remove('field_items')
+        optional.remove('trait_items')
         test_elems(self, self.obj, optional)

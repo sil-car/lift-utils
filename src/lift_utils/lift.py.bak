@@ -21,8 +21,9 @@ class LIFTFile(LIFTUtilsBase):
         self.size: int = self.path.stat().st_size if self.path else None
         if self.path and self.path.is_file():
             self.xml_tree = self._read_to_etree()
+        self.lexicon = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.path.read_text() if self.path else ''
 
     def _read_to_etree(self) -> etree:
@@ -31,4 +32,4 @@ class LIFTFile(LIFTUtilsBase):
 
     def to_lexicon(self) -> Lexicon:
         """Parse LIFT data to a Lexicon object."""
-        return Lexicon(self.path, self.xml_tree)
+        return Lexicon(path=self.path, xml_tree=self.xml_tree)

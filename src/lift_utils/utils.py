@@ -33,17 +33,19 @@ def etree_to_obj_attributes(xml_tree, obj):
 
             for c in obj.xml_tree.getchildren():
                 tag = config.XML_NAMES.get(p.name, p.name)
-                if p.name in ['fields', 'ranges'] and p.item_type is None:
-                    # These elements are plural but have explicit tags.
-                    tag = p.name
+                # if p.name in ['fields', 'ranges'] and p.item_type is None:
+                #     # These elements are plural but have explicit tags.
+                #     tag = p.name
                 if tag == c.tag:
+                    # if xml_tree.tag == 'field' and tag == 'form':
+                    #     print(type(obj), c.attrib)
                     if hasattr(p.prop_type, 'append'):  # list-like object
                         if obj.__dict__.get(p.name) is None:
                             # Instantiate list-like object.
                             obj.__dict__[p.name] = p.prop_type()
-                        obj.__dict__[p.name].append(p.item_type(c))
+                        obj.__dict__[p.name].append(p.item_type(xml_tree=c))
                     else:  # single element
-                        obj.__dict__[p.name] = p.prop_type(c)
+                        obj.__dict__[p.name] = p.prop_type(xml_tree=c)
 
 
 def obj_attributes_to_etree(obj, root_tag):
@@ -52,32 +54,36 @@ def obj_attributes_to_etree(obj, root_tag):
     else:
         xml_tree = root_tag
 
+    try:
+        if obj.lift_obj and type(obj.lift_obj) is type(obj):
+            obj = obj.lift_obj  # redefine for 'range' and 'ranges'
+    except AttributeError:
+        pass
+
     if obj.props.attributes:
         for attrib in obj.props.attributes:
             attr = attrib.name
             val = obj.__dict__.get(attr)
             name = config.XML_NAMES.get(attr, attr)
-            if val:
-                xml_tree.set(name, val)
+            if val is not None:
+                xml_tree.set(name, str(val))
 
     if obj.props.elements:
         for elem in obj.props.elements:
             attr = elem.name
             name = config.XML_NAMES.get(attr, attr)
+            # if attr in ['fields', 'ranges'] and root_tag == 'header':
+            #     # These elements are plural but have explicit tags.
+            #     name = attr
             val = obj.__dict__.get(attr)
             if hasattr(val, 'append'):  # list-like element
                 for o in obj.__dict__.get(attr):
-                    # TODO: Rather than create an empty subelement, this should
-                    # recursively call itself, which means it should also take
-                    # a parent node as input rather than a tag name.
-                    # etree.SubElement(xml_tree, x)
                     xml_tree.append(obj_attributes_to_etree(o, name))
             elif val and attr == 'pcdata':
                 xml_tree.text = val
             elif val and attr == 'tail':
                 xml_tree.tail = val
             elif val:  # single element
-                # etree.SubElement(xml_tree, x)
                 xml_tree.append(
                     obj_attributes_to_etree(obj.__dict__.get(attr), name)
                 )

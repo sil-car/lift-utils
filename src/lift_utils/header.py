@@ -1,5 +1,6 @@
 """Manipulate the header section."""
 
+from copy import deepcopy
 from lxml import etree
 from typing import List
 from typing import Optional
@@ -11,6 +12,7 @@ from .base import Multitext
 from .datatypes import Key
 from .datatypes import Prop
 from .datatypes import URL
+from .utils import obj_attributes_to_etree
 
 
 class FieldDefn(Multitext):
@@ -23,23 +25,25 @@ class FieldDefn(Multitext):
 
     def __init__(
         self,
+        tag: Key = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree)
+        super().__init__(xml_tree=xml_tree)
         # properties
         self.props.add_to(
             'attributes',
             Prop('tag', required=True, prop_type=Key)
         )
+        self.xml_tag = 'field'
         # attributes
-        self.tag: Key = None
+        self.tag = tag
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
     def __str__(self):
-        forms = 'forms' if len(self.forms) > 1 else 'form'
-        return f"{self.tag} ({len(self.forms)} {forms})"
+        forms = 'forms' if len(self.form_items) > 1 else 'form'
+        return f"{self.tag} ({len(self.form_items)} {forms})"
 
 
 class FieldDefinition(LIFTUtilsBase):
@@ -52,7 +56,7 @@ class FieldDefinition(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree)
+        super().__init__(xml_tree=xml_tree)
         # properties
         attribs = [
             Prop('name', required=True, prop_type=Key),
@@ -69,6 +73,7 @@ class FieldDefinition(LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
+        self.xml_tag = 'field'
         # attributes
         self.name: Key = None
         self.class_: Optional[str] = None
@@ -94,12 +99,13 @@ class RangeElement(Extensible, LIFTUtilsBase):
 
     def __init__(
         self,
+        elem_id: Key = None,
         xml_tree: Optional[etree._Element] = None
     ):
         if config.LIFT_VERSION == '0.13':
-            LIFTUtilsBase.__init__(self, xml_tree)
+            LIFTUtilsBase.__init__(self, xml_tree=xml_tree)
         else:
-            Extensible.__init__(self, xml_tree)
+            Extensible.__init__(self, xml_tree=xml_tree)
         # properties
         attribs = [
             Prop('id', required=True, prop_type=Key),
@@ -109,20 +115,21 @@ class RangeElement(Extensible, LIFTUtilsBase):
         for a in attribs:
             self.props.add_to('attributes', a)
         elems = [
-            Prop('descriptions', prop_type=list, item_type=Multitext),
-            Prop('labels', prop_type=list, item_type=Multitext),
-            Prop('abbrevs', prop_type=list, item_type=Multitext),
+            Prop('description_items', prop_type=list, item_type=Multitext),
+            Prop('label_items', prop_type=list, item_type=Multitext),
+            Prop('abbrev_items', prop_type=list, item_type=Multitext),
         ]
         for e in elems:
             self.props.add_to('elements', e)
+        self.xml_tag = 'range-element'
         # attributes
-        self.id: Key = None
+        self.id = elem_id
         self.parent: Key = None
         self.guid: str = None
         # elements
-        self.descriptions: Optional[List[Multitext]] = None
-        self.labels: Optional[List[Multitext]] = None
-        self.abbrevs: Optional[List[Multitext]] = None
+        self.description_items: Optional[List[Multitext]] = None
+        self.label_items: Optional[List[Multitext]] = None
+        self.abbrev_items: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -138,12 +145,13 @@ class Range(Extensible, LIFTUtilsBase):
 
     def __init__(
         self,
+        range_id: Key = None,
         xml_tree: Optional[etree._Element] = None
     ):
         if config.LIFT_VERSION == '0.13':
-            LIFTUtilsBase.__init__(self, xml_tree)
+            LIFTUtilsBase.__init__(self, xml_tree=xml_tree)
         else:
-            Extensible.__init__(self, xml_tree)
+            Extensible.__init__(self, xml_tree=xml_tree)
         # properties
         attribs = [
             Prop('id', required=True, prop_type=Key),
@@ -160,23 +168,39 @@ class Range(Extensible, LIFTUtilsBase):
                 item_type=RangeElement
             ),
             Prop('description', prop_type=Multitext),
-            Prop('labels', prop_type=list, item_type=Multitext),
-            Prop('abbrevs', prop_type=list, item_type=Multitext),
+            Prop('label_items', prop_type=list, item_type=Multitext),
+            Prop('abbrev_items', prop_type=list, item_type=Multitext),
         ]
         for e in elems:
             self.props.add_to('elements', e)
+        self.xml_tag = 'range'
         # attributes
-        self.id: Key = None
+        self.id = range_id
         self.guid: Optional[str] = None
         self.href: Optional[URL] = None
         # elements
         self.description: Optional[Multitext] = None
         self.range_elements: List[RangeElement] = None
-        self.labels: List[Multitext] = None
-        self.abbrevs: List[Multitext] = None
+        self.label_items: List[Multitext] = None
+        self.abbrev_items: List[Multitext] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
+            self._set_alt_objs()
+
+    def _set_alt_objs(self):
+        self.ranges_obj = deepcopy(self)
+        self.lift_obj = deepcopy(self)
+        if self.href:  # create two xml trees for 'range'
+            self.lift_obj.props.elements = []
+            self.ranges_obj.href = None
+            self.ranges_obj.props.attributes = [a for a in self.ranges_obj.props.attributes[:] if a.name != 'href']  # noqa: E501
+
+    def _to_xml_tree(self):
+        self._set_alt_objs()
+        self.ranges_xml_tree = obj_attributes_to_etree(self.ranges_obj, self.xml_tag)  # noqa: E501
+        xml_tree = obj_attributes_to_etree(self, self.xml_tag)
+        return xml_tree
 
 
 class Ranges(LIFTUtilsBase):
@@ -187,17 +211,31 @@ class Ranges(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree)
+        super().__init__(xml_tree=xml_tree)
         # properties
         self.props.add_to(
             'elements',
-            Prop('ranges', required=True, prop_type=list, item_type=Range),
+            Prop('range_items', required=True, prop_type=list, item_type=Range),  # noqa: E501
         )
+        self.xml_tag = 'ranges'  # or 'lift-ranges'
         # elements
-        self.ranges: List[Range] = None
+        self.range_items: List[Range] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
+            self._set_alt_objs()
+
+    def _set_alt_objs(self):
+        self.ranges_obj = deepcopy(self)
+        self.lift_obj = deepcopy(self)
+        self.ranges_obj.xml_tag = 'lift-ranges'
+
+    def _to_xml_tree(self):
+        self._set_alt_objs()
+        # For unit tests:
+        self.ranges_xml_tree = obj_attributes_to_etree(self.ranges_obj, 'lift-ranges')  # noqa: E501
+        xml_tree = obj_attributes_to_etree(self, 'ranges')
+        return xml_tree
 
 
 class FieldDefns(LIFTUtilsBase):
@@ -210,14 +248,15 @@ class FieldDefns(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree)
+        super().__init__(xml_tree=xml_tree)
         # properties
         self.props.add_to(
             'elements',
-            Prop('fields', prop_type=list, item_type=FieldDefn)
+            Prop('field_items', prop_type=list, item_type=FieldDefn)
         )
+        self.xml_tag = 'fields'
         # elements
-        self.fields: Optional[List[FieldDefn]] = None
+        self.field_items: Optional[List[FieldDefn]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -231,7 +270,7 @@ class Fields(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree)
+        super().__init__(xml_tree=xml_tree)
         # properties
         self.props.add_to(
             'elements',
@@ -250,9 +289,8 @@ class Header(LIFTUtilsBase):
 
     :ivar Optional[Multitext] description: Contains a multilingual description
         of the lexicon for information purposes only.
-    :ivar Optional[Ranges[Range]] ranges: Contains all the ``range``
-        information.
-    :ivar Optional[FieldDefns] fields: `Used by LIFT v0.13 (FieldWorks).`
+    :ivar Optional[Ranges] ranges: Contains all the ``range`` information.
+    :ivar Optional[FieldDefns] field_items: `Used by LIFT v0.13 (FieldWorks).`
         Contains definitions for all the ``field`` types used in the document.
     :ivar Optional[Fields] fields: Contains definitions for all the ``field``
         types used in the document.
@@ -262,7 +300,7 @@ class Header(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree)
+        super().__init__(xml_tree=xml_tree)
         # properties
         elems = [
             Prop('description', prop_type=Multitext),
@@ -274,6 +312,7 @@ class Header(LIFTUtilsBase):
             elems.append(Prop('fields', prop_type=Fields))
         for e in elems:
             self.props.add_to('elements', e)
+        self.xml_tag = 'header'
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[Ranges] = None

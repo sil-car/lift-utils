@@ -15,7 +15,7 @@ LIFT_VERSION = '0.15'
 class TestLexicon(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot()
-        self.obj = lexicon.Lexicon(LIFT_GOOD, self.xml_tree)
+        self.obj = lexicon.Lexicon(path=LIFT_GOOD, xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -33,7 +33,7 @@ class TestLexicon(unittest.TestCase):
 class TestEntry(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//entry')
-        self.obj = lexicon.Entry(self.xml_tree)
+        self.obj = lexicon.Entry(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -51,7 +51,7 @@ class TestEntry(unittest.TestCase):
 class TestEtymology(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//etymology')
-        self.obj = lexicon.Etymology(self.xml_tree)
+        self.obj = lexicon.Etymology(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -70,7 +70,7 @@ class TestExample(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//example')
-        self.obj = lexicon.Example(self.xml_tree)
+        self.obj = lexicon.Example(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -82,14 +82,14 @@ class TestExample(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')
+        optional.remove('span_items')
         test_elems(self, self.obj, optional)
 
 
 class TestGrammaticalInfo(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//grammatical-info')  # noqa: E501
-        self.obj = lexicon.GrammaticalInfo(self.xml_tree)
+        self.obj = lexicon.GrammaticalInfo(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -107,7 +107,7 @@ class TestGrammaticalInfo(unittest.TestCase):
 class TestNote(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//note')
-        self.obj = lexicon.Note(self.xml_tree)
+        self.obj = lexicon.Note(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -122,7 +122,7 @@ class TestNote(unittest.TestCase):
 class TestPhonetic(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//pronunciation')  # noqa: E501
-        self.obj = lexicon.Phonetic(self.xml_tree)
+        self.obj = lexicon.Phonetic(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         pass  # no attributes
@@ -131,14 +131,14 @@ class TestPhonetic(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')
+        optional.remove('span_items')
         test_elems(self, self.obj, optional)
 
 
 class TestRelation(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//relation')
-        self.obj = lexicon.Relation(self.xml_tree)
+        self.obj = lexicon.Relation(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -156,7 +156,7 @@ class TestRelation(unittest.TestCase):
 class TestReversal(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//reversal')
-        self.obj = lexicon.Reversal(self.xml_tree)
+        self.obj = lexicon.Reversal(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -168,14 +168,14 @@ class TestReversal(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')
+        optional.remove('span_items')
         test_elems(self, self.obj, optional)
 
 
 class TestSense(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//sense')
-        self.obj = lexicon.Sense(self.xml_tree)
+        self.obj = lexicon.Sense(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -193,7 +193,7 @@ class TestSense(unittest.TestCase):
 class TestTranslation(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//translation')
-        self.obj = lexicon.Translation(self.xml_tree)
+        self.obj = lexicon.Translation(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -208,7 +208,7 @@ class TestTranslation(unittest.TestCase):
 class TestVariant(unittest.TestCase):
     def setUp(self):
         self.xml_tree = etree.parse(LIFT_GOOD).getroot().find('.//variant')
-        self.obj = lexicon.Variant(self.xml_tree)
+        self.obj = lexicon.Variant(xml_tree=self.xml_tree)
 
     def test_attribs(self):
         required = [p.name for p in self.obj.props.attributes if p.required]
@@ -220,5 +220,5 @@ class TestVariant(unittest.TestCase):
         required = [p.name for p in self.obj.props.elements if p.required]
         test_elems(self, self.obj, required)
         optional = [p.name for p in self.obj.props.elements if not p.required]
-        optional.remove('spans')
+        optional.remove('span_items')
         test_elems(self, self.obj, optional)

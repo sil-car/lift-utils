@@ -10,7 +10,9 @@ from lift_utils import utils
 
 from lift_utils.lexicon import Etymology
 
-LIFT_VERSION = '0.13'
+from .utils import compare_xml_trees
+
+LIFT_VERSION = '0.15'
 
 
 class TestAnnotation(unittest.TestCase):
@@ -38,7 +40,7 @@ class TestField(unittest.TestCase):
         obj = base.Field()
         obj.date_created = datatypes.DateTime("0000-00-00")
         obj.date_modified = datatypes.DateTime("0000-00-00")
-        obj.prop_type = datatypes.Key("field-type")
+        obj.name = datatypes.Key("field-type")
         obj.annotation_items = [
             base.Annotation(),
             base.Annotation(),
@@ -53,7 +55,7 @@ class TestField(unittest.TestCase):
         ]
 
         xml = f"""
-        <field dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" type="{obj.prop_type}">
+        <field dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" name="{obj.name}">
             <form/>
             <form/>
             <trait/>
@@ -63,8 +65,7 @@ class TestField(unittest.TestCase):
         </field>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
-        # print(etree.tostring(obj._to_xml_tree(), pretty_print=True).decode())
-        # print(etree.tostring(xml_tree, pretty_print=True).decode())
+        # compare_xml_trees(obj._to_xml_tree(), xml_tree)
         self.assertEqual(
             etree.tostring(obj._to_xml_tree(), pretty_print=True),
             etree.tostring(xml_tree, pretty_print=True)
