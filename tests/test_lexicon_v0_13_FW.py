@@ -6,7 +6,7 @@ from . import DATA_PATH
 from lift_utils import lexicon
 from lift_utils.utils import xmlfile_to_etree
 
-LIFT_GOOD = str(DATA_PATH / "Pumi_2019" / "Pumi_2019.lift")
+LIFT_GOOD = DATA_PATH / "Pumi_2019" / "Pumi_2019.lift"
 LIFT_VERSION = '0.13'
 LEXICON = lexicon.Lexicon()
 LEXICON.parse_lift(LIFT_GOOD)
@@ -34,11 +34,9 @@ class TestReadWrite(unittest.TestCase):
     # file is unpredictable, there's no way to guarantee that the output file
     # will produce the same order, even if contents are identical.
     def test_read_write_file(self):
-        infile = DATA_PATH / "test-export" / "in.lift"
-        outfile = infile.parent / 'out.lift'
-        lex = lexicon.Lexicon()
-        lex.parse_lift(infile)
-        lex.to_lift(outfile)
+        infile = LIFT_GOOD
+        outfile = DATA_PATH / "Pumi_out.lift"
+        LEXICON.to_lift(outfile)
         xml_in = etree.tostring(
             xmlfile_to_etree(infile),
             encoding='UTF-8',
@@ -47,6 +45,19 @@ class TestReadWrite(unittest.TestCase):
         ).decode().rstrip()
         xml_out = etree.tostring(
             xmlfile_to_etree(outfile),
+            encoding='UTF-8',
+            pretty_print=True,
+            xml_declaration=True
+        ).decode().rstrip()
+
+        ranges_xml_in = etree.tostring(
+            xmlfile_to_etree(infile.with_suffix('.lift-ranges')),
+            encoding='UTF-8',
+            pretty_print=True,
+            xml_declaration=True
+        ).decode().rstrip()
+        ranges_xml_out = etree.tostring(
+            xmlfile_to_etree(outfile.with_suffix('.lift-ranges')),
             encoding='UTF-8',
             pretty_print=True,
             xml_declaration=True
@@ -64,4 +75,16 @@ class TestReadWrite(unittest.TestCase):
         # size comparison for the time being. This works okay as long as there
         # aren't too many comments in the infile, since comments aren't kept.
         # This tests that the outfile's size is within 7% of the infile's.
-        self.assertAlmostEqual(1, len(xml_out)/len(xml_in), delta=0.07)
+        delta = 0.05
+        # print(len(xml_out)/len(xml_in))
+        # print(len(ranges_xml_out)/len(ranges_xml_in))
+        self.assertAlmostEqual(
+            1,
+            len(xml_out)/len(xml_in),
+            delta=delta
+        )
+        self.assertAlmostEqual(
+            1,
+            len(ranges_xml_out)/len(ranges_xml_in),
+            delta=delta
+        )
