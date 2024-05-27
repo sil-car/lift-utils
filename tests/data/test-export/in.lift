@@ -70,9 +70,12 @@
       </form>
     </lexical-unit>
     <trait name="morph-type" value="stem"/>
-    <note>
+    <note dateCreated="0000-00-00">
       <form lang="en">
         <text>A note for an entry.</text>
+      </form>
+      <form lang="fr">
+        <text>Un commentaire sur une « entry ».</text>
       </form>
     </note>
     <etymology type="borrowed" source="">

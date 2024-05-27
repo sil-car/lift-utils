@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<lift version="0.13" producer="SIL.FLEx 9.0.17.44670">
+<lift version="0.13" producer="LIFT-Utils 0.1.1">
   <header>
     <ranges>
       <range id="dialect" href="file:///home/nate/g/lift-utils/tests/data/test-export/test-export.lift-ranges"/>
@@ -27,14 +27,8 @@
         <form lang="en">
           <text>This records the syllable pattern for a LexPronunciation in FieldWorks.</text>
         </form>
-        <form lang="en">
-          <text>This records the syllable pattern for a LexPronunciation in FieldWorks.</text>
-        </form>
       </field>
       <field tag="tone">
-        <form lang="en">
-          <text>This records the tone information for a LexPronunciation in FieldWorks.</text>
-        </form>
         <form lang="en">
           <text>This records the tone information for a LexPronunciation in FieldWorks.</text>
         </form>
@@ -43,14 +37,8 @@
         <form lang="en">
           <text>This records a comment (note) in a LexEtymology in FieldWorks.</text>
         </form>
-        <form lang="en">
-          <text>This records a comment (note) in a LexEtymology in FieldWorks.</text>
-        </form>
       </field>
       <field tag="import-residue">
-        <form lang="en">
-          <text>This records residue left over from importing a standard format file into FieldWorks (or LinguaLinks).</text>
-        </form>
         <form lang="en">
           <text>This records residue left over from importing a standard format file into FieldWorks (or LinguaLinks).</text>
         </form>
@@ -59,14 +47,8 @@
         <form lang="en">
           <text>This field is used to store a literal meaning of the entry.  Typically, this field is necessary only for a compound or an idiom where the meaning of the whole is different from the sum of its parts.</text>
         </form>
-        <form lang="en">
-          <text>This field is used to store a literal meaning of the entry.  Typically, this field is necessary only for a compound or an idiom where the meaning of the whole is different from the sum of its parts.</text>
-        </form>
       </field>
       <field tag="summary-definition">
-        <form lang="en">
-          <text>A summary definition (located at the entry level in the Entry pane) is a general definition summarizing all the senses of a primary entry. It has no theoretical value; its use is solely pragmatic.</text>
-        </form>
         <form lang="en">
           <text>A summary definition (located at the entry level in the Entry pane) is a general definition summarizing all the senses of a primary entry. It has no theoretical value; its use is solely pragmatic.</text>
         </form>
@@ -75,14 +57,10 @@
         <form lang="en">
           <text>This field stores the scientific name pertinent to the current sense.</text>
         </form>
-        <form lang="en">
-          <text>This field stores the scientific name pertinent to the current sense.</text>
-        </form>
       </field>
     </fields>
   </header>
   <entry dateCreated="2024-05-22T13:46:32Z" dateModified="2024-05-22T14:44:01Z" id="entry_dd7919a3-583d-4f9e-989f-f2efdf7d04d1" guid="dd7919a3-583d-4f9e-989f-f2efdf7d04d1">
-    <trait name="morph-type" value="stem"/>
     <trait name="morph-type" value="stem"/>
     <lexical-unit>
       <form lang="en">
@@ -100,20 +78,15 @@
         <text>entry</text>
       </gloss>
     </sense>
-    <note>
+    <note dateCreated="0000-00-00">
       <form lang="en">
         <text>A note for an entry.</text>
       </form>
-      <form lang="en">
-        <text>A note for an entry.</text>
+      <form lang="fr">
+        <text>Un commentaire sur une « entry ».</text>
       </form>
     </note>
     <etymology type="borrowed" source="">
-      <field type="preccomment">
-        <form lang="en">
-          <text>preceding annotation</text>
-        </form>
-      </field>
       <field type="preccomment">
         <form lang="en">
           <text>preceding annotation</text>

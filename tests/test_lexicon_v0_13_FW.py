@@ -63,5 +63,5 @@ class TestReadWrite(unittest.TestCase):
         # NOTE: In lieu of being able to compare xml content, just using a file
         # size comparison for the time being. This works okay as long as there
         # aren't too many comments in the infile, since comments aren't kept.
-        # This test means that the outfile's size is within 7% of the infile's.
+        # This tests that the outfile's size is within 7% of the infile's.
         self.assertAlmostEqual(1, len(xml_out)/len(xml_in), delta=0.07)
