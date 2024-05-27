@@ -9,35 +9,37 @@ LIFT Utils documentation
 **LIFT Utils** is a Python library for manipulating linguistic lexicon files in
 the XML-based `LIFT format <https://github.com/sillsdev/lift-standard>`_.
 
->>> from lift_utils import lift
->>> lex = lift.LIFTFile("sango.lift").to_lexicon()
->>> print(len(lex.entries))
+>>> from lift_utils import lexicon
+>>> lex = lexicon.Lexicon("sango.lift")
+>>> print(len(lex.entry_items))
 3507
->>> print(lex.entries[0])
+>>> print(lex.entry_items[0])
 kêtê ngû sô asua pë…    pool                            Nom
->>> print(lex.entries[0].senses[0])
+>>> print(lex.entry_items[0].sense_items[0])
 pool            Nom             None
->>> for k, v in lex.entries[0].__dict__.items():
+>>> for k, v in lex.entry_items[0].__dict__.items():
 ...     print(f"{k}: {v}")
 ... 
-xml_tree: <Element entry at 0x7f8fd404d580>
+xml_tree: <Element entry at 0x7f4c7f33fa00>
+xml_tag: entry
+props: <lift_utils.datatypes.Props object at 0x7f4c7f335190>
 date_created: 2019-03-05T12:19:45Z
 date_modified: 2022-05-04T11:17:08Z
-fields: None
-traits: [<lift_utils.base.Trait object at 0x7f8fd3098940>]
-annotations: None
+field_items: None
+trait_items: [<lift_utils.base.Trait object at 0x7f4c7f348d90>]
+annotation_items: None
 id: kêtê ngû sô asua pëpe_000d9e27-d103-4601-a4b1-6c3ee5ef4c01
 guid: 000d9e27-d103-4601-a4b1-6c3ee5ef4c01
 order: None
 date_deleted: None
 lexical_unit: kêtê ngû sô asua pëpe (sg)
 citation: None
-pronunciations: None
-variants: None
-senses: [<lift_utils.lexicon.Sense object at 0x7f8fd3098ac0>, <lift_utils.lexicon.Sense object at 0x7f8fd3098af0>]
-notes: None
-relations: [<lift_utils.lexicon.Relation object at 0x7f8fd3098400>, <lift_utils.lexicon.Relation object at 0x7f8fd3098a00>, <lift_utils.lexicon.Relation object at 0x7f8fd3098a90>]
-etymologies: None
+pronunciation_items: None
+variant_items: None
+sense_items: [<lift_utils.lexicon.Sense object at 0x7f4c7f31f1f0>, <lift_utils.lexicon.Sense object at 0x7f4c7f31fbb0>]
+note_items: None
+relation_items: [<lift_utils.lexicon.Relation object at 0x7f4c7f3293a0>, <lift_utils.lexicon.Relation object at 0x7f4c7f331250>, <lift_utils.lexicon.Relation object at 0x7f4c7f331a90>]
+etymology_items: None
 
 .. toctree::
    :maxdepth: 4
