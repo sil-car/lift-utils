@@ -24,41 +24,27 @@ def etree_to_obj_attributes(xml_tree, obj):
 
     if obj.props.elements:
         for p in obj.props.elements:
-            if p.name == 'pcdata' and obj.xml_tree.text:
+            tag = config.XML_NAMES.get(p.name, p.name)
+            if obj.xml_tree.text and p.name == 'pcdata':
                 obj.__dict__[p.name] = p.prop_type(obj.xml_tree.text)
                 continue
-            elif p.name == 'tail' and obj.xml_tree.tail:
+            elif obj.xml_tree.tail and p.name == 'tail':
                 obj.__dict__[p.name] = p.prop_type(obj.xml_tree.tail)
                 continue
-
             for c in obj.xml_tree.getchildren():
-                tag = config.XML_NAMES.get(p.name, p.name)
-                # if p.name in ['fields', 'ranges'] and p.item_type is None:
-                #     # These elements are plural but have explicit tags.
-                #     tag = p.name
-                if tag == c.tag:
-                    # if xml_tree.tag == 'field' and tag == 'form':
-                    #     print(type(obj), c.attrib)
-                    if hasattr(p.prop_type, 'append'):  # list-like object
+                if c.tag == tag:
+                    if hasattr(p.prop_type, 'append'):  # list-like obj/elem
+                        c_obj = p.item_type(xml_tree=c)
                         if obj.__dict__.get(p.name) is None:
                             # Instantiate list-like object.
                             obj.__dict__[p.name] = p.prop_type()
-                        obj.__dict__[p.name].append(p.item_type(xml_tree=c))
+                        obj.__dict__[p.name].append(c_obj)
                     else:  # single element
                         obj.__dict__[p.name] = p.prop_type(xml_tree=c)
 
 
 def obj_attributes_to_etree(obj, root_tag):
-    if not isinstance(root_tag, etree._Element):
-        xml_tree = etree.Element(root_tag)
-    else:
-        xml_tree = root_tag
-
-    try:
-        if obj.lift_obj and type(obj.lift_obj) is type(obj):
-            obj = obj.lift_obj  # redefine for 'range' and 'ranges'
-    except AttributeError:
-        pass
+    xml_tree = etree.Element(root_tag)
 
     if obj.props.attributes:
         for attrib in obj.props.attributes:
@@ -72,9 +58,6 @@ def obj_attributes_to_etree(obj, root_tag):
         for elem in obj.props.elements:
             attr = elem.name
             name = config.XML_NAMES.get(attr, attr)
-            # if attr in ['fields', 'ranges'] and root_tag == 'header':
-            #     # These elements are plural but have explicit tags.
-            #     name = attr
             val = obj.__dict__.get(attr)
             if hasattr(val, 'append'):  # list-like element
                 for o in obj.__dict__.get(attr):
@@ -108,12 +91,10 @@ def xmlstring_to_etree(xmlstring):
     return etree.fromstring(xmlstring, get_xml_parser())
 
 
-def get_dict_key_from_value(dictionary, value, idx=0):
-    keys = []
-    for k, v in dictionary.items():
-        if v == value:
-            keys.append(k)
-    if keys:
-        return keys[idx]
-    else:
-        return None
+def etree_to_xmlstring(xml_tree):
+    return etree.tostring(
+        xml_tree,
+        encoding='UTF-8',
+        pretty_print=True,
+        xml_declaration=True
+    ).decode().rstrip()

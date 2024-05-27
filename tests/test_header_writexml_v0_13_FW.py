@@ -27,8 +27,8 @@ class TestFieldDefn(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -47,8 +47,8 @@ class TestFieldDefns(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -87,8 +87,8 @@ class TestHeader(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(obj.xml_tree, xml_tree)
         self.assertEqual(
-            etree.tostring(obj.xml_tree, pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj.xml_tree),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -98,28 +98,19 @@ class TestRange(unittest.TestCase):
         obj = header.Range()
         obj.id = base.Key('range-id')
         obj.href = base.URL('///fake/path')
-        obj.range_elements = [header.RangeElement()]
+        obj.range_element_items = [header.RangeElement()]
         obj.xml_tree = obj._to_xml_tree()
 
         xml = f"""
-        <range id="range-id" href="///fake/path"/>
-        """
-        xml_tree = utils.xmlstring_to_etree(xml)
-        ranges_xml = f"""
-        <range id="range-id">
+        <range id="range-id" href="///fake/path">
             <range-element/>
         </range>
         """
-        ranges_xml_tree = utils.xmlstring_to_etree(ranges_xml)
+        xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(obj.xml_tree, xml_tree)
         self.assertEqual(
-            etree.tostring(obj.xml_tree, pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
-        )
-        # compare_xml_trees(obj.ranges_xml_tree, ranges_xml_tree)
-        self.assertEqual(
-            etree.tostring(obj.ranges_xml_tree, pretty_print=True),
-            etree.tostring(ranges_xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj.xml_tree),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -136,21 +127,19 @@ class TestRangeElement(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
 class TestRanges(unittest.TestCase):
-    def setUp(self):
+    def test_lift_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
-        self.obj = header.Ranges()
-        self.obj.range_items = [
+        obj = header.Ranges()
+        obj.range_items = [
             header.Range(),
         ]
-        self.obj.xml_tree = self.obj._to_xml_tree()
-
-    def test_xml(self):
+        obj.xml_tree = obj._to_xml_tree()
         xml = f"""
         <ranges>
             <range/>
@@ -159,18 +148,6 @@ class TestRanges(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(self.obj.xml_tree, xml_tree)
         self.assertEqual(
-            etree.tostring(self.obj.xml_tree, pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
-        )
-
-    def test_ranges_xml(self):
-        xml = f"""
-        <lift-ranges>
-            <range/>
-        </lift-ranges>
-        """
-        xml_tree = utils.xmlstring_to_etree(xml)
-        self.assertEqual(
-            etree.tostring(self.obj.ranges_xml_tree, pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj.xml_tree),
+            utils.etree_to_xmlstring(xml_tree)
         )

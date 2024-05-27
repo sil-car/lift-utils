@@ -27,8 +27,8 @@ class TestAnnotation(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -63,11 +63,9 @@ class TestField(unittest.TestCase):
         </field>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
-        # print(etree.tostring(obj._to_xml_tree(), pretty_print=True).decode())
-        # print(etree.tostring(xml_tree, pretty_print=True).decode())
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -91,8 +89,8 @@ class TestForm(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -112,11 +110,9 @@ class TestGloss(unittest.TestCase):
         </gloss>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
-        # print(etree.tostring(obj._to_xml_tree(), pretty_print=True))
-        # print(etree.tostring(xml_tree, pretty_print=True))
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -137,8 +133,8 @@ class TestSpan(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         xml_tree = xml_tree.getchildren()[0]
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -157,8 +153,8 @@ class TestText(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -182,8 +178,8 @@ class TestTrait(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -201,6 +197,6 @@ class TestURLRef(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )

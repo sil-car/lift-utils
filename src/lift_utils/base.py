@@ -14,6 +14,7 @@ from .datatypes import Prop
 from .datatypes import Props
 from .datatypes import URL
 from .utils import etree_to_obj_attributes
+from .utils import etree_to_xmlstring
 from .utils import obj_attributes_to_etree
 
 
@@ -29,15 +30,11 @@ class LIFTUtilsBase:
         self.props.attributes = []
         self.props.elements = []
 
-    def to_xml(self):
+    def to_xml(self, xml_tree=None):
         """Convert the object's data to XML text."""
-        self.xml_tree = self._to_xml_tree()
-        return etree.tostring(
-            self.xml_tree,
-            encoding='UTF-8',
-            pretty_print=True,
-            xml_declaration=True
-        ).decode().rstrip()
+        if xml_tree is None:
+            xml_tree = self._to_xml_tree()
+        return etree_to_xmlstring(xml_tree)
 
     def print(self, format='xml'):
         """Print the object's data to stdout; as XML by default."""
@@ -69,7 +66,7 @@ class Span(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('lang', prop_type=Lang),
@@ -108,7 +105,7 @@ class Trait(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('name', required=True, prop_type=Key),
@@ -148,7 +145,7 @@ class Flag(Trait):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
 
 
 class Text(LIFTUtilsBase):
@@ -160,7 +157,7 @@ class Text(LIFTUtilsBase):
         text: PCData = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         elems = [
             Prop('pcdata', required=True, prop_type=PCData),
@@ -194,7 +191,7 @@ class Form(LIFTUtilsBase):
         text: Text = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         self.props.add_to(
             'attributes',
@@ -229,7 +226,7 @@ class URLRef(LIFTUtilsBase):
         href: URL = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         self.props.add_to(
             'attributes',
@@ -258,7 +255,7 @@ class Multitext(Text):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         elems = [
             Prop('form_items', prop_type=list, item_type=Form),
@@ -297,7 +294,7 @@ class Gloss(Form):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         self.props.add_to(
             'elements',
@@ -322,7 +319,7 @@ class Annotation(Multitext):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('name', required=True, prop_type=Key),
@@ -353,7 +350,7 @@ class Field(Multitext):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('date_created', prop_type=DateTime),
@@ -412,7 +409,7 @@ class Extensible(LIFTUtilsBase):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('date_created', prop_type=DateTime),

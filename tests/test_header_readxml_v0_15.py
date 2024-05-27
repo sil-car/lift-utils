@@ -44,7 +44,7 @@ class TestFields(unittest.TestCase):
         test_elems(self, self.obj, optional)
 
     def test_items(self):
-        self.assertTrue(len(self.obj.field_definitions) > 1)
+        self.assertTrue(len(self.obj.field_items) > 1)
 
 
 class TestHeader(unittest.TestCase):

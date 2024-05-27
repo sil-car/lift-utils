@@ -42,8 +42,8 @@ class Note(Multitext, Extensible):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        Extensible.__init__(self, xml_tree=xml_tree)
-        Multitext.__init__(self, xml_tree=xml_tree)
+        Extensible.__init__(self)
+        Multitext.__init__(self)
         # properties
         self.props.add_to('attributes', Prop('type', prop_type=Key))
         self.xml_tag = 'note'
@@ -71,8 +71,8 @@ class Phonetic(Multitext, Extensible):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        Extensible.__init__(self, xml_tree=xml_tree)
-        Multitext.__init__(self, xml_tree=xml_tree)
+        Extensible.__init__(self)
+        Multitext.__init__(self)
         # properties
         self.props.add_to(
             'elements',
@@ -114,7 +114,7 @@ class Etymology(Extensible):
         source: str = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('type', required=True, prop_type=Key),
@@ -158,7 +158,7 @@ class GrammaticalInfo(LIFTUtilsBase):
         value: Key = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         self.props.add_to(
             'attributes',
@@ -200,7 +200,7 @@ class Reversal(Multitext):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         self.props.add_to(
             'attributes',
@@ -233,7 +233,7 @@ class Translation(Multitext):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         self.props.add_to(
             'attributes',
@@ -263,8 +263,8 @@ class Example(Multitext, Extensible):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        Extensible.__init__(self, xml_tree=xml_tree)
-        Multitext.__init__(self, xml_tree=xml_tree)
+        Extensible.__init__(self)
+        Multitext.__init__(self)
         # properties
         self.props.add_to(
             'attributes',
@@ -309,7 +309,7 @@ class Relation(Extensible):
         ref: RefId = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('type', required=True, prop_type=Key),
@@ -355,8 +355,8 @@ class Variant(Multitext, Extensible):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        Extensible.__init__(self, xml_tree=xml_tree)
-        Multitext.__init__(self, xml_tree=xml_tree)
+        Extensible.__init__(self)
+        Multitext.__init__(self)
         # properties
         self.props.add_to(
             'attributes',
@@ -414,7 +414,7 @@ class Sense(Extensible):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('id', prop_type=RefId),
@@ -528,7 +528,7 @@ class Entry(Extensible):
         self,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('id', prop_type=RefId),
@@ -650,7 +650,7 @@ class Lexicon(LIFTUtilsBase):
         version: str = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        super().__init__(xml_tree=xml_tree)
+        super().__init__()
         # properties
         attribs = [
             Prop('version', required=True, prop_type=str),
@@ -665,6 +665,8 @@ class Lexicon(LIFTUtilsBase):
         for e in elems:
             self.props.add_to('elements', e)
         self.xml_tag = 'lift'
+        self.lift_xml_tree = None
+        self.ranges_xml_tree = None
         # attributes
         self.version = version
         self.producer: Optional[str] = None
@@ -696,8 +698,26 @@ class Lexicon(LIFTUtilsBase):
         self._update_from_xml(xml_tree)
 
     def to_lift(self, outfile):
+        outfile = Path(outfile).with_suffix('.lift')  # add suffix if not given
+        ranges_file = outfile.with_suffix('.lift-ranges')
         self.producer = Lexicon._producer
-        Path(outfile).write_text(self.to_xml())
+
+        # Write LIFT file.
+        lift_tree = self._to_xml_tree()
+        for _range in lift_tree.find('.//ranges').getchildren():
+            for _range_element in _range:
+                _range.remove(_range_element)
+            for attrib in _range.attrib.keys():
+                if attrib not in ['id', 'href']:
+                    del _range.attrib[attrib]
+        outfile.write_text(self.to_xml(lift_tree))
+
+        # Write LIFT-RANGES file.
+        lift_ranges = self.header.ranges._to_xml_tree()
+        lift_ranges.tag = 'lift-ranges'
+        for _range in list(lift_ranges):
+            del _range.attrib['href']
+        ranges_file.write_text(self.to_xml(lift_ranges))
 
     def show(self):
         """Print an overview of the ``lexicon`` in the terminal window."""
@@ -738,6 +758,8 @@ class Lexicon(LIFTUtilsBase):
                 ext_hrefs.add(r.href)
         for p in ext_hrefs:
             self._update_header_from_href(p)
+        # Update ranges xml_trees.
+        self.header.ranges._to_xml_tree()
 
     def _update_header_from_href(self, href: URL):
         filepath = unquote(urlparse(href).path)
@@ -749,6 +771,7 @@ class Lexicon(LIFTUtilsBase):
             relpath = self.path.parent / Path(filepath).name
             xml_tree = xmlfile_to_etree(relpath)
 
+        # Update model data.
         for _range in xml_tree.getchildren():
             for i, r in enumerate(self.header.ranges.range_items[:]):
                 if _range.attrib.get('id') == r.id:

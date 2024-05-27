@@ -1,5 +1,6 @@
 """Define the basic datatypes."""
 
+import uuid
 from typing import List
 
 
@@ -35,6 +36,8 @@ class RefId(str):
     def __new__(cls, text=None):
         if text is not None:
             return super().__new__(cls, text)
+        else:  # generate new UUID
+            return super().__new__(cls, str(uuid.uuid4()))
 
 
 class URL(str):

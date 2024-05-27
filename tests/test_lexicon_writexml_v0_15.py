@@ -30,8 +30,8 @@ class TestEntry(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -57,8 +57,8 @@ class TestEtymology(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -78,8 +78,8 @@ class TestExample(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -124,8 +124,8 @@ class TestExtensible(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -144,8 +144,8 @@ class TestGrammaticalInfo(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -165,8 +165,8 @@ class TestLexicon(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -192,8 +192,8 @@ class TestNote(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(obj._to_xml_tree(), xml_tree)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -223,8 +223,8 @@ class TestPhonetic(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(obj._to_xml_tree(), xml_tree)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -246,8 +246,8 @@ class TestRelation(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -266,8 +266,8 @@ class TestReversal(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -288,8 +288,8 @@ class TestSense(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -309,8 +309,8 @@ class TestTranslation(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
 
 
@@ -329,6 +329,6 @@ class TestVariant(unittest.TestCase):
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
-            etree.tostring(obj._to_xml_tree(), pretty_print=True),
-            etree.tostring(xml_tree, pretty_print=True)
+            utils.etree_to_xmlstring(obj._to_xml_tree()),
+            utils.etree_to_xmlstring(xml_tree)
         )
