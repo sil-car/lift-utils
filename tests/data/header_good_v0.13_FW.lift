@@ -4,7 +4,7 @@
   <header>
     <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
     <ranges>
-      <range id="etymology" guid="unique-range-identifier-001" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges">
+      <range id="etymology" guid="unique-range-identifier-001" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.15.lift-ranges">
         <range-element id="borrowed" guid="unique-range-element-identifier-001" parent="none">
           <label><form lang="en"><text>borrowed</text></form></label>
           <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
@@ -41,10 +41,12 @@
       <range id="do-not-publish-in" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.13_FW.lift-ranges"/>
     </ranges>
     <fields>
-      <field tag="cv-pattern">
+      <field tag="cv-pattern" class="unknown" type="option" option-range="dialect" writing-system="en">
         <form lang="en">
           <text>This records the syllable pattern for a LexPronunciation in FieldWorks.</text>
         </form>
+        <label><form lang="en"><text>FieldDefninition label</text></form></label>
+        <description><form lang="en"><text>FieldDefninition description</text></form></description>
       </field>
       <field tag="tone">
         <form lang="en">

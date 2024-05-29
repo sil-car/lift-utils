@@ -28,7 +28,7 @@
         </ranges>
         <fields>
             <field tag="cv-pattern">
-                <form lang="en"><text>This records the syllable pattern for a LexPronunciation in FieldWorks.</text></form>
+                <form lang="en"><text>This records the syllable <span>pattern</span> for a LexPronunciation in FieldWorks.</text></form>
             </field>
             <field tag="tone">
                 <form lang="en"><text>This records the tone information for a LexPronunciation in FieldWorks.</text></form>
@@ -62,12 +62,14 @@
             <form lang="sg"><text>kêtê ngû sô asua pëpe</text></form>
         </lexical-unit>
         <trait  name="morph-type" value="phrase"/>
-        <relation type="_component-lexeme" ref="3b2e3f52-85fe-42b0-a6db-2e2207228397" order="0">
+        <relation dateCreated="0000-00-00" dateModified="0000-00-00" type="_component-lexeme" ref="3b2e3f52-85fe-42b0-a6db-2e2207228397" order="0">
             <usage type="source">
                 <form lang="en"><text>tl</text></form>
             </usage>
             <trait name="is-primary" value="true"/>
             <trait  name="complex-form-type" value="Expr."/>
+            <field/>
+            <annotation/>
         </relation>
         <relation type="_component-lexeme" ref="9fa3166a-000a-4117-b821-dabd31554089" order="1">
            <trait name="is-primary" value="true"/>
@@ -80,17 +82,31 @@
         <pronunciation>
             <media/>
             <form/>
+            <field/>
+            <trait/>
+            <annotation/>
         </pronunciation>
-        <variant ref="TestRefId">
+        <variant dateCreated="0000-00-00" dateModified="0000-00-00" ref="TestRefId">
             <pronunciation/>
             <relation/>
+            <form/>
+            <field/>
+            <trait/>
+            <annotation/>
         </variant>
-        <note type="TestType"/>
-        <etymology type="TestType" source="TestSource">
+        <note dateCreated="0000-00-00" dateModified="0000-00-00" type="note-type"/>
+        <etymology dateCreated="0000-00-00" dateModified="0000-00-00" type="etym-type" source="etym-source">
             <form/>
             <gloss/>
+            <field/>
+            <trait/>
+            <annotation>
+                <form lang="en">
+                    <text>Some sample text with a <span>span.</span></text>
+                </form>
+            </annotation>
         </etymology>
-        <sense id="27bb9896-e413-4c14-8cdc-cbe26ecbc148" order="0">
+        <sense dateCreated="0000-00-00" dateModified="0000-00-00" id="27bb9896-e413-4c14-8cdc-cbe26ecbc148" order="0">
             <grammatical-info value="Nom">
                 <trait name ="TestTrait"/>
             </grammatical-info>
@@ -98,8 +114,12 @@
             <gloss lang="en"><text>pool</text></gloss>
             <gloss lang="fr"><text>étang</text></gloss>
             <definition/>
-            <example source="ExampleSource">
+            <example dateCreated="0000-00-00" dateModified="0000-00-00" source="ExampleSource">
                 <translation type="TestType"/>
+                <field/>
+                <trait/>
+                <annotation/>
+                <form/>
                 <note/>
             </example>
             <illustration/>
@@ -113,6 +133,7 @@
                 <form lang="fr"><text>étang</text></form>
                 <main/>
                 <grammatical-info/>
+                <trait/>
             </reversal>
             <reversal type="en"><form lang="en"><text>pool</text></form></reversal>
             <reversal type="de"><form lang="de"><text>Teich</text></form></reversal>
@@ -120,6 +141,7 @@
             <field type="CAWL">
                 <form lang="en"><text>1287</text></form>
             </field>
+            <annotation/>
             </sense>
             <sense id="d79eb529-9160-4446-b34a-c0051f6e200d" order="1">
             <grammatical-info value="Nom"/>
@@ -137,5 +159,7 @@
                 <form lang="en"><text>1288</text></form>
             </field>
         </sense>
+        <field/>
+        <annotation/>
     </entry>
 </lift>

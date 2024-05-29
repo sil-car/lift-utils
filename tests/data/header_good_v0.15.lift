@@ -4,8 +4,8 @@
   <header>
     <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
     <ranges>
-      <range id="etymology" guid="unique-range-identifier-001" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.15.lift-ranges">
-        <range-element id="borrowed" guid="unique-range-element-identifier-001" parent="none">
+      <range dateCreated="2008-04-03T03:09:11Z" dateModified="1990-02-26" id="etymology" guid="unique-range-identifier-001" href="file:///home/nate/g/lift_utils/tests/data/header_good_v0.15.lift-ranges">
+        <range-element dateCreated="2008-04-03T03:09:11Z" dateModified="1990-02-26" id="borrowed" guid="unique-range-element-identifier-001" parent="none">
           <label><form lang="en"><text>borrowed</text></form></label>
           <description><form lang="en"><text>The word is borrowed from another language</text></form></description>
           <abbrev><form lang="en"><text>RangeElement abbrev</text></form></abbrev>
