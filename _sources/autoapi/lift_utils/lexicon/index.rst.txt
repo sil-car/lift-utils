@@ -33,7 +33,7 @@ Classes
 
 
 
-.. py:class:: Entry(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Entry(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -51,33 +51,32 @@ Classes
        models for this standard.
    :ivar Optional[Multitext] citation: This is the form that is to be printed
        in the dictionary.
-   :ivar Optional[List[Phonetic]] pronunciations: There can be multiple
+   :ivar Optional[List[Phonetic]] pronunciation_items: There can be multiple
        phonetic forms of an entry.
-   :ivar Optional[List[Variant]] variants: Any constrained variants or free
-       orthographic variants.
-   :ivar Optional[List[Sense]] senses: This is where the definition goes.
-   :ivar Optional[List[Note]] notes: The more notes you keep the better.
-   :ivar Optional[List[Relation]] relations: Gives a lexical relationship
+   :ivar Optional[List[Variant]] variant_items: Any constrained variants or
+       free orthographic variants.
+   :ivar Optional[List[Sense]] sense_items: This is where the definition goes.
+   :ivar Optional[List[Note]] note_items: The more notes you keep the better.
+   :ivar Optional[List[Relation]] relation_items: Gives a lexical relationship
        between this entry and another ``entry`` or ``sense``.
-   :ivar Optional[List[Etymology]] etymologies: Differs from a lexical
+   :ivar Optional[List[Etymology]] etymology_items: Differs from a lexical
        relation in that it has no referent in the lexicon.
 
-   .. py:method:: get_gloss(sense_idx=0, lang='en')
+   .. py:method:: get_gloss(sense_idx=0, lang='en') -> str
 
       Get gloss details for a given sense index and language.
       Defaults to index 0 and English.
 
 
-   .. py:method:: get_grammatical_info(sense_idx=0)
+   .. py:method:: get_grammatical_info(sense_idx=0) -> GrammaticalInfo
 
       Get basic grammatical info for a given sense index [default=0].
               
 
 
-   .. py:method:: get_summary_line(lang='en')
+   .. py:method:: get_id() -> lift_utils.datatypes.RefId
 
-      Return a one-line summary of the entry's data for a given language.
-      Defaults to English.
+      Return the object's unique identifier
 
 
    .. py:method:: show()
@@ -86,7 +85,7 @@ Classes
 
 
 
-.. py:class:: Etymology(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Etymology(etym_type: lift_utils.datatypes.Key = None, source: str = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -97,12 +96,12 @@ Classes
        some other word in another language.
    :ivar str source: Gives the language for the source language of the
        etymological relation.
-   :ivar Optional[List[Gloss]] glosses: Gives glosses of the word that the
+   :ivar Optional[List[Gloss]] gloss_items: Gives glosses of the word that the
        etymological relationship is with.
    :ivar Optional[Form] form: Holds the form of the etymological reference.
 
 
-.. py:class:: Example(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Example(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
@@ -113,12 +112,12 @@ Classes
    :ivar Optional[Key] source: Reference by which another application may
        refer to this example or is a reference into another database of texts,
        for example.
-   :ivar Optional[List[Translation]] translations: Gives translations of the
-       example into different languages.
-   :ivar Optional[List[Note]] notes: Holds notes on this example.
+   :ivar Optional[List[Translation]] translation_items: Gives translations of
+       the example into different languages.
+   :ivar Optional[List[Note]] note_items: Holds notes on this example.
 
 
-.. py:class:: GrammaticalInfo(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: GrammaticalInfo(value: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -127,12 +126,12 @@ Classes
 
    :ivar Key value: The part of speech tag into the ``grammatical-info``
        range.
-   :ivar Optional[List[Trait]] traits: Allows the grammatical information for
-       a given sense to have more information than just the part of speech
+   :ivar Optional[List[Trait]] trait_items: Allows the grammatical information
+       for a given sense to have more information than just the part of speech
        given by the ``value`` attribute.
 
 
-.. py:class:: Lexicon(path: Optional[Union[pathlib.Path, str]] = None, xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Lexicon(path: Optional[Union[pathlib.Path, str]] = None, version: str = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -145,20 +144,44 @@ Classes
        lift file.
    :ivar Optional[Header] header: Contains the header information for the
        database.
-   :ivar Optional[List[Entry]] entries: Each of the entries in the lexicon.
+   :ivar Optional[List[Entry]] entry_items: Each of the entries in the
+       lexicon.
+   :ivar Optional[Path] path: File path to a LIFT file to import.
 
-   .. py:method:: get_item_by_id(refid) -> Union[Entry, Sense, None]
+   .. py:method:: find(text: str, field: str = 'gloss') -> Union[Entry, Sense, None]
+
+      Return the first matching ``Entry`` or ``Sense`` item.
+      The field searched can be "lexical-unit", "variant", "gloss", or
+      "definition", as well as any fields defined in the LIFT file's header.
+
+
+   .. py:method:: find_all(text: str, field: str = 'gloss') -> List[Union[Entry, Sense]]
+
+      Return all matching ``Entry`` or ``Sense`` items.
+      The field searched can be "lexical-unit", "variant", "gloss",
+      "definition", or "grammatical-info", as well as any fields defined in
+      the LIFT file's header.
+
+
+   .. py:method:: get_item_by_id(refid: str) -> Union[Entry, Sense, None]
 
       Return an entry or sense by its ``RefId``.
 
 
    .. py:method:: show()
 
-      Print an overview of the ``lexicon`` in the terminal window.
+      Print an overview of the ``Lexicon`` in the terminal window.
+
+
+   .. py:method:: to_lift(file_path: str)
+
+      Save the ``Lexicon`` as a LIFT file.
+      The LIFT-RANGES file will be automatically created in the same folder
+      as the LIFT file.
 
 
 
-.. py:class:: Note(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Note(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
@@ -171,21 +194,21 @@ Classes
        ``range-element`` in the ``note-type`` range.
 
 
-.. py:class:: Phonetic(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Phonetic(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
 
    This represents a single pronunciation in phonetic form.
 
-   :ivar Optional[List[URLRef]] medias: Stores an audio representation of the
-       text.
-   :ivar Optional[List[Span]] forms: `Used by LIFT v0.13 (FieldWorks).` Stores
-       the phonetic representation using whichever writing system: IPA,
+   :ivar Optional[List[URLRef]] media_items: Stores an audio representation of
+       the text.
+   :ivar Optional[List[Span]] form_items: `Used by LIFT v0.13 (FieldWorks).`
+       Stores the phonetic representation using whichever writing system: IPA,
        Americanist, etc.
 
 
-.. py:class:: Relation(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Relation(rel_type: lift_utils.datatypes.Key = None, ref: lift_utils.datatypes.RefId = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -201,7 +224,7 @@ Classes
        languages or writing systems.
 
 
-.. py:class:: Reversal(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Reversal(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`
@@ -217,7 +240,7 @@ Classes
        language.
 
 
-.. py:class:: Sense(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Sense(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -229,40 +252,38 @@ Classes
    :ivar Optional[int] order: A number that is used to give the relative
        order of senses within an entry.
    :ivar Optional[GrammaticalInfo] grammatical_info: Grammatical information.
-   :ivar Optional[List[Form]] glosses: `Used by LIFT v0.13 (FieldWorks).` Each
-       ``gloss`` is a single string in a single language and writing system.
-   :ivar Optional[List[Gloss]] glosses: Each ``gloss`` is a single string in a
-       single language and writing system.
+   :ivar Optional[List[Union[Gloss, Form]]] gloss_items: Each ``gloss`` is a
+       single string in a single language and writing system. ``Form`` is used
+       by LIFT v0.13 (FieldWorks), while ``Gloss`` is used in later versions.
    :ivar Optional[Multitext] definition: Gives the definition in multiple
        languages or writing systems.
-   :ivar Optional[List[Relation]] relations: While a lexical relation isn't
-       strictly owned by a sense it is a good place to hold it.
-   :ivar Optional[List[Note]] notes: There are lots of different types of
+   :ivar Optional[List[Relation]] relation_items: While a lexical relation
+       isn't strictly owned by a sense it is a good place to hold it.
+   :ivar Optional[List[Note]] note_items: There are lots of different types of
        notes.
-   :ivar Optional[List[Example]] examples: Examples may be used for different
-       target audiences.
-   :ivar Optional[List[Reversal]] reversals: There may be different reversal
-       indexes.
-   :ivar Optional[List[URLRef]] illustrations: The picture doesn't have to be
-       static.
-   :ivar Optional[List] subsenses: Senses can form a hierarchy.
+   :ivar Optional[List[Example]] example_items: Examples may be used for
+       different target audiences.
+   :ivar Optional[List[Reversal]] reversal_items: There may be different
+       reversal indexes.
+   :ivar Optional[List[URLRef]] illustration_items: The picture doesn't have
+       to be static.
+   :ivar Optional[List[Sense]] subsense_items: Senses can form a hierarchy.
 
-   .. py:method:: get_gloss(lang='en')
+   .. py:method:: get_gloss(lang='en') -> str
 
       Get gloss details for a given language.
       Defaults to English.
 
 
-   .. py:method:: get_grammatical_info()
+   .. py:method:: get_grammatical_info() -> GrammaticalInfo
 
       Get basic grammatical info.
               
 
 
-   .. py:method:: get_summary_line(lang='en')
+   .. py:method:: get_id() -> lift_utils.datatypes.RefId
 
-      Return a one-line summary of the entry's data for a given language.
-      Defaults to English.
+      Return the object's unique identifier
 
 
    .. py:method:: show()
@@ -271,7 +292,7 @@ Classes
 
 
 
-.. py:class:: Translation(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Translation(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`
@@ -281,7 +302,7 @@ Classes
    :ivar Optional[Key] type: Gives the type of the translation.
 
 
-.. py:class:: Variant(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Variant(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
@@ -291,11 +312,11 @@ Classes
    :ivar Optional[RefId] ref: Gives the variation as a reference to another
        ``entry`` or ``sense`` rather than specifying the ``form`` (that is,
        the ``Multitext`` value of the variant).
-   :ivar Optional[List[Phonetic]] pronunciations: Holds the phonetic variant
-       whether it is that this is a variation in phonetics only or that the
-       phonetic variation arises because of an orthographic or phonemic
-       variation.
-   :ivar Optional[List[Relation]]relations: Some variants have a lexical
+   :ivar Optional[List[Phonetic]] pronunciation_items: Holds the phonetic
+       variant whether it is that this is a variation in phonetics only or
+       that the phonetic variation arises because of an orthographic or
+       phonemic variation.
+   :ivar Optional[List[Relation]] relation_items: Some variants have a lexical
        relationship with other senses or entries in the lexicon.
 
 

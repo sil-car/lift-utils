@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: FieldDefinition(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: FieldDefinition(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -39,7 +39,7 @@ Classes
    standard.
 
 
-.. py:class:: FieldDefn(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: FieldDefn(tag: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`
@@ -51,7 +51,7 @@ Classes
    .. note:: Used by LIFT v0.13 (FieldWorks) instead of ``FieldDefinition``.
 
 
-.. py:class:: FieldDefns(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: FieldDefns(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -61,7 +61,7 @@ Classes
    .. note:: Used by LIFT v0.13 (FieldWorks) instead of ``Fields``.
 
 
-.. py:class:: Fields(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Fields(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -70,7 +70,7 @@ Classes
        
 
 
-.. py:class:: Header(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Header(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -80,34 +80,36 @@ Classes
 
    :ivar Optional[Multitext] description: Contains a multilingual description
        of the lexicon for information purposes only.
-   :ivar Optional[Ranges[Range]] ranges: Contains all the ``range``
-       information.
-   :ivar Optional[FieldDefns] fields: `Used by LIFT v0.13 (FieldWorks).`
+   :ivar Optional[Ranges] ranges: Contains all the ``range`` information.
+   :ivar Optional[FieldDefns] field_items: `Used by LIFT v0.13 (FieldWorks).`
        Contains definitions for all the ``field`` types used in the document.
    :ivar Optional[Fields] fields: Contains definitions for all the ``field``
        types used in the document.
 
 
-.. py:class:: Range(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Range(range_id: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
-   Bases: :py:obj:`lift_utils.base.Extensible`
+   Bases: :py:obj:`lift_utils.base.Extensible`, :py:obj:`lift_utils.base.LIFTUtilsBase`
 
    A set of ``range-elements``.
    It is used to identify both the group of ``range-elements`` but also to
    some extent their type.
 
+   .. note:: Does not inherit from Extensible in LIFT v0.13 (FieldWorks).
 
-.. py:class:: RangeElement(xml_tree: Optional[lxml.etree.ElementTree] = None)
+
+.. py:class:: RangeElement(elem_id: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
-   Bases: :py:obj:`lift_utils.base.Extensible`
+   Bases: :py:obj:`lift_utils.base.Extensible`, :py:obj:`lift_utils.base.LIFTUtilsBase`
 
    The description of a particular range element found in a ``range``.
-       
+
+   .. note:: Does not inherit from Extensible in LIFT v0.13 (FieldWorks).
 
 
-.. py:class:: Ranges(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Ranges(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`

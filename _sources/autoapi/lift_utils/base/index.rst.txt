@@ -33,7 +33,7 @@ Classes
 
 
 
-.. py:class:: Annotation(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Annotation(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Multitext`
@@ -42,7 +42,7 @@ Classes
        
 
 
-.. py:class:: Extensible(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Extensible(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -53,13 +53,14 @@ Classes
        when the element was added to the dictionary.
    :ivar Optional[DateTime] date_modified: Contains a date/timestamp saying
        when the element was last changed.
-   :ivar Optional[List[Field]] fields: Holds extra textual information.
-   :ivar Optional[List[Trait]] traits: Adds type or constraint information.
+   :ivar Optional[List[Field]] field_items: Holds extra textual information.
+   :ivar Optional[List[Trait]] trait_items: Adds type or constraint
+       information.
    :ivar Optional[List[Annotation]] annotation: Adds meta-information
        describing the element.
 
 
-.. py:class:: Field(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Field(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Multitext`
@@ -69,7 +70,7 @@ Classes
    LIFT standard.
 
 
-.. py:class:: Flag(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Flag(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Trait`
@@ -81,7 +82,7 @@ Classes
        not defined; assumed to be equivalent to ``Trait``.
 
 
-.. py:class:: Form(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Form(lang: lift_utils.datatypes.Lang = None, text: Text = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -90,7 +91,7 @@ Classes
    This is specified by the ``lang`` attribute.
 
 
-.. py:class:: Gloss(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Gloss(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Form`
@@ -100,25 +101,20 @@ Classes
    attribute.
 
 
-.. py:class:: LIFTUtilsBase(xml_tree: lxml.etree = None)
+.. py:class:: LIFTUtilsBase(xml_tree: lxml.etree._Element = None)
 
 
    This is a base class for all LIFT-related objects in this package.
 
-   :ivar etree xml_tree: The object's current data.
+   :ivar etree._Element xml_tree: The object's current data.
 
-   .. py:method:: print(format='xml')
+   .. py:method:: print(_format='xml')
 
       Print the object's data to stdout; as XML by default.
 
 
-   .. py:method:: to_xml()
 
-      Convert the object's data to XML.
-
-
-
-.. py:class:: Multitext(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Multitext(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Text`
@@ -127,7 +123,7 @@ Classes
    It can be in a given language, or in multiple languages.
 
 
-.. py:class:: Span(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Span(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -136,17 +132,16 @@ Classes
        
 
 
-.. py:class:: Text(text=None, xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Text(text: lift_utils.datatypes.PCData = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
-   Bases: :py:obj:`Form`
+   Bases: :py:obj:`LIFTUtilsBase`
 
    Contains textual data mixed with ``span`` elements only.
+       
 
-   .. note:: It only inherits from ``Form`` in LIFT v0.13 (FieldWorks).
 
-
-.. py:class:: Trait(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: Trait(xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -155,7 +150,7 @@ Classes
    It can also be used for adding binary constraints.
 
 
-.. py:class:: URLRef(xml_tree: Optional[lxml.etree.ElementTree] = None)
+.. py:class:: URLRef(href: lift_utils.datatypes.URL = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`

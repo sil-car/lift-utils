@@ -20,9 +20,14 @@ Functions
 
    lift_utils.utils.ellipsize
    lift_utils.utils.etree_to_obj_attributes
+   lift_utils.utils.etree_to_xmlstring
    lift_utils.utils.get_xml_parser
+   lift_utils.utils.obj_attributes_to_etree
+   lift_utils.utils.search_entry
+   lift_utils.utils.search_sense
    lift_utils.utils.unicode_sort
-   lift_utils.utils.xml_to_etree
+   lift_utils.utils.xmlfile_to_etree
+   lift_utils.utils.xmlstring_to_etree
 
 
 
@@ -32,12 +37,27 @@ Functions
 .. py:function:: etree_to_obj_attributes(xml_tree, obj)
 
 
+.. py:function:: etree_to_xmlstring(xml_tree)
+
+
 .. py:function:: get_xml_parser()
+
+
+.. py:function:: obj_attributes_to_etree(obj, root_tag)
+
+
+.. py:function:: search_entry(entry, text, field, target_groups, header_fields, get_all)
+
+
+.. py:function:: search_sense(sense, text, field, target_groups, header_fields, get_all)
 
 
 .. py:function:: unicode_sort(in_list)
 
 
-.. py:function:: xml_to_etree(filepath)
+.. py:function:: xmlfile_to_etree(filepath)
+
+
+.. py:function:: xmlstring_to_etree(xmlstring)
 
 
