@@ -3,7 +3,7 @@ Read and write LIFT files in Python.
 
 ## Releases
 
-Install from [PyPI.org/lift-utils](https://pypi.org/project/lift-utils/):
+Install from https://pypi.org/project/lift-utils/:
 ```shell
 python3 -m pip install lift_utils
 ```
