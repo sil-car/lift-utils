@@ -9,11 +9,12 @@
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parents[2] / 'src'))
+from lift_utils import config  # noqa: E402
 
 project = 'LIFT Utils'
 copyright = '2024, Nate Marti'
 author = 'Nate Marti'
-release = '0.1'
+release = config.LIB_VERSION
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
