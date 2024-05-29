@@ -27,6 +27,7 @@ from .header import Header
 from .header import Range
 from .utils import xmlfile_to_etree
 from .utils import etree_to_obj_attributes
+from .utils import search_entry
 
 
 class Note(Multitext, Extensible):
@@ -180,7 +181,7 @@ class GrammaticalInfo(LIFTUtilsBase):
     def __str__(self):
         traits = ''
         if self.trait_items:
-            traits = f": {'; '.join([t for t in self.trait_items])}"
+            traits = f": {'; '.join([str(t) for t in self.trait_items])}"
         return f"{self.value}{traits}"
 
 
@@ -462,14 +463,16 @@ class Sense(Extensible):
     def __str__(self):
         return self.get_summary_line()
 
+    def get_id(self):
+        return self.id
+
     def get_summary_line(self, lang='en'):
         """Return a one-line summary of the entry's data for a given language.
         Defaults to English.
         """
-        gl = utils.ellipsize(str(self.get_gloss(lang=lang)), 10)
+        gl = utils.ellipsize(str(self.get_gloss(lang=lang)), 20)
         gi = utils.ellipsize(self.get_grammatical_info(), 10)
-        de = str(self.definition)
-        return f"{gl:10}\t{gi:10}\t{de}"
+        return f"{gl:20}\t{gi:10}\t{self.id}"
 
     def get_gloss(self, lang='en'):
         """Get gloss details for a given language.
@@ -495,7 +498,7 @@ class Sense(Extensible):
 
     def show(self):
         """Print an overview of the ``sense`` in the terminal window."""
-        print(self.__str__())
+        print(self)
 
 
 class Entry(Extensible):
@@ -572,14 +575,16 @@ class Entry(Extensible):
     def __str__(self):
         return self.get_summary_line()
 
+    def get_id(self):
+        return self.id
+
     def get_summary_line(self, lang='en'):
         """Return a one-line summary of the entry's data for a given language.
         Defaults to English.
         """
         lu = utils.ellipsize(str(self.lexical_unit), 20)
         gl = self.get_gloss(lang=lang)
-        gi = self.get_grammatical_info()
-        return f"{lu:20}\t{gl:30}\t{gi}"
+        return f"{lu:20}\t{gl:30}\t{self.id}"
 
     def get_grammatical_info(self, sense_idx=0):
         """Get basic grammatical info for a given sense index [default=0].
@@ -629,9 +634,6 @@ class Entry(Extensible):
 
 
 class Lexicon(LIFTUtilsBase):
-
-    _producer = f"LIFT-Utils {config.LIB_VERSION}"
-
     """This is the main class of the lexicon.
     It contains the header and all the entries in the database.
 
@@ -642,7 +644,10 @@ class Lexicon(LIFTUtilsBase):
         database.
     :ivar Optional[List[Entry]] entry_items: Each of the entries in the
         lexicon.
+    :ivar Optional[Path] path: File path to a LIFT file to import.
     """
+
+    _producer = f"LIFT-Utils {config.LIB_VERSION}"
 
     def __init__(
         self,
@@ -676,7 +681,7 @@ class Lexicon(LIFTUtilsBase):
         if path:
             self.path = Path(path)
             if self.path.suffix == '.lift':
-                self.parse_lift(self.path)
+                self._from_lift(self.path)
             else:
                 print(f"Error: Not a valid LIFT file: {self.path}")
                 exit(1)
@@ -689,7 +694,76 @@ class Lexicon(LIFTUtilsBase):
             s += f"; produced by {self.producer}"
         return s
 
-    def parse_lift(self, infile):
+    def find(self, text: str, field: str = 'gloss'):
+        """Return the first matching ``Entry`` or ``Sense`` item.
+        The field searched can be "lexical-unit", "variant", "gloss", or
+        "definition", as well as any fields defined in the LIFT file's header.
+        """
+        return self._find(text, field=field)
+
+    def find_all(self, text: str, field: str = 'gloss'):
+        """Return all matching ``Entry`` or ``Sense`` items.
+        The field searched can be "lexical-unit", "variant", "gloss", or
+        "definition", as well as any fields defined in the LIFT file's header.
+        """
+        return self._find(text, field=field, get_all=True)
+
+    def _find(self, text, field='gloss', get_all=False):
+        items = []
+
+        target_groups = ['entries', 'senses']
+        entry_fields = ['lexical-unit', 'variant']
+        sense_fields = ['gloss', 'definition']
+        header_fields = [f.tag for f in self.header.fields.field_items]
+        if field in entry_fields:
+            target_groups.remove('senses')
+        elif field in sense_fields:
+            target_groups.remove('entries')
+
+        for entry in self.entry_items:
+            result = search_entry(
+                entry,
+                text,
+                field,
+                target_groups,
+                header_fields,
+                get_all
+            )
+            if result is not None:
+                if not get_all:
+                    return result
+                else:
+                    items.extend(result)
+        if get_all:
+            return items
+
+    def get_item_by_id(self, refid) -> Union[Entry, Sense, None]:
+        """Return an entry or sense by its ``RefId``."""
+        if not self.entry_items:
+            return
+        for entry in self.entry_items:
+            if entry.id == refid:
+                return entry
+            if entry.sense_items:
+                for sense in entry.sense_items:
+                    if sense.id == refid:
+                        return sense
+                    if sense.subsense_items:
+                        for subsense in sense.subsense_items:
+                            if subsense.id == refid:
+                                return subsense
+
+    def show(self):
+        """Print an overview of the ``lexicon`` in the terminal window."""
+        text = "No entries."
+        if self.entry_items:
+            summary_lines = [e.get_summary_line('en') for e in self.entry_items]  # noqa: E501
+            slist = utils.unicode_sort(summary_lines)
+            nl = '\n'
+            text = nl.join(slist)
+        print(text)
+
+    def _from_lift(self, infile):
         infile = Path(infile)
         if not infile.is_file():
             print(f"Error: Invalid file path: {infile}")
@@ -697,7 +771,7 @@ class Lexicon(LIFTUtilsBase):
         xml_tree = xmlfile_to_etree(infile)
         self._update_from_xml(xml_tree)
 
-    def to_lift(self, outfile):
+    def _to_lift(self, outfile):
         outfile = Path(outfile).with_suffix('.lift')  # add suffix if not given
         ranges_file = outfile.with_suffix('.lift-ranges')
         self.producer = Lexicon._producer
@@ -710,38 +784,14 @@ class Lexicon(LIFTUtilsBase):
             for attrib in _range.attrib.keys():
                 if attrib not in ['id', 'href']:
                     del _range.attrib[attrib]
-        outfile.write_text(self.to_xml(lift_tree))
+        outfile.write_text(self._to_xml(lift_tree))
 
         # Write LIFT-RANGES file.
         lift_ranges = self.header.ranges._to_xml_tree()
         lift_ranges.tag = 'lift-ranges'
         for _range in list(lift_ranges):
             del _range.attrib['href']
-        ranges_file.write_text(self.to_xml(lift_ranges))
-
-    def show(self):
-        """Print an overview of the ``lexicon`` in the terminal window."""
-        text = "No entries."
-        if self.entry_items:
-            summary_lines = [e.get_summary_line('en') for e in self.entry_items]  # noqa: E501
-            slist = utils.unicode_sort(summary_lines)
-            nl = '\n'
-            text = nl.join(slist)
-        print(text)
-
-    def get_item_by_id(self, refid) -> Union[Entry, Sense, None]:
-        """Return an entry or sense by its ``RefId``."""
-
-        if not self.entry_items:
-            return
-
-        for entry in self.entry_items:
-            if entry.id == refid:
-                return entry
-            if entry.sense_items:
-                for sense in entry.sense_items:
-                    if sense.id == refid:
-                        return sense
+        ranges_file.write_text(self._to_xml(lift_ranges))
 
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.

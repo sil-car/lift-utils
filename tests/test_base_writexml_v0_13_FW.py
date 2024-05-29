@@ -38,7 +38,7 @@ class TestField(unittest.TestCase):
         obj = base.Field()
         obj.date_created = datatypes.DateTime("0000-00-00")
         obj.date_modified = datatypes.DateTime("0000-00-00")
-        obj.prop_type = datatypes.Key("field-type")
+        obj.type = datatypes.Key("field-type")
         obj.annotation_items = [
             base.Annotation(),
             base.Annotation(),
@@ -53,7 +53,7 @@ class TestField(unittest.TestCase):
         ]
 
         xml = f"""
-        <field dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" type="{obj.prop_type}">
+        <field dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" type="{obj.type}">
             <form/>
             <form/>
             <trait/>

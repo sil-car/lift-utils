@@ -98,3 +98,147 @@ def etree_to_xmlstring(xml_tree):
         pretty_print=True,
         xml_declaration=True
     ).decode().rstrip()
+
+
+def search_entry(
+    entry,
+    text,
+    field,
+    target_groups,
+    header_fields,
+    get_all
+):
+    items = []
+    if 'senses' in target_groups:
+        if not entry.sense_items:
+            if not get_all:
+                return
+            else:
+                return items
+        for sense in entry.sense_items:
+            result = search_sense(
+                sense,
+                text,
+                field,
+                target_groups,
+                header_fields,
+                get_all
+            )
+            if result is not None:
+                if not get_all:
+                    return result
+                else:
+                    items.extend(result)
+
+            if not sense.subsense_items:
+                continue
+            for subsense in sense.subsense_items:
+                result = search_sense(
+                    subsense,
+                    text,
+                    field,
+                    target_groups,
+                    header_fields,
+                    get_all
+                )
+                if result is not None:
+                    if not get_all:
+                        return result
+                    else:
+                        items.extend(result)
+
+    if 'entries' in target_groups:
+        if field == 'lexical-unit':
+            if not entry.lexical_unit or not entry.lexical_unit.form_items:  # noqa: E501
+                if not get_all:
+                    return
+                else:
+                    return items
+            for form in entry.lexical_unit.form_items:
+                if text in str(form.text):
+                    if not get_all:
+                        return entry
+                    else:
+                        items.append(entry)
+        elif field == 'variant':
+            if not entry.variant_items:
+                if not get_all:
+                    return
+                else:
+                    return items
+            for variant in entry.variant_items:
+                if not variant.form_items:
+                    continue
+                for form in variant.form_items:
+                    if text in str(form.text):
+                        if not get_all:
+                            return entry
+                        else:
+                            items.append(entry)
+        elif field in header_fields:
+            if not entry.field_items:
+                if not get_all:
+                    return
+                else:
+                    return items
+            for field_item in entry.field_items:
+                if field_item.type == field and field_item.form_items:  # noqa: E501
+                    for form in field_item.form_items:
+                        if text in str(form.text):
+                            if not get_all:
+                                return entry
+                            else:
+                                items.append(entry)
+    if get_all:
+        return items
+
+
+def search_sense(
+    sense,
+    text,
+    field,
+    target_groups,
+    header_fields,
+    get_all
+):
+    items = []
+    if field == 'gloss':
+        if not sense.gloss_items:
+            if not get_all:
+                return
+            else:
+                return items
+        for gloss in sense.gloss_items:
+            if text in str(gloss.text):
+                if not get_all:
+                    return sense
+                else:
+                    items.append(sense)
+    elif field == 'definition':
+        if not sense.definition or not sense.definition.form_items:  # noqa: E501
+            if not get_all:
+                return
+            else:
+                return items
+        for form in sense.definition.form_items:
+            if text in str(form.text):
+                if not get_all:
+                    return sense
+                else:
+                    items.append(sense)
+    elif field in header_fields:
+        if not sense.field_items:
+            if not get_all:
+                return
+            else:
+                return items
+        for field_item in sense.field_items:
+            if field_item.type == field and field_item.form_items:  # noqa: E501
+                for form in field_item.form_items:
+                    if text in str(form.text):
+                        if not get_all:
+                            return sense
+                        else:
+                            items.append(sense)
+    if get_all:
+        return items

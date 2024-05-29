@@ -21,7 +21,7 @@ from .utils import obj_attributes_to_etree
 class LIFTUtilsBase:
     """This is a base class for all LIFT-related objects in this package.
 
-    :ivar etree xml_tree: The object's current data.
+    :ivar etree._Element xml_tree: The object's current data.
     """
     def __init__(self, xml_tree: etree._Element = None):
         self.xml_tree = xml_tree
@@ -30,18 +30,12 @@ class LIFTUtilsBase:
         self.props.attributes = []
         self.props.elements = []
 
-    def to_xml(self, xml_tree=None):
-        """Convert the object's data to XML text."""
-        if xml_tree is None:
-            xml_tree = self._to_xml_tree()
-        return etree_to_xmlstring(xml_tree)
-
-    def print(self, format='xml'):
+    def print(self, _format='xml'):
         """Print the object's data to stdout; as XML by default."""
         self.xml_tree = self._to_xml_tree()
         try:
-            if format == 'xml':
-                print(self.to_xml(), flush=True)
+            if _format == 'xml':
+                print(self._to_xml(), flush=True)
             else:
                 return
         except BrokenPipeError:
@@ -56,6 +50,11 @@ class LIFTUtilsBase:
     def _to_xml_tree(self):
         xml_tree = obj_attributes_to_etree(self, self.xml_tag)
         return xml_tree
+
+    def _to_xml(self, xml_tree=None):
+        if xml_tree is None:
+            xml_tree = self._to_xml_tree()
+        return etree_to_xmlstring(xml_tree)
 
 
 class Span(LIFTUtilsBase):
@@ -357,7 +356,7 @@ class Field(Multitext):
             Prop('date_modified', prop_type=DateTime),
         ]
         if config.LIFT_VERSION == '0.13':
-            attribs.append(Prop('prop_type', required=True, prop_type=Key))
+            attribs.append(Prop('type', required=True, prop_type=Key))
         else:
             attribs.append(Prop('name', required=True, prop_type=Key))
         for a in attribs:
@@ -373,7 +372,7 @@ class Field(Multitext):
         self.xml_tag = 'field'
         # attributes
         if config.LIFT_VERSION == '0.13':
-            self.prop_type: Key = None
+            self.type: Key = None
         else:
             self.name: Key = None
         self.date_created: Optional[DateTime] = None
