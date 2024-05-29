@@ -82,7 +82,7 @@ Roadmap
    * - v0.2
      - write support for LIFT files
    * - v0.3
-     - add helper methods to facilitate database manipulation
+     - add helper methods to facilitate lexicon manipulation
 
 Indexes
 =======
