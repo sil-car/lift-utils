@@ -18,4 +18,4 @@ https://sil-car.github.io/lift-utils
 | --: | --- |
 | v0.1 | read support for LIFT files |
 | v0.2 | write support for LIFT files |
-| v0.3 | add helper methods (get, set, add, list, etc.) |
+| v0.3 | add helper methods to facilitate lexicon manipulation |
