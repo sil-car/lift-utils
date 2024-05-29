@@ -34,7 +34,7 @@ class TestReadWrite(unittest.TestCase):
     def test_read_write_file(self):
         infile = LIFT_GOOD
         outfile = DATA_PATH / "sango_out.lift"
-        LEXICON._to_lift(outfile)
+        LEXICON.to_lift(outfile)
         xml_in = etree.tostring(
             xmlfile_to_etree(infile),
             encoding='UTF-8',
@@ -101,6 +101,12 @@ class TestFind(unittest.TestCase):
 
     def test_find_all_gloss(self):
         self.assertEqual(len(self.lexicon.find_all("head")), 20)
+
+    def test_find_all_grammatical_info(self):
+        self.assertEqual(
+            len(self.lexicon.find_all("Nom", field="grammatical-info")),
+            2381
+        )
 
     def test_find_all_header_field(self):
         self.assertEqual(len(self.lexicon.find_all("1021", field="CAWL")), 1)

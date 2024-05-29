@@ -391,11 +391,9 @@ class Sense(Extensible):
     :ivar Optional[int] order: A number that is used to give the relative
         order of senses within an entry.
     :ivar Optional[GrammaticalInfo] grammatical_info: Grammatical information.
-    :ivar Optional[List[Form]] gloss_items: `Used by LIFT v0.13 (FieldWorks).`
-        Each ``gloss`` is a single string in a single language and writing
-        system.
-    :ivar Optional[List[Gloss]] gloss_items: Each ``gloss`` is a single string
-        in a single language and writing system.
+    :ivar Optional[List[Union[Gloss, Form]]] gloss_items: Each ``gloss`` is a
+        single string in a single language and writing system. ``Form`` is used
+        by LIFT v0.13 (FieldWorks), while ``Gloss`` is used in later versions.
     :ivar Optional[Multitext] definition: Gives the definition in multiple
         languages or writing systems.
     :ivar Optional[List[Relation]] relation_items: While a lexical relation
@@ -408,7 +406,7 @@ class Sense(Extensible):
         reversal indexes.
     :ivar Optional[List[URLRef]] illustration_items: The picture doesn't have
         to be static.
-    :ivar Optional[List] subsense_items: Senses can form a hierarchy.
+    :ivar Optional[List[Sense]] subsense_items: Senses can form a hierarchy.
     """
 
     def __init__(
@@ -461,12 +459,9 @@ class Sense(Extensible):
             self._update_from_xml(xml_tree)
 
     def __str__(self):
-        return self.get_summary_line()
+        return self._summary_line()
 
-    def get_id(self):
-        return self.id
-
-    def get_summary_line(self, lang='en'):
+    def _summary_line(self, lang='en'):
         """Return a one-line summary of the entry's data for a given language.
         Defaults to English.
         """
@@ -474,7 +469,11 @@ class Sense(Extensible):
         gi = utils.ellipsize(self.get_grammatical_info(), 10)
         return f"{gl:20}\t{gi:10}\t{self.id}"
 
-    def get_gloss(self, lang='en'):
+    def get_id(self) -> RefId:
+        """Return the object's unique identifier"""
+        return self.id
+
+    def get_gloss(self, lang='en') -> str:
         """Get gloss details for a given language.
         Defaults to English.
         """
@@ -488,7 +487,7 @@ class Sense(Extensible):
                     gloss = str(g)
         return gloss
 
-    def get_grammatical_info(self):
+    def get_grammatical_info(self) -> GrammaticalInfo:
         """Get basic grammatical info.
         """
         grammatical_info = ''
@@ -573,12 +572,9 @@ class Entry(Extensible):
             self._update_from_xml(xml_tree)
 
     def __str__(self):
-        return self.get_summary_line()
+        return self._summary_line()
 
-    def get_id(self):
-        return self.id
-
-    def get_summary_line(self, lang='en'):
+    def _summary_line(self, lang='en'):
         """Return a one-line summary of the entry's data for a given language.
         Defaults to English.
         """
@@ -586,7 +582,11 @@ class Entry(Extensible):
         gl = self.get_gloss(lang=lang)
         return f"{lu:20}\t{gl:30}\t{self.id}"
 
-    def get_grammatical_info(self, sense_idx=0):
+    def get_id(self) -> RefId:
+        """Return the object's unique identifier"""
+        return self.id
+
+    def get_grammatical_info(self, sense_idx=0) -> GrammaticalInfo:
         """Get basic grammatical info for a given sense index [default=0].
         """
         grammatical_info = ''
@@ -594,7 +594,7 @@ class Entry(Extensible):
             grammatical_info = self.sense_items[sense_idx].get_grammatical_info()  # noqa: E501
         return grammatical_info
 
-    def get_gloss(self, sense_idx=0, lang='en'):
+    def get_gloss(self, sense_idx=0, lang='en') -> str:
         """Get gloss details for a given sense index and language.
         Defaults to index 0 and English.
         """
@@ -694,17 +694,26 @@ class Lexicon(LIFTUtilsBase):
             s += f"; produced by {self.producer}"
         return s
 
-    def find(self, text: str, field: str = 'gloss'):
+    def find(
+        self,
+        text: str,
+        field: str = 'gloss'
+    ) -> Union[Entry, Sense, None]:
         """Return the first matching ``Entry`` or ``Sense`` item.
         The field searched can be "lexical-unit", "variant", "gloss", or
         "definition", as well as any fields defined in the LIFT file's header.
         """
         return self._find(text, field=field)
 
-    def find_all(self, text: str, field: str = 'gloss'):
+    def find_all(
+        self,
+        text: str,
+        field: str = 'gloss'
+    ) -> List[Union[Entry, Sense]]:
         """Return all matching ``Entry`` or ``Sense`` items.
-        The field searched can be "lexical-unit", "variant", "gloss", or
-        "definition", as well as any fields defined in the LIFT file's header.
+        The field searched can be "lexical-unit", "variant", "gloss",
+        "definition", or "grammatical-info", as well as any fields defined in
+        the LIFT file's header.
         """
         return self._find(text, field=field, get_all=True)
 
@@ -712,12 +721,12 @@ class Lexicon(LIFTUtilsBase):
         items = []
 
         target_groups = ['entries', 'senses']
-        entry_fields = ['lexical-unit', 'variant']
-        sense_fields = ['gloss', 'definition']
+        entry_only_fields = ['lexical-unit', 'variant']
+        sense_only_fields = ['gloss', 'definition', 'grammatical-info']
         header_fields = [f.tag for f in self.header.fields.field_items]
-        if field in entry_fields:
+        if field in entry_only_fields:
             target_groups.remove('senses')
-        elif field in sense_fields:
+        elif field in sense_only_fields:
             target_groups.remove('entries')
 
         for entry in self.entry_items:
@@ -737,7 +746,7 @@ class Lexicon(LIFTUtilsBase):
         if get_all:
             return items
 
-    def get_item_by_id(self, refid) -> Union[Entry, Sense, None]:
+    def get_item_by_id(self, refid: str) -> Union[Entry, Sense, None]:
         """Return an entry or sense by its ``RefId``."""
         if not self.entry_items:
             return
@@ -754,10 +763,10 @@ class Lexicon(LIFTUtilsBase):
                                 return subsense
 
     def show(self):
-        """Print an overview of the ``lexicon`` in the terminal window."""
+        """Print an overview of the ``Lexicon`` in the terminal window."""
         text = "No entries."
         if self.entry_items:
-            summary_lines = [e.get_summary_line('en') for e in self.entry_items]  # noqa: E501
+            summary_lines = [e._summary_line('en') for e in self.entry_items]  # noqa: E501
             slist = utils.unicode_sort(summary_lines)
             nl = '\n'
             text = nl.join(slist)
@@ -771,8 +780,12 @@ class Lexicon(LIFTUtilsBase):
         xml_tree = xmlfile_to_etree(infile)
         self._update_from_xml(xml_tree)
 
-    def _to_lift(self, outfile):
-        outfile = Path(outfile).with_suffix('.lift')  # add suffix if not given
+    def to_lift(self, file_path: str):
+        """Save the ``Lexicon`` as a LIFT file.
+        The LIFT-RANGES file will be automatically created in the same folder
+        as the LIFT file.
+        """
+        outfile = Path(file_path).with_suffix('.lift')  # ensure suffix
         ranges_file = outfile.with_suffix('.lift-ranges')
         self.producer = Lexicon._producer
 

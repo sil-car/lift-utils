@@ -226,6 +226,17 @@ def search_sense(
                     return sense
                 else:
                     items.append(sense)
+    elif field == 'grammatical-info':
+        if not sense.grammatical_info:
+            if not get_all:
+                return
+            else:
+                return items
+        if text in str(sense.grammatical_info):
+            if not get_all:
+                return sense
+            else:
+                items.append(sense)
     elif field in header_fields:
         if not sense.field_items:
             if not get_all:
