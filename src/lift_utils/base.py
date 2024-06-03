@@ -48,6 +48,7 @@ class LIFTUtilsBase:
             self.__dict__[_name] = [new_obj]
         else:
             self.__dict__[_name].append(new_obj)
+        return len(self.__dict__.get(_name)) - 1
 
     def _update_from_xml(self, xml_tree):
         # Set initial xml_tree.
@@ -340,13 +341,13 @@ class Multitext(Text):
             if xml_tree is False:
                 return
             self._update_from_xml(xml_tree)
-        elif form_dict:
+        elif form_dict is not None:
             self.set_form_items(form_dict)
 
     def __str__(self):
         s = 'multitext'
         if self.form_items:
-            self.form_items.sort()
+            # self.form_items.sort()
             s = f"{self.form_items[0].text} ({self.form_items[0].lang})"
             ct = len(self.form_items)
             if ct > 1:

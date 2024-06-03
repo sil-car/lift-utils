@@ -606,6 +606,42 @@ class Entry(Extensible):
     def __str__(self):
         return self._summary_line()
 
+    def add_etymology(self) -> int:
+        """Add an empty ``Etymology`` item to the entry.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('etymology_items', Etymology)
+
+    def add_note(self) -> int:
+        """Add an empty ``Note`` item to the entry.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('note_items', Note)
+
+    def add_pronunciation(self) -> int:
+        """Add an empty ``Phonetic`` item to the entry.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('pronunciation_items', Phonetic)
+
+    def add_relation(self) -> int:
+        """Add an empty ``Relation`` item to the entry.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('relation_items', Relation)
+
+    def add_sense(self) -> int:
+        """Add an empty ``Sense`` item to the entry.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('sense_items', Sense)
+
+    def add_variant(self) -> int:
+        """Add an empty ``Variant`` item to the entry.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('variant_items', Variant)
+
     def get_id(self) -> RefId:
         """Return the object's unique identifier"""
         return self.id
@@ -631,6 +667,22 @@ class Entry(Extensible):
                     # Choose preferred language gloss.
                     gloss = str(g)
         return gloss
+
+    def set_citation(self, forms_dict=None):
+        """Set the entry's ``Citation``.
+
+        :var Optional[dict] forms_dict: ``dict`` keys are language codes,
+            values are the text descriptions of the ``Citation``.
+        """
+        self.citation = Multitext(forms_dict)
+
+    def set_lexical_unit(self, forms_dict=None):
+        """Set the entry's ``LexicalUnit``.
+
+        :var Optional[dict] forms_dict: ``dict`` keys are lanuage codes,
+            values are text descriptions of the ``LexicalUnit``.
+        """
+        self.lexical_unit = Multitext(forms_dict)
 
     def show(self):
         """Print an overview of the ``entry`` in the terminal window."""
@@ -727,7 +779,12 @@ class Lexicon(LIFTUtilsBase):
         return s
 
     def add_entry(self):
-        pass
+        self._add_list_item('entry_items', Entry)
+        self.entry_items[-1].date_created = DateTime()
+        new_id = RefId()
+        while self.get_item_by_id(new_id):  # make sure it's unique
+            new_id = RefId()
+        self.entry_items[-1].id = new_id
 
     def find(
         self,

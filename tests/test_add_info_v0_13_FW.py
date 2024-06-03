@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 
+from lift_utils import lexicon
 from lift_utils import Lexicon
 from lift_utils import base
 from lift_utils import datatypes
@@ -172,7 +173,48 @@ class TestModifyLexiconItems(unittest.TestCase):
     def setUp(self):
         self.lexicon = LEXICON
 
-    def test_set_pronunciation_item(self):
+    def test_entry_add_etymology(self):
+        entry = self.lexicon.entry_items[0]
+        idx = entry.add_etymology()
+        self.assertIsInstance(idx, int)
+        self.assertIsInstance(entry.etymology_items[idx], lexicon.Etymology)
+
+    def test_entry_add_note(self):
+        entry = self.lexicon.entry_items[0]
+        idx = entry.add_note()
+        self.assertIsInstance(idx, int)
+        self.assertIsInstance(entry.note_items[idx], lexicon.Note)
+
+    def test_entry_add_pronunciation(self):
+        entry = self.lexicon.entry_items[0]
+        idx = entry.add_pronunciation()
+        self.assertIsInstance(idx, int)
+        self.assertIsInstance(entry.pronunciation_items[idx], lexicon.Phonetic)
+
+    def test_entry_add_relation(self):
+        entry = self.lexicon.entry_items[0]
+        idx = entry.add_relation()
+        self.assertIsInstance(idx, int)
+        self.assertIsInstance(entry.relation_items[idx], lexicon.Relation)
+
+    def test_entry_add_sense(self):
+        entry = self.lexicon.entry_items[0]
+        idx = entry.add_sense()
+        self.assertIsInstance(idx, int)
+        self.assertIsInstance(entry.sense_items[idx], lexicon.Sense)
+
+    def test_entry_add_variant(self):
+        entry = self.lexicon.entry_items[0]
+        idx = entry.add_variant()
+        self.assertIsInstance(idx, int)
+        self.assertIsInstance(entry.variant_items[idx], lexicon.Variant)
+
+    def test_entry_set_lexical_unit(self):
+        entry = self.lexicon.entry_items[0]
+        entry.set_lexical_unit({'en': 'english text', 'sg': 'atëne ti sängö'})
+        self.assertEqual(len(entry.lexical_unit.form_items), 2)
+
+    def test_entry_set_pronunciation_item(self):
         entry_id = "rô_ff402c0b-4eb5-4df1-bd29-a1900aaf7567"
         entry = self.lexicon.get_item_by_id(entry_id)
         labels = {
@@ -193,7 +235,7 @@ class TestModifyLexiconItems(unittest.TestCase):
             self.assertIn(f.lang, labels.keys())
             self.assertIn(str(f.text), labels.values())
 
-    def test_add_etymology_item(self):
+    def test_etymology_add_gloss_item(self):
         entry_id = "yongo_eafee046-6df9-4162-8c38-a2536713b69f"
         entry = self.lexicon.get_item_by_id(entry_id)
         entry.etymology_items[0].add_gloss("en", "English gloss")
@@ -202,9 +244,12 @@ class TestModifyLexiconItems(unittest.TestCase):
         self.assertEqual(gloss_item.lang, 'en')
         self.assertEqual(str(gloss_item.text), 'English gloss')
 
-    def test_add_entry_item(self):
+    def test_lexicon_add_entry_item(self):
         len_before = len(self.lexicon.entry_items)
         self.lexicon.add_entry()
         len_after = len(self.lexicon.entry_items)
+        idx = len_after - 1
 
         self.assertEqual(len_after - 1, len_before)
+        self.assertIsNotNone(self.lexicon.entry_items[idx].id)
+        self.assertIsNotNone(self.lexicon.entry_items[idx].date_created)

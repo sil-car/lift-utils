@@ -1,6 +1,8 @@
 """Various utility functions."""
 
 import unidecode
+from datetime import datetime
+from datetime import timezone
 from lxml import etree
 
 from . import config
@@ -253,3 +255,7 @@ def search_sense(
                             items.append(sense)
     if get_all:
         return items
+
+
+def get_current_timestamp():
+    return datetime.strftime(datetime.now(timezone.utc), '%Y-%m-%dT%H:%M:%SZ')

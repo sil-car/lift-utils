@@ -3,6 +3,8 @@
 import uuid
 from typing import List
 
+from .utils import get_current_timestamp
+
 
 class PCData(str):
     def __new__(cls, text=None):
@@ -16,6 +18,8 @@ class DateTime(str):
     def __new__(cls, text=None):
         if text is not None:
             return super().__new__(cls, text)
+        else:
+            return get_current_timestamp()
 
 
 class Key(str):
