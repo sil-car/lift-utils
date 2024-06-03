@@ -43,16 +43,22 @@ class TestEtymology(unittest.TestCase):
             source="Esource"
         )
         obj.gloss_items = [
-            base.Gloss(),
-            base.Gloss(),
+            base.Gloss(lang="", text=""),
+            base.Gloss(lang="", text=""),
         ]
-        obj.form = base.Form()
+        obj.form = base.Form(lang="", text="")
 
         xml = f"""
         <etymology type="Etype" source="Esource">
-            <gloss/>
-            <gloss/>
-            <form/>
+            <gloss lang="">
+                <text/>
+            </gloss>
+            <gloss lang="">
+                <text/>
+            </gloss>
+            <form lang="">
+                <text/>
+            </form>
         </etymology>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
@@ -90,36 +96,42 @@ class TestExtensible(unittest.TestCase):
         obj.type = datatypes.Key("Etype")
         obj.source = "Esource"
         obj.gloss_items = [
-            base.Gloss(),
-            base.Gloss(),
+            base.Gloss(lang="", text=""),
+            base.Gloss(lang="", text=""),
         ]
-        obj.form = base.Form()
+        obj.form = base.Form(lang='', text='')
         obj.date_created = datatypes.DateTime("0000-00-00")
         obj.date_modified = datatypes.DateTime("0000-00-00")
         obj.field_items = [
-            base.Field(),
-            base.Field(),
+            base.Field(field_type=""),
+            base.Field(field_type=""),
         ]
         obj.trait_items = [
-            base.Trait(),
-            base.Trait(),
+            base.Trait(name='', value=''),
+            base.Trait(name='', value=''),
         ]
         obj.annotation_items = [
-            base.Annotation(),
-            base.Annotation(),
+            base.Annotation(name="", value=""),
+            base.Annotation(name="", value=""),
         ]
 
         xml = f"""
         <etymology dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" type="Etype" source="Esource">
-            <field/>
-            <field/>
-            <trait/>
-            <trait/>
-            <annotation/>
-            <annotation/>
-            <gloss/>
-            <gloss/>
-            <form/>
+            <field type=""/>
+            <field type=""/>
+            <trait name="" value=""/>
+            <trait name="" value=""/>
+            <annotation name="" value=""/>
+            <annotation name="" value=""/>
+            <gloss lang="">
+                <text/>
+            </gloss>
+            <gloss lang="">
+                <text/>
+            </gloss>
+            <form lang="">
+                <text/>
+            </form>
         </etymology>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
@@ -132,14 +144,14 @@ class TestExtensible(unittest.TestCase):
 class TestGrammaticalInfo(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
-        obj = lexicon.GrammaticalInfo(value=datatypes.Key("g-i-value"))
+        obj = lexicon.GrammaticalInfo(value="g-i-value")
         obj.trait_items = [
-            base.Trait(),
+            base.Trait(name='', value=''),
         ]
 
         xml = f"""
         <grammatical-info value="g-i-value">
-            <trait/>
+            <trait name="" value=""/>
         </grammatical-info>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
@@ -151,7 +163,6 @@ class TestGrammaticalInfo(unittest.TestCase):
 
 class TestLexicon(unittest.TestCase):
     def test_xml(self):
-        # config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Lexicon(version='0.13')
         obj.producer = f"LIFTUtils {config.LIB_VERSION}"
         obj.entry_items = [
@@ -204,12 +215,12 @@ class TestPhonetic(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Phonetic()
         obj.media_items = [
-            base.URLRef(href1),
-            base.URLRef(href2),
+            base.URLRef(href=href1),
+            base.URLRef(href=href2),
         ]
         obj.form_items = [
-            base.Span(),
-            base.Span(),
+            base.Span(text=""),
+            base.Span(text=""),
         ]
 
         xml = f"""
@@ -299,12 +310,14 @@ class TestTranslation(unittest.TestCase):
         obj = lexicon.Translation()
         obj.type = base.Key('literal')
         obj.form_items = [
-            base.Form()
+            base.Form(lang="", text="")
         ]
 
         xml = f"""
         <translation type="literal">
-            <form/>
+            <form lang="">
+                <text/>
+            </form>
         </translation>
         """
         xml_tree = utils.xmlstring_to_etree(xml)

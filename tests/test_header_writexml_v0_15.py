@@ -18,11 +18,13 @@ class TestFieldDefn(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
         obj = header.FieldDefn(tag=base.Key('field-tag'))
-        obj.form_items = [base.Form()]
+        obj.form_items = [base.Form(lang="", text="")]
 
         xml = f"""
         <field tag="field-tag">
-            <form/>
+            <form lang="">
+                <text/>
+            </form>
         </field>
         """
         xml_tree = utils.xmlstring_to_etree(xml)

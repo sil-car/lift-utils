@@ -23,6 +23,7 @@ from .datatypes import Key
 from .datatypes import RefId
 from .datatypes import Prop
 from .datatypes import URL
+from .errors import UnsupportedActionException
 from .header import Header
 from .header import Range
 from .utils import xmlfile_to_etree
@@ -94,7 +95,30 @@ class Phonetic(Multitext, Extensible):
             self._update_from_xml(xml_tree)
 
     def __str__(self):
-        return super().__str__()
+        return str(super())
+
+    def add_form(
+        self,
+        text=None,
+        tail=None,
+        lang=None,
+        href=None,
+        span_class=None,
+    ):
+        if config.LIFT_VERSION != '0.13':
+            raise UnsupportedActionException(config.LIFT_VERSION)
+        self._add_list_item(
+            'form_items',
+            Span,
+            text=text,
+            tail=tail,
+            lang=lang,
+            href=href,
+            span_class=span_class,
+        )
+
+    def add_media(self, href=None, label=None):
+        self._add_list_item('media_items', URLRef, href=href, label=label)
 
 
 class Etymology(Extensible):
@@ -143,6 +167,12 @@ class Etymology(Extensible):
     def __str__(self):
         return f"{self.type} ({self.source})"
 
+    def add_gloss(self, lang, text):
+        self._add_list_item('gloss_items', Gloss, lang=lang, text=text)
+
+    def set_form(self):
+        pass
+
 
 class GrammaticalInfo(LIFTUtilsBase):
     """A reference to a ``range-element`` in the ``grammatical-info`` range.
@@ -156,7 +186,7 @@ class GrammaticalInfo(LIFTUtilsBase):
 
     def __init__(
         self,
-        value: Key = None,
+        value: str = None,
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
@@ -171,12 +201,14 @@ class GrammaticalInfo(LIFTUtilsBase):
         )
         self.xml_tag = 'grammatical-info'
         # attributes
-        self.value = value
+        self.value = None
         # elements
         self.trait_items: Optional[List[Trait]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
+        elif value is not None:
+            self.value = Key(value)
 
     def __str__(self):
         traits = ''
@@ -574,14 +606,6 @@ class Entry(Extensible):
     def __str__(self):
         return self._summary_line()
 
-    def _summary_line(self, lang='en'):
-        """Return a one-line summary of the entry's data for a given language.
-        Defaults to English.
-        """
-        lu = utils.ellipsize(str(self.lexical_unit), 20)
-        gl = self.get_gloss(lang=lang)
-        return f"{lu:20}\t{gl:30}\t{self.id}"
-
     def get_id(self) -> RefId:
         """Return the object's unique identifier"""
         return self.id
@@ -631,6 +655,14 @@ class Entry(Extensible):
         if self.etymology_items:
             text.append('; '.join(str(e) for e in self.etymology_items))
         print('\n'.join(text))
+
+    def _summary_line(self, lang='en'):
+        """Return a one-line summary of the entry's data for a given language.
+        Defaults to English.
+        """
+        lu = utils.ellipsize(str(self.lexical_unit), 20)
+        gl = self.get_gloss(lang=lang)
+        return f"{lu:20}\t{gl:30}\t{self.id}"
 
 
 class Lexicon(LIFTUtilsBase):
@@ -694,6 +726,9 @@ class Lexicon(LIFTUtilsBase):
             s += f"; produced by {self.producer}"
         return s
 
+    def add_entry(self):
+        pass
+
     def find(
         self,
         text: str,
@@ -716,6 +751,32 @@ class Lexicon(LIFTUtilsBase):
         the LIFT file's header.
         """
         return self._find(text, field=field, get_all=True)
+
+    def get_item_by_id(self, refid: str) -> Union[Entry, Sense, None]:
+        """Return an entry or sense by its ``RefId``."""
+        if not self.entry_items:
+            return
+        for entry in self.entry_items:
+            if entry.id == refid:
+                return entry
+            if entry.sense_items:
+                for sense in entry.sense_items:
+                    if sense.id == refid:
+                        return sense
+                    if sense.subsense_items:
+                        for subsense in sense.subsense_items:
+                            if subsense.id == refid:
+                                return subsense
+
+    def show(self):
+        """Print an overview of the ``Lexicon`` in the terminal window."""
+        text = "No entries."
+        if self.entry_items:
+            summary_lines = [e._summary_line('en') for e in self.entry_items]  # noqa: E501
+            slist = utils.unicode_sort(summary_lines)
+            nl = '\n'
+            text = nl.join(slist)
+        print(text)
 
     def _find(self, text, field='gloss', get_all=False):
         items = []
@@ -745,32 +806,6 @@ class Lexicon(LIFTUtilsBase):
                     items.extend(result)
         if get_all:
             return items
-
-    def get_item_by_id(self, refid: str) -> Union[Entry, Sense, None]:
-        """Return an entry or sense by its ``RefId``."""
-        if not self.entry_items:
-            return
-        for entry in self.entry_items:
-            if entry.id == refid:
-                return entry
-            if entry.sense_items:
-                for sense in entry.sense_items:
-                    if sense.id == refid:
-                        return sense
-                    if sense.subsense_items:
-                        for subsense in sense.subsense_items:
-                            if subsense.id == refid:
-                                return subsense
-
-    def show(self):
-        """Print an overview of the ``Lexicon`` in the terminal window."""
-        text = "No entries."
-        if self.entry_items:
-            summary_lines = [e._summary_line('en') for e in self.entry_items]  # noqa: E501
-            slist = utils.unicode_sort(summary_lines)
-            nl = '\n'
-            text = nl.join(slist)
-        print(text)
 
     def _from_lift(self, infile):
         infile = Path(infile)
