@@ -371,7 +371,7 @@ class Relation(Extensible):
 
 
 class Variant(Multitext, Extensible):
-    """``variant`` elements are used for all sorts of variation.
+    """``Variant`` elements are used for all sorts of variation.
 
     :ivar Optional[RefId] ref: Gives the variation as a reference to another
         ``entry`` or ``sense`` rather than specifying the ``form`` (that is,

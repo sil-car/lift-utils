@@ -36,11 +36,10 @@ def etree_to_obj_attributes(xml_tree, obj):
             for c in obj.xml_tree.getchildren():
                 if c.tag == tag:
                     if hasattr(p.prop_type, 'append'):  # list-like obj/elem
-                        c_obj = p.item_type(xml_tree=c)
-                        if obj.__dict__.get(p.name) is None:
+                        if not obj.__dict__.get(p.name):
                             # Instantiate list-like object.
                             obj.__dict__[p.name] = p.prop_type()
-                        obj.__dict__[p.name].append(c_obj)
+                        obj.__dict__[p.name].append(p.item_type(xml_tree=c))
                     else:  # single element
                         obj.__dict__[p.name] = p.prop_type(xml_tree=c)
 
@@ -52,23 +51,24 @@ def obj_attributes_to_etree(obj, root_tag):
         for attrib in obj.props.attributes:
             attr = attrib.name
             val = obj.__dict__.get(attr)
-            name = config.XML_NAMES.get(attr, attr)
             if val is not None:
-                xml_tree.set(name, str(val))
+                xml_tree.set(config.XML_NAMES.get(attr, attr), str(val))
 
     if obj.props.elements:
         for elem in obj.props.elements:
             attr = elem.name
-            name = config.XML_NAMES.get(attr, attr)
             val = obj.__dict__.get(attr)
+            if not val:
+                continue
+            name = config.XML_NAMES.get(attr, attr)
             if hasattr(val, 'append'):  # list-like element
                 for o in obj.__dict__.get(attr):
                     xml_tree.append(obj_attributes_to_etree(o, name))
-            elif val and attr == 'pcdata':
+            elif attr == 'pcdata':
                 xml_tree.text = val
-            elif val and attr == 'tail':
+            elif attr == 'tail':
                 xml_tree.tail = val
-            elif val:  # single element
+            else:  # single element
                 xml_tree.append(
                     obj_attributes_to_etree(obj.__dict__.get(attr), name)
                 )

@@ -74,8 +74,25 @@ class Props:
         self.lift_version = lift_version
         self.attributes = attributes
         self.elements = elements
+        # Maintaining lists of property names is faster than checking every
+        # time on-the-fly.
+        if self.attributes is None:
+            self.attribute_names = []
+        else:
+            self.attribute_names = [p.name for p in self.attributes]
+
+        if self.elements is None:
+            self.element_names = []
+        else:
+            self.element_names = [p.name for p in self.elements]
 
     def add_to(self, prop_group_name, prop_obj):
-        prop_group = self.__dict__.get(prop_group_name)
-        if prop_obj.name not in (p.name for p in prop_group):
+        if prop_group_name == 'attributes':
+            prop_group = self.attributes
+            prop_group_names = self.attribute_names
+        elif prop_group_name == 'elements':
+            prop_group = self.elements
+            prop_group_names = self.element_names
+        if prop_obj.name not in prop_group_names:
             prop_group.append(prop_obj)
+            prop_group_names.append(prop_obj.name)
