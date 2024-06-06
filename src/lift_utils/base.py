@@ -561,7 +561,7 @@ class Extensible(LIFTUtilsBase):
             self._update_from_xml(xml_tree)
 
     def add_annotation(self, name=None, value=None, who=None, when=None):
-        self._add_list_item(
+        return self._add_list_item(
             'annotation_items',
             Annotation,
             name=name,
@@ -575,10 +575,10 @@ class Extensible(LIFTUtilsBase):
             kwargs = {'field_type': name}
         else:
             kwargs = {'name': name}
-        self._add_list_item('field_items', Field, **kwargs)
+        return self._add_list_item('field_items', Field, **kwargs)
 
     def add_trait(self, name=None, value=None, trait_id=None):
-        self._add_list_item(
+        return self._add_list_item(
             'trait_items',
             Trait,
             name=name,

@@ -485,7 +485,7 @@ class Sense(Extensible):
         self.example_items: Optional[List[Example]] = None
         self.reversal_items: Optional[List[Reversal]] = None
         self.illustration_items: Optional[List[URLRef]] = None
-        self.subsense_items: Optional[List] = None
+        self.subsense_items: Optional[List[Sense]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -493,21 +493,58 @@ class Sense(Extensible):
     def __str__(self):
         return self._summary_line()
 
-    def _summary_line(self, lang='en'):
-        """Return a one-line summary of the entry's data for a given language.
-        Defaults to English.
+    def add_example(self) -> int:
+        """Add an empty ``Example`` item to the sense.
+        Returns the index of the new item. Use this index to add data to it.
         """
-        gl = utils.ellipsize(str(self.get_gloss(lang=lang)), 20)
-        gi = utils.ellipsize(self.get_grammatical_info(), 10)
-        return f"{gl:20}\t{gi:10}\t{self.id}"
+        return self._add_list_item('example_items', Example)
+
+    def add_gloss(self, lang, text) -> int:
+        """Add a ``Gloss`` item to the sense.
+        Returns the index of the new item.
+
+        :var str lang: The gloss's language.
+        :var str text: The actual gloss text.
+        """
+        return self._add_list_item('gloss_items', Gloss, lang=lang, text=text)
+
+    def add_illustration(self, href=None) -> int:
+        """Add an ``URLRef`` illustration item to the sense.
+        Returns the index of the new item.
+        """
+        return self._add_list_item('illustration_items', URLRef, href=href)
+
+    def add_note(self) -> int:
+        """Add an empty ``Note`` item to the sense.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('note_items', Note)
+
+    def add_relation(self) -> int:
+        """Add an empty ``Relation`` item to the sense.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('relation_items', Relation)
+
+    def add_reversal(self) -> int:
+        """Add an empty ``Reversal`` item to the sense.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('reversal_items', Reversal)
+
+    def add_subsense(self) -> int:
+        """Add an empty ``Subense`` item to the sense.
+        Returns the index of the new item. Use this index to add data to it.
+        """
+        return self._add_list_item('subsense_items', Sense)
 
     def get_id(self) -> RefId:
         """Return the object's unique identifier"""
         return self.id
 
     def get_gloss(self, lang='en') -> str:
-        """Get gloss details for a given language.
-        Defaults to English.
+        """Get the gloss for a given language.
+        Defaults to English; falls back otherwise to the first gloss.
         """
         gloss = ''
         if self.gloss_items:
@@ -520,12 +557,36 @@ class Sense(Extensible):
         return gloss
 
     def get_grammatical_info(self) -> GrammaticalInfo:
-        """Get basic grammatical info.
+        """Return the grammatical-info part of speech value.
         """
         grammatical_info = ''
         if self.grammatical_info:
             grammatical_info = str(self.grammatical_info)
         return grammatical_info
+
+    def set_definition(self, forms_dict=None):
+        """Set the sense's definition.
+
+        :var Optional[dict] forms_dict: ``dict`` keys are language codes,
+            values are the text for each definition.
+        """
+        self.definition = Multitext(forms_dict)
+
+    def set_grammatical_info(self, value: str):
+        """Set the sense's ``GrammaticalInfo``.
+
+        :var str value: The part of speech tag into the ``grammatical-info``
+            range.
+        """
+        self.grammatical_info = GrammaticalInfo(value=value)
+
+    def _summary_line(self, lang='en'):
+        """Return a one-line summary of the entry's data for a given language.
+        Defaults to English.
+        """
+        gl = utils.ellipsize(str(self.get_gloss(lang=lang)), 20)
+        gi = utils.ellipsize(self.get_grammatical_info(), 10)
+        return f"{gl:20}\t{gi:10}\t{self.id}"
 
     def show(self):
         """Print an overview of the ``sense`` in the terminal window."""
@@ -645,28 +706,6 @@ class Entry(Extensible):
     def get_id(self) -> RefId:
         """Return the object's unique identifier"""
         return self.id
-
-    def get_grammatical_info(self, sense_idx=0) -> GrammaticalInfo:
-        """Get basic grammatical info for a given sense index [default=0].
-        """
-        grammatical_info = ''
-        if self.sense_items:
-            grammatical_info = self.sense_items[sense_idx].get_grammatical_info()  # noqa: E501
-        return grammatical_info
-
-    def get_gloss(self, sense_idx=0, lang='en') -> str:
-        """Get gloss details for a given sense index and language.
-        Defaults to index 0 and English.
-        """
-        gloss = ''
-        if self.sense_items and self.sense_items[sense_idx].gloss_items:
-            # Choose 1st gloss if preferred language not found.
-            gloss = str(self.sense_items[sense_idx].gloss_items[0])
-            for g in self.sense_items[sense_idx].gloss_items:
-                if g.lang == lang:
-                    # Choose preferred language gloss.
-                    gloss = str(g)
-        return gloss
 
     def set_citation(self, forms_dict=None):
         """Set the entry's ``Citation``.

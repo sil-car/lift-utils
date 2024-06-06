@@ -7,7 +7,6 @@ from lift_utils import base
 from lift_utils import config
 from lift_utils import datatypes
 from lift_utils import utils
-
 from lift_utils.lexicon import Etymology
 
 from .utils import compare_xml_trees

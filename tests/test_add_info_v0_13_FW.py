@@ -1,14 +1,11 @@
 import unittest
-from pathlib import Path
+
+from . import LEXICON
 
 from lift_utils import lexicon
-from lift_utils import Lexicon
 from lift_utils import base
 from lift_utils import datatypes
 from lift_utils import errors
-
-DATA_DIR = Path(__file__).parent / 'data'
-LEXICON = Lexicon(DATA_DIR / "sango" / "sango.lift")
 
 
 class TestAddExtensibleItems(unittest.TestCase):
@@ -22,18 +19,20 @@ class TestAddExtensibleItems(unittest.TestCase):
             self.entry.add_annotation,
             name='name'
             )
-        self.entry.add_annotation(name="test", value="test value")
+        idx = self.entry.add_annotation(name="test", value="test value")
         self.assertIsInstance(self.entry.annotation_items[0], base.Annotation)
         self.assertEqual(len(self.entry.annotation_items), 1)
+        del self.entry.annotation_items[idx]
 
     def test_add_field(self):
         self.assertRaises(
             errors.RequiredValueException,
             self.entry.add_field
         )
-        self.entry.add_field(name="Test Field")
+        idx = self.entry.add_field(name="Test Field")
         self.assertIsInstance(self.entry.field_items[0], base.Field)
         self.assertEqual(self.entry.field_items[0].type, 'Test Field')
+        del self.entry.field_items[idx]
 
     def test_add_trait(self):
         self.assertRaises(
@@ -47,6 +46,7 @@ class TestAddExtensibleItems(unittest.TestCase):
         self.assertIsInstance(self.entry.trait_items[idx], base.Trait)
         self.assertEqual(self.entry.trait_items[idx].name, 'trait-name')
         self.assertEqual(self.entry.trait_items[idx].value, 'trait-value')
+        del self.entry.trait_items[idx]
 
 
 class TestCreateBaseItems(unittest.TestCase):
@@ -172,47 +172,56 @@ class TestCreateBaseItems(unittest.TestCase):
 class TestModifyLexiconItems(unittest.TestCase):
     def setUp(self):
         self.lexicon = LEXICON
+        self.entry = self.lexicon.entry_items[0]
+        self.sense = self.entry.sense_items[0]
 
     def test_entry_add_etymology(self):
-        entry = self.lexicon.entry_items[0]
-        idx = entry.add_etymology()
+        idx = self.entry.add_etymology()
         self.assertIsInstance(idx, int)
-        self.assertIsInstance(entry.etymology_items[idx], lexicon.Etymology)
+        self.assertIsInstance(
+            self.entry.etymology_items[idx],
+            lexicon.Etymology
+        )
+        del self.entry.etymology_items[idx]
 
     def test_entry_add_note(self):
-        entry = self.lexicon.entry_items[0]
-        idx = entry.add_note()
+        idx = self.entry.add_note()
         self.assertIsInstance(idx, int)
-        self.assertIsInstance(entry.note_items[idx], lexicon.Note)
+        self.assertIsInstance(self.entry.note_items[idx], lexicon.Note)
+        del self.entry.note_items[idx]
 
     def test_entry_add_pronunciation(self):
-        entry = self.lexicon.entry_items[0]
-        idx = entry.add_pronunciation()
+        idx = self.entry.add_pronunciation()
         self.assertIsInstance(idx, int)
-        self.assertIsInstance(entry.pronunciation_items[idx], lexicon.Phonetic)
+        self.assertIsInstance(
+            self.entry.pronunciation_items[idx],
+            lexicon.Phonetic
+        )
+        del self.entry.pronunciation_items[idx]
 
     def test_entry_add_relation(self):
-        entry = self.lexicon.entry_items[0]
-        idx = entry.add_relation()
+        idx = self.entry.add_relation()
         self.assertIsInstance(idx, int)
-        self.assertIsInstance(entry.relation_items[idx], lexicon.Relation)
+        self.assertIsInstance(self.entry.relation_items[idx], lexicon.Relation)
+        del self.entry.relation_items[idx]
 
     def test_entry_add_sense(self):
-        entry = self.lexicon.entry_items[0]
-        idx = entry.add_sense()
+        idx = self.entry.add_sense()
         self.assertIsInstance(idx, int)
-        self.assertIsInstance(entry.sense_items[idx], lexicon.Sense)
+        self.assertIsInstance(self.entry.sense_items[idx], lexicon.Sense)
+        del self.entry.sense_items[idx]
 
     def test_entry_add_variant(self):
-        entry = self.lexicon.entry_items[0]
-        idx = entry.add_variant()
+        idx = self.entry.add_variant()
         self.assertIsInstance(idx, int)
-        self.assertIsInstance(entry.variant_items[idx], lexicon.Variant)
+        self.assertIsInstance(self.entry.variant_items[idx], lexicon.Variant)
+        del self.entry.variant_items[idx]
 
     def test_entry_set_lexical_unit(self):
-        entry = self.lexicon.entry_items[0]
-        entry.set_lexical_unit({'en': 'english text', 'sg': 'atëne ti sängö'})
-        self.assertEqual(len(entry.lexical_unit.form_items), 2)
+        self.entry.set_lexical_unit(
+            {'en': 'english text', 'sg': 'atëne ti sängö'}
+        )
+        self.assertEqual(len(self.entry.lexical_unit.form_items), 2)
 
     def test_entry_set_pronunciation_item(self):
         entry_id = "rô_ff402c0b-4eb5-4df1-bd29-a1900aaf7567"
@@ -243,6 +252,7 @@ class TestModifyLexiconItems(unittest.TestCase):
         gloss_item = entry.etymology_items[0].gloss_items[idx]
         self.assertEqual(gloss_item.lang, 'en')
         self.assertEqual(str(gloss_item.text), 'English gloss')
+        del entry.etymology_items[0].gloss_items[idx]
 
     def test_lexicon_add_entry_item(self):
         len_before = len(self.lexicon.entry_items)
@@ -253,3 +263,66 @@ class TestModifyLexiconItems(unittest.TestCase):
         self.assertEqual(len_after - 1, len_before)
         self.assertIsNotNone(self.lexicon.entry_items[idx].id)
         self.assertIsNotNone(self.lexicon.entry_items[idx].date_created)
+        del self.lexicon.entry_items[idx]
+
+    def test_sense_add_example(self):
+        idx = self.sense.add_example()
+        self.assertEqual(len(self.sense.example_items), 1)
+        self.assertIsInstance(self.sense.example_items[idx], lexicon.Example)
+        del self.sense.example_items[idx]
+
+    def test_sense_add_gloss(self):
+        len_before = len(self.sense.gloss_items)
+        idx = self.sense.add_gloss(lang='en', text="gloss text")
+        len_after = len(self.sense.gloss_items)
+        self.assertEqual(len_after - 1, len_before)
+        self.assertIsInstance(self.sense.gloss_items[idx], base.Gloss)
+        self.assertEqual(self.sense.gloss_items[idx].lang, 'en')
+        self.assertEqual(str(self.sense.gloss_items[idx].text), 'gloss text')
+        del self.sense.gloss_items[idx]
+
+    def test_sense_add_illustration(self):
+        href = "file:///home/user/image.png"
+        idx = self.sense.add_illustration(href=href)
+        self.assertEqual(len(self.sense.illustration_items), 1)
+        self.assertIsInstance(self.sense.illustration_items[idx], base.URLRef)
+        self.assertEqual(self.sense.illustration_items[idx].href, href)
+        del self.sense.illustration_items[idx]
+
+    def test_sense_add_note(self):
+        len_before = len(self.sense.note_items)
+        idx = self.sense.add_note()
+        len_after = len(self.sense.note_items)
+        self.assertEqual(len_after - 1, len_before)
+        self.assertIsInstance(self.sense.note_items[idx], lexicon.Note)
+        del self.sense.note_items[idx]
+
+    def test_sense_add_relation(self):
+        idx = self.sense.add_relation()
+        self.assertEqual(len(self.sense.relation_items), 1)
+        self.assertIsInstance(self.sense.relation_items[idx], lexicon.Relation)
+        del self.sense.relation_items[idx]
+
+    def test_sense_add_reversal(self):
+        len_before = len(self.sense.reversal_items)
+        idx = self.sense.add_reversal()
+        len_after = len(self.sense.reversal_items)
+        self.assertEqual(len_after - 1, len_before)
+        self.assertIsInstance(self.sense.reversal_items[idx], lexicon.Reversal)
+        del self.sense.reversal_items[idx]
+
+    def test_sense_add_subsense(self):
+        idx = self.sense.add_subsense()
+        self.assertEqual(len(self.sense.subsense_items), 1)
+        self.assertIsInstance(self.sense.subsense_items[idx], lexicon.Sense)
+        del self.sense.subsense_items[idx]
+
+    def test_sense_set_definition(self):
+        self.sense.set_definition(
+            {'en': 'english text', 'sg': 'atëne ti sängö'}
+        )
+        self.assertEqual(len(self.sense.definition.form_items), 2)
+
+    def test_sense_set_grammatical_info(self):
+        self.sense.set_grammatical_info('Nom')
+        self.assertEqual(str(self.sense.grammatical_info), 'Nom')

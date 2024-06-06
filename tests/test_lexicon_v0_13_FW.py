@@ -2,12 +2,13 @@ import unittest
 from lxml import etree
 
 from . import DATA_PATH
+from . import LEXICON
 
-from lift_utils import lexicon
+# from lift_utils import lexicon
 from lift_utils.utils import xmlfile_to_etree
 
 LIFT_GOOD = DATA_PATH / "sango" / "sango.lift"
-LEXICON = lexicon.Lexicon(LIFT_GOOD)
+# LEXICON = lexicon.Lexicon(LIFT_GOOD)
 
 
 class TestParse(unittest.TestCase):
