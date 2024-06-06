@@ -7,6 +7,11 @@ from lift_utils import base
 from lift_utils import datatypes
 from lift_utils import errors
 
+FIRST_ENTRY = LEXICON.entry_items[0]
+FIRST_ENTRY_LAST_MODIFIED = FIRST_ENTRY.date_modified
+FIRST_SENSE = FIRST_ENTRY.sense_items[0]
+FIRST_SENSE_LAST_MODIFIED = FIRST_SENSE.date_modified
+
 
 class TestAddExtensibleItems(unittest.TestCase):
     def setUp(self):
@@ -172,8 +177,10 @@ class TestCreateBaseItems(unittest.TestCase):
 class TestModifyLexiconItems(unittest.TestCase):
     def setUp(self):
         self.lexicon = LEXICON
-        self.entry = self.lexicon.entry_items[0]
-        self.sense = self.entry.sense_items[0]
+        self.entry = FIRST_ENTRY
+        self.sense = FIRST_SENSE
+        self.entry_last_modified = FIRST_ENTRY_LAST_MODIFIED
+        self.sense_last_modified = FIRST_SENSE_LAST_MODIFIED
 
     def test_entry_add_etymology(self):
         idx = self.entry.add_etymology()
@@ -182,12 +189,16 @@ class TestModifyLexiconItems(unittest.TestCase):
             self.entry.etymology_items[idx],
             lexicon.Etymology
         )
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
         del self.entry.etymology_items[idx]
 
     def test_entry_add_note(self):
         idx = self.entry.add_note()
         self.assertIsInstance(idx, int)
         self.assertIsInstance(self.entry.note_items[idx], lexicon.Note)
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
         del self.entry.note_items[idx]
 
     def test_entry_add_pronunciation(self):
@@ -197,24 +208,32 @@ class TestModifyLexiconItems(unittest.TestCase):
             self.entry.pronunciation_items[idx],
             lexicon.Phonetic
         )
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
         del self.entry.pronunciation_items[idx]
 
     def test_entry_add_relation(self):
         idx = self.entry.add_relation()
         self.assertIsInstance(idx, int)
         self.assertIsInstance(self.entry.relation_items[idx], lexicon.Relation)
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
         del self.entry.relation_items[idx]
 
     def test_entry_add_sense(self):
         idx = self.entry.add_sense()
         self.assertIsInstance(idx, int)
         self.assertIsInstance(self.entry.sense_items[idx], lexicon.Sense)
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
         del self.entry.sense_items[idx]
 
     def test_entry_add_variant(self):
         idx = self.entry.add_variant()
         self.assertIsInstance(idx, int)
         self.assertIsInstance(self.entry.variant_items[idx], lexicon.Variant)
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
         del self.entry.variant_items[idx]
 
     def test_entry_set_lexical_unit(self):
@@ -222,6 +241,8 @@ class TestModifyLexiconItems(unittest.TestCase):
             {'en': 'english text', 'sg': 'atëne ti sängö'}
         )
         self.assertEqual(len(self.entry.lexical_unit.form_items), 2)
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
 
     def test_entry_set_pronunciation_item(self):
         entry_id = "rô_ff402c0b-4eb5-4df1-bd29-a1900aaf7567"
@@ -243,6 +264,8 @@ class TestModifyLexiconItems(unittest.TestCase):
         for f in media_item.label.form_items:
             self.assertIn(f.lang, labels.keys())
             self.assertIn(str(f.text), labels.values())
+        self.assertIsNotNone(self.entry.date_modified)
+        self.assertNotEqual(self.entry.date_modified, self.entry_last_modified)
 
     def test_etymology_add_gloss_item(self):
         entry_id = "yongo_eafee046-6df9-4162-8c38-a2536713b69f"
@@ -269,6 +292,8 @@ class TestModifyLexiconItems(unittest.TestCase):
         idx = self.sense.add_example()
         self.assertEqual(len(self.sense.example_items), 1)
         self.assertIsInstance(self.sense.example_items[idx], lexicon.Example)
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
         del self.sense.example_items[idx]
 
     def test_sense_add_gloss(self):
@@ -279,6 +304,8 @@ class TestModifyLexiconItems(unittest.TestCase):
         self.assertIsInstance(self.sense.gloss_items[idx], base.Gloss)
         self.assertEqual(self.sense.gloss_items[idx].lang, 'en')
         self.assertEqual(str(self.sense.gloss_items[idx].text), 'gloss text')
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
         del self.sense.gloss_items[idx]
 
     def test_sense_add_illustration(self):
@@ -287,6 +314,8 @@ class TestModifyLexiconItems(unittest.TestCase):
         self.assertEqual(len(self.sense.illustration_items), 1)
         self.assertIsInstance(self.sense.illustration_items[idx], base.URLRef)
         self.assertEqual(self.sense.illustration_items[idx].href, href)
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
         del self.sense.illustration_items[idx]
 
     def test_sense_add_note(self):
@@ -295,12 +324,16 @@ class TestModifyLexiconItems(unittest.TestCase):
         len_after = len(self.sense.note_items)
         self.assertEqual(len_after - 1, len_before)
         self.assertIsInstance(self.sense.note_items[idx], lexicon.Note)
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
         del self.sense.note_items[idx]
 
     def test_sense_add_relation(self):
         idx = self.sense.add_relation()
         self.assertEqual(len(self.sense.relation_items), 1)
         self.assertIsInstance(self.sense.relation_items[idx], lexicon.Relation)
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
         del self.sense.relation_items[idx]
 
     def test_sense_add_reversal(self):
@@ -309,12 +342,16 @@ class TestModifyLexiconItems(unittest.TestCase):
         len_after = len(self.sense.reversal_items)
         self.assertEqual(len_after - 1, len_before)
         self.assertIsInstance(self.sense.reversal_items[idx], lexicon.Reversal)
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
         del self.sense.reversal_items[idx]
 
     def test_sense_add_subsense(self):
         idx = self.sense.add_subsense()
         self.assertEqual(len(self.sense.subsense_items), 1)
         self.assertIsInstance(self.sense.subsense_items[idx], lexicon.Sense)
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
         del self.sense.subsense_items[idx]
 
     def test_sense_set_definition(self):
@@ -322,7 +359,11 @@ class TestModifyLexiconItems(unittest.TestCase):
             {'en': 'english text', 'sg': 'atëne ti sängö'}
         )
         self.assertEqual(len(self.sense.definition.form_items), 2)
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)
 
     def test_sense_set_grammatical_info(self):
         self.sense.set_grammatical_info('Nom')
         self.assertEqual(str(self.sense.grammatical_info), 'Nom')
+        self.assertIsNotNone(self.sense.date_modified)
+        self.assertNotEqual(self.sense.date_modified, self.sense_last_modified)

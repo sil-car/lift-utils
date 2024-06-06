@@ -21,6 +21,8 @@ class TestEntry(unittest.TestCase):
         obj.id = lexicon.RefId('unique-entry-and-sense-id')
         obj.lexical_unit = lexicon.Multitext()
         obj.sense_items = [lexicon.Sense()]
+        obj.date_created = None
+        obj.sense_items[0].date_created = None
 
         xml = f"""
         <entry id="unique-entry-and-sense-id">
@@ -168,6 +170,7 @@ class TestLexicon(unittest.TestCase):
         obj.entry_items = [
             lexicon.Entry(),
         ]
+        obj.entry_items[0].date_created = None
 
         xml = f"""
         <lift version="0.13" producer="LIFTUtils {config.LIB_VERSION}">
@@ -289,6 +292,8 @@ class TestSense(unittest.TestCase):
         obj.grammatical_info = lexicon.GrammaticalInfo()
         obj.definition = lexicon.Multitext()
         obj.subsense_items = [lexicon.Sense()]
+        obj.date_created = None
+        obj.subsense_items[0].date_created = None
 
         xml = f"""
         <sense>

@@ -592,3 +592,9 @@ class Extensible(LIFTUtilsBase):
             x = config.XML_NAMES.get(a, a)
             xml_tree.set(x, self.__dict__.get(a))
         return xml_tree
+
+    def set_date_created(self):
+        self.date_created = DateTime()
+
+    def set_date_modified(self):
+        self.date_modified = DateTime()

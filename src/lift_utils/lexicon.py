@@ -489,6 +489,8 @@ class Sense(Extensible):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
+        else:
+            self.set_date_created()
 
     def __str__(self):
         return self._summary_line()
@@ -497,6 +499,7 @@ class Sense(Extensible):
         """Add an empty ``Example`` item to the sense.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('example_items', Example)
 
     def add_gloss(self, lang, text) -> int:
@@ -506,36 +509,42 @@ class Sense(Extensible):
         :var str lang: The gloss's language.
         :var str text: The actual gloss text.
         """
+        self.set_date_modified()
         return self._add_list_item('gloss_items', Gloss, lang=lang, text=text)
 
     def add_illustration(self, href=None) -> int:
         """Add an ``URLRef`` illustration item to the sense.
         Returns the index of the new item.
         """
+        self.set_date_modified()
         return self._add_list_item('illustration_items', URLRef, href=href)
 
     def add_note(self) -> int:
         """Add an empty ``Note`` item to the sense.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('note_items', Note)
 
     def add_relation(self) -> int:
         """Add an empty ``Relation`` item to the sense.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('relation_items', Relation)
 
     def add_reversal(self) -> int:
         """Add an empty ``Reversal`` item to the sense.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('reversal_items', Reversal)
 
     def add_subsense(self) -> int:
         """Add an empty ``Subense`` item to the sense.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('subsense_items', Sense)
 
     def get_id(self) -> RefId:
@@ -570,6 +579,7 @@ class Sense(Extensible):
         :var Optional[dict] forms_dict: ``dict`` keys are language codes,
             values are the text for each definition.
         """
+        self.set_date_modified()
         self.definition = Multitext(forms_dict)
 
     def set_grammatical_info(self, value: str):
@@ -578,6 +588,7 @@ class Sense(Extensible):
         :var str value: The part of speech tag into the ``grammatical-info``
             range.
         """
+        self.set_date_modified()
         self.grammatical_info = GrammaticalInfo(value=value)
 
     def _summary_line(self, lang='en'):
@@ -663,6 +674,8 @@ class Entry(Extensible):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
+        else:
+            self.set_date_created()
 
     def __str__(self):
         return self._summary_line()
@@ -671,36 +684,42 @@ class Entry(Extensible):
         """Add an empty ``Etymology`` item to the entry.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('etymology_items', Etymology)
 
     def add_note(self) -> int:
         """Add an empty ``Note`` item to the entry.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('note_items', Note)
 
     def add_pronunciation(self) -> int:
         """Add an empty ``Phonetic`` item to the entry.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('pronunciation_items', Phonetic)
 
     def add_relation(self) -> int:
         """Add an empty ``Relation`` item to the entry.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('relation_items', Relation)
 
     def add_sense(self) -> int:
         """Add an empty ``Sense`` item to the entry.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('sense_items', Sense)
 
     def add_variant(self) -> int:
         """Add an empty ``Variant`` item to the entry.
         Returns the index of the new item. Use this index to add data to it.
         """
+        self.set_date_modified()
         return self._add_list_item('variant_items', Variant)
 
     def get_id(self) -> RefId:
@@ -713,6 +732,7 @@ class Entry(Extensible):
         :var Optional[dict] forms_dict: ``dict`` keys are language codes,
             values are the text descriptions of the ``Citation``.
         """
+        self.set_date_modified()
         self.citation = Multitext(forms_dict)
 
     def set_lexical_unit(self, forms_dict=None):
@@ -721,6 +741,7 @@ class Entry(Extensible):
         :var Optional[dict] forms_dict: ``dict`` keys are lanuage codes,
             values are text descriptions of the ``LexicalUnit``.
         """
+        self.set_date_modified()
         self.lexical_unit = Multitext(forms_dict)
 
     def show(self):
