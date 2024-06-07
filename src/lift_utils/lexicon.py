@@ -23,6 +23,7 @@ from .datatypes import Key
 from .datatypes import RefId
 from .datatypes import Prop
 from .datatypes import URL
+from .errors import InvalidExtensionError
 from .errors import UnsupportedActionException
 from .header import Header
 from .header import Range
@@ -827,8 +828,7 @@ class Lexicon(LIFTUtilsBase):
             if self.path.suffix == '.lift':
                 self._from_lift(self.path)
             else:
-                print(f"Error: Not a valid LIFT file: {self.path}")
-                exit(1)
+                raise InvalidExtensionError(self.path.name)
         elif xml_tree is not None:
             self._update_from_xml(xml_tree)
 
@@ -927,8 +927,7 @@ class Lexicon(LIFTUtilsBase):
     def _from_lift(self, infile):
         infile = Path(infile)
         if not infile.is_file():
-            print(f"Error: Invalid file path: {infile}")
-            exit(1)
+            raise FileNotFoundError
         xml_tree = xmlfile_to_etree(infile)
         self._update_from_xml(xml_tree)
 

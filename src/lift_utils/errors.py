@@ -1,3 +1,9 @@
+class InvalidExtensionError(Exception):
+    def __init__(self, filename):
+        message = f"File has an invalid extension: {filename}"
+        super().__init__(message)
+
+
 class RequiredValueException(Exception):
     def __init__(self, values):
         message = f"Required value(s) missing: {', '.join(values)}"
