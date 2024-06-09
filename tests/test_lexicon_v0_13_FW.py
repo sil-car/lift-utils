@@ -4,16 +4,26 @@ from lxml import etree
 from . import DATA_PATH
 from . import LEXICON
 
-# from lift_utils import lexicon
 from lift_utils.utils import xmlfile_to_etree
 
 LIFT_GOOD = DATA_PATH / "sango" / "sango.lift"
-# LEXICON = lexicon.Lexicon(LIFT_GOOD)
 
 
 class TestParse(unittest.TestCase):
     def setUp(self):
         self.lexicon = LEXICON
+
+    def test_lexicon_find_writing_systems(self):
+        self.lexicon.vernacular_writing_systems.sort()
+        self.lexicon.analysis_writing_systems.sort()
+        self.assertEqual(
+            self.lexicon.vernacular_writing_systems,
+            ['sg', 'sg-fonipa']
+        )
+        self.assertEqual(
+            self.lexicon.analysis_writing_systems,
+            ['de', 'en', 'fr']
+        )
 
     def test_lexicon_header_field_items(self):
         self.assertTrue(len(self.lexicon.header.fields.field_items) == 8)
@@ -109,23 +119,39 @@ class TestFind(unittest.TestCase):
             2381
         )
 
-    def test_find_all_header_field(self):
+    def test_find_all_header_field_contains(self):
         self.assertEqual(len(self.lexicon.find_all("1021", field="CAWL")), 1)
 
-    def test_find_definition(self):
+    def test_find_all_header_field_exact(self):
+        self.assertEqual(len(self.lexicon.find_all(
+            "1056",
+            field="CAWL",
+            match_type="exact"
+        )), 1)
+
+    def test_find_definition_contains(self):
         self.assertEqual(
             str(self.lexicon.find("man", field="definition").id),
             "f6c860ea-80ff-431a-a5dd-9469b315f40c"
         )
 
-    def test_find_gloss(self):
+    def test_find_gloss_contains(self):
         self.assertEqual(
             str(self.lexicon.find("house").id),
             "086e06e3-a5f6-4c54-805a-4a1adcd51d4f"
         )
 
-    def test_find_header_field(self):
+    def test_find_header_field_contains(self):
         self.assertEqual(
-            str(self.lexicon.find("1000", field="CAWL").id),
-            "eee0d95e-8343-4307-83bb-944104cd2ead"
+            str(self.lexicon.find("i-1056", field="CAWL").id),
+            "25222115-e109-4704-8e82-d7cd523c8cbd"
+        )
+
+    def test_find_header_field_exact(self):
+        self.assertIsNone(
+            self.lexicon.find(
+                "056",
+                field="CAWL",
+                match_type="exact"
+            )
         )
