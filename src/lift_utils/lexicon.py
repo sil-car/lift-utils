@@ -27,9 +27,10 @@ from .errors import InvalidExtensionError
 from .errors import UnsupportedActionException
 from .header import Header
 from .header import Range
-from .utils import xmlfile_to_etree
 from .utils import etree_to_obj_attributes
+from .utils import get_writing_systems_from_entry
 from .utils import search_entry
+from .utils import xmlfile_to_etree
 
 
 class Note(Multitext, Extensible):
@@ -817,6 +818,8 @@ class Lexicon(LIFTUtilsBase):
         self.xml_tag = 'lift'
         self.lift_xml_tree = None
         self.ranges_xml_tree = None
+        self.analysis_writing_systems = None
+        self.vernacular_writing_systems = None
         # attributes
         self.version = version
         self.producer: Optional[str] = None
@@ -824,13 +827,14 @@ class Lexicon(LIFTUtilsBase):
         self.header: Optional[Header] = None
         self.entry_items: Optional[List[Entry]] = None
         if path:
-            self.path = Path(path)
+            self.path = Path(path).expanduser()
             if self.path.suffix == '.lift':
                 self._from_lift(self.path)
             else:
                 raise InvalidExtensionError(self.path.name)
         elif xml_tree is not None:
             self._update_from_xml(xml_tree)
+            self._find_writing_systems()
 
     def __str__(self):
         s = f"LIFT lexicon v{self.version}"
@@ -849,28 +853,49 @@ class Lexicon(LIFTUtilsBase):
     def find(
         self,
         text: str,
-        field: str = 'gloss'
+        field: str = 'gloss',
+        match_type: str = 'contains'
     ) -> Union[Entry, Sense, None]:
         """Return the first matching ``Entry`` or ``Sense`` item.
         The field searched can be "lexical-unit", "variant", "gloss", or
         "definition", as well as any fields defined in the LIFT file's header.
+
+        :var str text: The search term.
+        :var str field: The field to be searched [default is "gloss"].
+        :var str match_type: The kind comparison between the search term and
+            the field's data. Possible values are 'contains' [default],
+            'exact', or 'regex'.
         """
-        return self._find(text, field=field)
+        return self._find(text, field=field, match_type=match_type)
 
     def find_all(
         self,
-        text: str,
-        field: str = 'gloss'
+        text: str = '',
+        field: str = 'gloss',
+        match_type: str = 'contains'
     ) -> List[Union[Entry, Sense]]:
         """Return all matching ``Entry`` or ``Sense`` items.
-        The field searched can be "lexical-unit", "variant", "gloss",
-        "definition", or "grammatical-info", as well as any fields defined in
-        the LIFT file's header.
+        The default field is "gloss", but the field searched can be
+        "lexical-unit", "variant", "gloss", "definition", or
+        "grammatical-info", as well as any fields defined in the LIFT file's
+        header. Passing no text or using an empty string (``''``) will match
+        any text; i.e, will return all items of the given field.
+
+        :var str text: The search term.
+        :var str field: The field to be searched [default is "gloss"].
+        :var str match_type: The kind comparison between the search term and
+            the field's data. Possible values are 'contains' [default],
+            'exact', or 'regex'.
         """
-        return self._find(text, field=field, get_all=True)
+        return self._find(
+            text,
+            field=field,
+            match_type=match_type,
+            get_all=True
+        )
 
     def get_item_by_id(self, refid: str) -> Union[Entry, Sense, None]:
-        """Return an entry or sense by its ``RefId``."""
+        """Return an entry or sense by its ``id`` attribute."""
         if not self.entry_items:
             return
         for entry in self.entry_items:
@@ -885,6 +910,21 @@ class Lexicon(LIFTUtilsBase):
                             if subsense.id == refid:
                                 return subsense
 
+    def get_parent_by_id(self, refid: str) -> Union[Entry, Sense, None]:
+        if not self.entry_items:
+            return
+        for entry in self.entry_items:
+            if entry.id == refid:
+                return None
+            if entry.sense_items:
+                for sense in entry.sense_items:
+                    if sense.id == refid:
+                        return entry
+                    if sense.subsense_items:
+                        for subsense in sense.subsense_items:
+                            if subsense.id == refid:
+                                return sense
+
     def show(self):
         """Print an overview of the ``Lexicon`` in the terminal window."""
         text = "No entries."
@@ -895,7 +935,7 @@ class Lexicon(LIFTUtilsBase):
             text = nl.join(slist)
         print(text)
 
-    def _find(self, text, field='gloss', get_all=False):
+    def _find(self, text, field='gloss', match_type='contains', get_all=False):
         items = []
 
         target_groups = ['entries', 'senses']
@@ -914,6 +954,7 @@ class Lexicon(LIFTUtilsBase):
                 field,
                 target_groups,
                 header_fields,
+                match_type,
                 get_all
             )
             if result is not None:
@@ -924,12 +965,29 @@ class Lexicon(LIFTUtilsBase):
         if get_all:
             return items
 
+    def _find_writing_systems(self):
+        """Infer the lexicon's writing systems (vernacular and analsis).
+        """
+        if self.vernacular_writing_systems is None:
+            self.vernacular_writing_systems = []
+        if self.analysis_writing_systems is None:
+            self.analysis_writing_systems = []
+
+        for e in self.entry_items:
+            writing_systems = get_writing_systems_from_entry(e)
+            for lang in writing_systems.get('vernacular'):
+                if lang not in self.vernacular_writing_systems:
+                    self.vernacular_writing_systems.append(lang)
+            for lang in writing_systems.get('analysis'):
+                if lang not in self.analysis_writing_systems:
+                    self.analysis_writing_systems.append(lang)
+
     def _from_lift(self, infile):
         infile = Path(infile)
         if not infile.is_file():
             raise FileNotFoundError
-        xml_tree = xmlfile_to_etree(infile)
-        self._update_from_xml(xml_tree)
+        self._update_from_xml(xmlfile_to_etree(infile))
+        self._find_writing_systems()
 
     def to_lift(self, file_path: str):
         """Save the ``Lexicon`` as a LIFT file.
@@ -958,8 +1016,6 @@ class Lexicon(LIFTUtilsBase):
         ranges_file.write_text(self._to_xml(lift_ranges))
 
     def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
         self.version = xml_tree.attrib.get('version')
         # Allow global access to version number.
         config.LIFT_VERSION = self.version
@@ -989,7 +1045,6 @@ class Lexicon(LIFTUtilsBase):
         for _range in xml_tree.getchildren():
             for i, r in enumerate(self.header.ranges.range_items[:]):
                 if _range.attrib.get('id') == r.id:
-                    href = r.href
                     self.header.ranges.range_items[i] = Range(xml_tree=_range)
-                    self.header.ranges.range_items[i].href = href  # add href
+                    self.header.ranges.range_items[i].href = r.href  # add href
                     break

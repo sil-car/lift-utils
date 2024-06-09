@@ -25,7 +25,6 @@ class LIFTUtilsBase:
     :ivar etree._Element xml_tree: The object's current data.
     """
     def __init__(self, xml_tree: etree._Element = None):
-        self.xml_tree = xml_tree
         self.xml_tag = None
         self.props = Props(lift_version=config.LIFT_VERSION)
         self.props.attributes = []
@@ -33,7 +32,6 @@ class LIFTUtilsBase:
 
     def print(self, _format='xml'):
         """Print the object's data to stdout; as XML by default."""
-        self.xml_tree = self._to_xml_tree()
         try:
             if _format == 'xml':
                 print(self._to_xml(), flush=True)
@@ -51,8 +49,6 @@ class LIFTUtilsBase:
         return len(self.__dict__.get(_name)) - 1
 
     def _update_from_xml(self, xml_tree):
-        # Set initial xml_tree.
-        self.xml_tree = xml_tree
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self)
 
