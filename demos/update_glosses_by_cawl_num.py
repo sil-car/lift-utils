@@ -58,7 +58,7 @@ def main():
 
     # Save to output file.
     gbanu_lex.to_lift('~/gbanu_sg.lift')
-    
+
     # Show memory use, if traced.
     if tracemalloc.is_tracing():
         snapshot = tracemalloc.take_snapshot()
