@@ -1,5 +1,5 @@
-
 import sys
+import tracemalloc
 from pathlib import Path
 from tabulate import tabulate
 
@@ -22,12 +22,19 @@ def main():
             lu = None
             item = lex.find(cawl, field='CAWL', match_type='exact')
             if item and item.id:
-                parent = lex.get_parent_by_id(item.id)
+                parent = lex.get_item_parent_by_id(item.id)
                 if parent:
                     lu = parent.lexical_unit
             row.append(lu)
         table.append(row)
     print(tabulate(table))
+
+    # Show memory use, if traced.
+    if tracemalloc.is_tracing():
+        snapshot = tracemalloc.take_snapshot()
+        top_stats = snapshot.statistics('lineno')
+        for stat in top_stats[:20]:
+            print(stat)
 
 
 if __name__ == '__main__':
