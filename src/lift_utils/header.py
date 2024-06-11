@@ -32,7 +32,7 @@ class FieldDefn(Multitext):
             'attributes',
             Prop('tag', required=True, prop_type=Key)
         )
-        self.xml_tag = 'field'
+        self._xml_tag = 'field'
         # attributes
         self.tag = tag
 
@@ -71,7 +71,7 @@ class FieldDefinition(LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'field'
+        self._xml_tag = 'field'
         # attributes
         self.name: Key = None
         self.class_: Optional[str] = None
@@ -105,7 +105,7 @@ class FieldDefns(LIFTUtilsBase):
             'elements',
             Prop('field_items', prop_type=list, item_type=FieldDefn)
         )
-        self.xml_tag = 'fields'
+        self._xml_tag = 'fields'
         # elements
         self.field_items: Optional[List[FieldDefn]] = None
 
@@ -164,7 +164,7 @@ class RangeElement(Extensible, LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'range-element'
+        self._xml_tag = 'range-element'
         # attributes
         self.id = elem_id
         self.parent: Key = None
@@ -216,7 +216,7 @@ class Range(Extensible, LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'range'
+        self._xml_tag = 'range'
         # attributes
         self.id = range_id
         self.guid: Optional[str] = None
@@ -245,7 +245,7 @@ class Ranges(LIFTUtilsBase):
             'elements',
             Prop('range_items', required=True, prop_type=list, item_type=Range),  # noqa: E501
         )
-        self.xml_tag = 'ranges'
+        self._xml_tag = 'ranges'
         # elements
         self.range_items: List[Range] = None
 
@@ -282,7 +282,7 @@ class Header(LIFTUtilsBase):
             elems.append(Prop('fields', prop_type=Fields))
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'header'
+        self._xml_tag = 'header'
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[Ranges] = None

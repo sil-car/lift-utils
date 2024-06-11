@@ -50,7 +50,7 @@ class Note(Multitext, Extensible):
         Multitext.__init__(self)
         # properties
         self.props.add_to('attributes', Prop('type', prop_type=Key))
-        self.xml_tag = 'note'
+        self._xml_tag = 'note'
         # attributes
         self.type: Optional[Key] = None
 
@@ -87,7 +87,7 @@ class Phonetic(Multitext, Extensible):
                 'elements',
                 Prop('form_items', prop_type=list, item_type=Span)
             )
-        self.xml_tag = 'pronunciation'
+        self._xml_tag = 'pronunciation'
         # elements
         self.media_items: Optional[List[URLRef]] = None
         if config.LIFT_VERSION == '0.13':
@@ -155,7 +155,7 @@ class Etymology(Extensible):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'etymology'
+        self._xml_tag = 'etymology'
         # attributes
         self.type = etym_type
         self.source = source
@@ -201,7 +201,7 @@ class GrammaticalInfo(LIFTUtilsBase):
             'elements',
             Prop('trait_items', prop_type=list, item_type=Trait)
         )
-        self.xml_tag = 'grammatical-info'
+        self._xml_tag = 'grammatical-info'
         # attributes
         self.value = None
         # elements
@@ -247,7 +247,7 @@ class Reversal(Multitext):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'reversal'
+        self._xml_tag = 'reversal'
         # attributes
         self.type: Optional[Key] = None
         # elements
@@ -274,7 +274,7 @@ class Translation(Multitext):
             'attributes',
             Prop('type', prop_type=Key)
         )
-        self.xml_tag = 'translation'
+        self._xml_tag = 'translation'
         # attributes
         self.type: Optional[Key] = None
 
@@ -314,7 +314,7 @@ class Example(Multitext, Extensible):
                 'elements',
                 Prop('note_items', prop_type=list, item_type=Note)
             )
-        self.xml_tag = 'example'
+        self._xml_tag = 'example'
         # attributes
         self.source: Optional[Key] = None
         # elements
@@ -357,7 +357,7 @@ class Relation(Extensible):
             'elements',
             Prop('usage_items', prop_type=list, item_type=Multitext)
         )
-        self.xml_tag = 'relation'
+        self._xml_tag = 'relation'
         # attributes
         self.type = rel_type
         self.ref = ref
@@ -403,7 +403,7 @@ class Variant(Multitext, Extensible):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'variant'
+        self._xml_tag = 'variant'
         # attributes
         self.ref: Optional[RefId] = None
         # elements
@@ -471,7 +471,7 @@ class Sense(Extensible):
             elems.append(Prop('gloss_items', prop_type=list, item_type=Gloss))
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'sense'
+        self._xml_tag = 'sense'
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
@@ -550,7 +550,7 @@ class Sense(Extensible):
         return self._add_list_item('subsense_items', Sense)
 
     def get_id(self) -> RefId:
-        """Return the object's unique identifier"""
+        """Return the object's ``id`` attribute."""
         return self.id
 
     def get_gloss(self, lang='en') -> str:
@@ -658,7 +658,7 @@ class Entry(Extensible):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'entry'
+        self._xml_tag = 'entry'
         # attributes
         self.id: Optional[RefId] = None
         self.guid: Optional[str] = None  # deprecated
@@ -752,7 +752,7 @@ class Entry(Extensible):
         text = ['\nEntry\n============']
         # Add overview line.
         if self.lexical_unit:
-            text.append(f"{self.lexical_unit}; {self.get_grammatical_info()}; {self.get_gloss()}")  # noqa: E501
+            text.append(f"{self.lexical_unit}; {self.get_grammatical_info()}")
         # Add traits.
         if self.trait_items:
             text.append('; '.join([str(t) for t in self.trait_items]))
@@ -775,8 +775,9 @@ class Entry(Extensible):
         Defaults to English.
         """
         lu = utils.ellipsize(str(self.lexical_unit), 20)
-        gl = self.get_gloss(lang=lang)
-        return f"{lu:20}\t{gl:30}\t{self.id}"
+        # gl = self.get_gloss(lang=lang)
+        # return f"{lu:20}\t{gl:30}\t{self.id}"
+        return f"{lu:20}\t{self.id}"
 
 
 class Lexicon(LIFTUtilsBase):
@@ -815,7 +816,7 @@ class Lexicon(LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'lift'
+        self._xml_tag = 'lift'
         self.lift_xml_tree = None
         self.ranges_xml_tree = None
         self.analysis_writing_systems = None
@@ -857,14 +858,16 @@ class Lexicon(LIFTUtilsBase):
         match_type: str = 'contains'
     ) -> Union[Entry, Sense, None]:
         """Return the first matching ``Entry`` or ``Sense`` item.
-        The field searched can be "lexical-unit", "variant", "gloss", or
-        "definition", as well as any fields defined in the LIFT file's header.
+        The field searched can be the entry's "lexical-unit" or "variant"
+        field, the sense's "gloss" [default], "definition", or
+        "grammatical-info" field, as well as any fields defined in the LIFT
+        file's header.
 
         :var str text: The search term.
         :var str field: The field to be searched [default is "gloss"].
         :var str match_type: The kind comparison between the search term and
-            the field's data. Possible values are 'contains' [default],
-            'exact', or 'regex'.
+            the field's data. Possible values are "contains" [default],
+            "exact", or "regex".
         """
         return self._find(text, field=field, match_type=match_type)
 
@@ -875,17 +878,16 @@ class Lexicon(LIFTUtilsBase):
         match_type: str = 'contains'
     ) -> List[Union[Entry, Sense]]:
         """Return all matching ``Entry`` or ``Sense`` items.
-        The default field is "gloss", but the field searched can be
-        "lexical-unit", "variant", "gloss", "definition", or
-        "grammatical-info", as well as any fields defined in the LIFT file's
-        header. Passing no text or using an empty string (``''``) will match
-        any text; i.e, will return all items of the given field.
+        The field searched can be the entry's "lexical-unit" or "variant"
+        field, the sense's "gloss" [default], "definition", or
+        "grammatical-info" field, as well as any fields defined in the LIFT
+        file's header.
 
         :var str text: The search term.
         :var str field: The field to be searched [default is "gloss"].
         :var str match_type: The kind comparison between the search term and
-            the field's data. Possible values are 'contains' [default],
-            'exact', or 'regex'.
+            the field's data. Possible values are "contains" [default],
+            "exact", or "regex".
         """
         return self._find(
             text,
@@ -895,35 +897,18 @@ class Lexicon(LIFTUtilsBase):
         )
 
     def get_item_by_id(self, refid: str) -> Union[Entry, Sense, None]:
-        """Return an entry or sense by its ``id`` attribute."""
-        if not self.entry_items:
-            return
-        for entry in self.entry_items:
-            if entry.id == refid:
-                return entry
-            if entry.sense_items:
-                for sense in entry.sense_items:
-                    if sense.id == refid:
-                        return sense
-                    if sense.subsense_items:
-                        for subsense in sense.subsense_items:
-                            if subsense.id == refid:
-                                return subsense
+        """Return an entry or sense by its ``id`` attribute.
 
-    def get_parent_by_id(self, refid: str) -> Union[Entry, Sense, None]:
-        if not self.entry_items:
-            return
-        for entry in self.entry_items:
-            if entry.id == refid:
-                return None
-            if entry.sense_items:
-                for sense in entry.sense_items:
-                    if sense.id == refid:
-                        return entry
-                    if sense.subsense_items:
-                        for subsense in sense.subsense_items:
-                            if subsense.id == refid:
-                                return sense
+        :var str refid: The ``id`` attribute of the entry or sense.
+        """
+        return self._item_from_id(refid, item_type='self')
+
+    def get_item_parent_by_id(self, refid: str) -> Union[Entry, Sense, None]:
+        """Return an sense's parent item by the sense's ``id`` attribute.
+
+        :var str refid: The ``id`` attribute of the entry or sense.
+        """
+        return self._item_from_id(refid, item_type='parent')
 
     def show(self):
         """Print an overview of the ``Lexicon`` in the terminal window."""
@@ -935,9 +920,36 @@ class Lexicon(LIFTUtilsBase):
             text = nl.join(slist)
         print(text)
 
+    def to_lift(self, file_path: str):
+        """Save the ``Lexicon`` as a LIFT file.
+        The LIFT-RANGES file will be automatically created in the same folder
+        as the LIFT file.
+
+        :var str file_path: Full or relative path to new LIFT file.
+        """
+        outfile = Path(file_path).expanduser().with_suffix('.lift')  # ensure suffix  # noqa: E501
+        ranges_file = outfile.with_suffix('.lift-ranges')
+        self.producer = Lexicon._producer
+
+        # Write LIFT file.
+        lift_tree = self._to_xml_tree()
+        for _range in lift_tree.find('.//ranges').getchildren():
+            for _range_element in _range:
+                _range.remove(_range_element)
+            for attrib in _range.attrib.keys():
+                if attrib not in ['id', 'href']:
+                    del _range.attrib[attrib]
+        outfile.write_text(self._to_xml(lift_tree))
+
+        # Write LIFT-RANGES file.
+        lift_ranges = self.header.ranges._to_xml_tree()
+        lift_ranges.tag = 'lift-ranges'
+        for _range in list(lift_ranges):
+            del _range.attrib['href']
+        ranges_file.write_text(self._to_xml(lift_ranges))
+
     def _find(self, text, field='gloss', match_type='contains', get_all=False):
         items = []
-
         target_groups = ['entries', 'senses']
         entry_only_fields = ['lexical-unit', 'variant']
         sense_only_fields = ['gloss', 'definition', 'grammatical-info']
@@ -989,31 +1001,29 @@ class Lexicon(LIFTUtilsBase):
         self._update_from_xml(xmlfile_to_etree(infile))
         self._find_writing_systems()
 
-    def to_lift(self, file_path: str):
-        """Save the ``Lexicon`` as a LIFT file.
-        The LIFT-RANGES file will be automatically created in the same folder
-        as the LIFT file.
-        """
-        outfile = Path(file_path).with_suffix('.lift')  # ensure suffix
-        ranges_file = outfile.with_suffix('.lift-ranges')
-        self.producer = Lexicon._producer
-
-        # Write LIFT file.
-        lift_tree = self._to_xml_tree()
-        for _range in lift_tree.find('.//ranges').getchildren():
-            for _range_element in _range:
-                _range.remove(_range_element)
-            for attrib in _range.attrib.keys():
-                if attrib not in ['id', 'href']:
-                    del _range.attrib[attrib]
-        outfile.write_text(self._to_xml(lift_tree))
-
-        # Write LIFT-RANGES file.
-        lift_ranges = self.header.ranges._to_xml_tree()
-        lift_ranges.tag = 'lift-ranges'
-        for _range in list(lift_ranges):
-            del _range.attrib['href']
-        ranges_file.write_text(self._to_xml(lift_ranges))
+    def _item_from_id(self, refid, item_type='self'):
+        if not self.entry_items:
+            return
+        for entry in self.entry_items:
+            if entry.id == refid:
+                if item_type == 'self':
+                    return entry
+                elif item_type == 'parent':
+                    return None
+            if entry.sense_items:
+                for sense in entry.sense_items:
+                    if sense.id == refid:
+                        if item_type == 'self':
+                            return sense
+                        elif item_type == 'parent':
+                            return entry
+                    if sense.subsense_items:
+                        for subsense in sense.subsense_items:
+                            if subsense.id == refid:
+                                if item_type == 'self':
+                                    return subsense
+                                elif item_type == 'parent':
+                                    return sense
 
     def _update_from_xml(self, xml_tree):
         self.version = xml_tree.attrib.get('version')

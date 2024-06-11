@@ -34,6 +34,18 @@ class TestParse(unittest.TestCase):
     def test_lexicon_entry_items(self):
         self.assertTrue(len(self.lexicon.entry_items) == 3507)
 
+    def test_lexicon_get_item_from_id(self):
+        refid = "ndâmbo kôlï/wâlï_fff4e6bb-9c09-43d6-ac11-b9220141b52b"
+        item = self.lexicon.get_item_by_id(refid)
+        self.assertIsNotNone(item)
+        self.assertEqual(item.date_modified, "2023-04-20T19:31:03Z")
+
+    def test_lexicon_get_parent_from_id(self):
+        refid = "25222115-e109-4704-8e82-d7cd523c8cbd"
+        parent = self.lexicon.get_item_parent_by_id(refid)
+        self.assertIsNotNone(parent)
+        self.assertEqual(parent.date_modified, "2023-04-20T19:31:03Z")
+
 
 class TestReadWrite(unittest.TestCase):
     # NOTE: I haven't yet found a reliable way to compare XML file data. Using

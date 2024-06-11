@@ -1,10 +1,20 @@
 """Define runtime global variables."""
+from lxml import etree
+
 
 LIB_VERSION = '0.3'
 LIFT_VERSION_FIELDWORKS = '0.13'  # used by FLEx 9.1
 LIFT_VERSION_LATEST = '0.15'
 LIFT_VERSION_DEFAULT = LIFT_VERSION_FIELDWORKS
 LIFT_VERSION = None
+
+MULTIPLE_ITEM_TAGS = (
+    'abbrev', 'annotation', 'description', 'entry', 'etymology', 'example',
+    'field', 'form', 'gloss', 'illustration', 'label', 'media', 'note',
+    'pronunciation', 'range', 'range-element', 'relation', 'reversal',
+    'sense', 'span', 'subsense', 'trait', 'translation', 'usage',
+    'variant',
+)
 
 XML_NAMES = {
     # object attribute keys (L) and corresponding LIFT XML tags (R)
@@ -44,3 +54,5 @@ XML_NAMES = {
     'variant_items': 'variant',
     'writing_system': 'writing-system',
 }
+
+XML_PARSER = etree.XMLParser(remove_blank_text=True)

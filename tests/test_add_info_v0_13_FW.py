@@ -20,7 +20,7 @@ class TestAddExtensibleItems(unittest.TestCase):
 
     def test_add_annotation(self):
         self.assertRaises(
-            errors.RequiredValueException,
+            errors.RequiredValueError,
             self.entry.add_annotation,
             name='name'
             )
@@ -31,7 +31,7 @@ class TestAddExtensibleItems(unittest.TestCase):
 
     def test_add_field(self):
         self.assertRaises(
-            errors.RequiredValueException,
+            errors.RequiredValueError,
             self.entry.add_field
         )
         idx = self.entry.add_field(name="Test Field")
@@ -41,7 +41,7 @@ class TestAddExtensibleItems(unittest.TestCase):
 
     def test_add_trait(self):
         self.assertRaises(
-            errors.RequiredValueException,
+            errors.RequiredValueError,
             self.entry.add_trait
         )
         idx = 0
@@ -56,9 +56,9 @@ class TestAddExtensibleItems(unittest.TestCase):
 
 class TestCreateBaseItems(unittest.TestCase):
     def test_create_annotation_missing_info(self):
-        self.assertRaises(errors.RequiredValueException, base.Annotation)
+        self.assertRaises(errors.RequiredValueError, base.Annotation)
         self.assertRaises(
-            errors.RequiredValueException,
+            errors.RequiredValueError,
             base.Annotation,
             name='test'
         )
@@ -83,9 +83,9 @@ class TestCreateBaseItems(unittest.TestCase):
         self.assertEqual(self.anno.value, 'value')
 
     def test_create_annotation(self):
-        self.assertRaises(errors.RequiredValueException, base.Annotation)
+        self.assertRaises(errors.RequiredValueError, base.Annotation)
         self.assertRaises(
-            errors.RequiredValueException,
+            errors.RequiredValueError,
             base.Annotation,
             name='test'
         )
@@ -105,7 +105,7 @@ class TestCreateBaseItems(unittest.TestCase):
         self.assertEqual(self.anno.when, 'optional-timestamp')
 
     def test_create_field(self):
-        self.assertRaises(errors.RequiredValueException, base.Field)
+        self.assertRaises(errors.RequiredValueError, base.Field)
         self.field = base.Field(
             field_type="test-field"
         )
@@ -113,7 +113,7 @@ class TestCreateBaseItems(unittest.TestCase):
         self.assertEqual(self.field.type, "test-field")
 
     def test_create_form(self):
-        self.assertRaises(errors.RequiredValueException, base.Form)
+        self.assertRaises(errors.RequiredValueError, base.Form)
         self.form = base.Form(
             lang="en",
             text="text"
@@ -124,7 +124,7 @@ class TestCreateBaseItems(unittest.TestCase):
         self.assertEqual(str(self.form.text), "text")
 
     def test_create_span(self):
-        self.assertRaises(errors.RequiredValueException, base.Span)
+        self.assertRaises(errors.RequiredValueError, base.Span)
         self.span = base.Span(
             text="this text",
             lang="en",
@@ -144,7 +144,7 @@ class TestCreateBaseItems(unittest.TestCase):
         self.assertEqual(self.span.class_, "bold")
 
     def test_create_text(self):
-        self.assertRaises(errors.RequiredValueException, base.Text)
+        self.assertRaises(errors.RequiredValueError, base.Text)
         self.text = base.Text(
             text="text"
         )
@@ -152,7 +152,7 @@ class TestCreateBaseItems(unittest.TestCase):
         self.assertEqual(self.text.pcdata, "text")
 
     def test_create_trait(self):
-        self.assertRaises(errors.RequiredValueException, base.Trait)
+        self.assertRaises(errors.RequiredValueError, base.Trait)
         self.trait = base.Trait(
             name="name",
             value="value",
@@ -166,7 +166,7 @@ class TestCreateBaseItems(unittest.TestCase):
         self.assertEqual(self.trait.id, "trait-id")
 
     def test_create_urlref(self):
-        self.assertRaises(errors.RequiredValueException, base.URLRef)
+        self.assertRaises(errors.RequiredValueError, base.URLRef)
         self.url = base.URLRef(
             href="https://www.example.com"
         )

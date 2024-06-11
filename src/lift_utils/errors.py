@@ -4,7 +4,7 @@ class InvalidExtensionError(Exception):
         super().__init__(message)
 
 
-class RequiredValueException(Exception):
+class RequiredValueError(Exception):
     def __init__(self, values):
         message = f"Required value(s) missing: {', '.join(values)}"
         super().__init__(message)

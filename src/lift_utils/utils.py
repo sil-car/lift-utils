@@ -1,5 +1,5 @@
 """Various utility functions."""
-import regex
+import re
 import unidecode
 from datetime import datetime
 from datetime import timezone
@@ -24,13 +24,19 @@ def etree_to_obj_attributes(xml_tree, obj):
 
     if obj.props.elements:
         for p in obj.props.elements:
-            tag = config.XML_NAMES.get(p.name, p.name)
             if xml_tree.text and p.name == 'pcdata':
                 obj.__dict__[p.name] = p.prop_type(xml_tree.text)
                 continue
             elif xml_tree.tail and p.name == 'tail':
                 obj.__dict__[p.name] = p.prop_type(xml_tree.tail)
                 continue
+
+            tag = config.XML_NAMES.get(p.name, p.name)
+            if tag in config.MULTIPLE_ITEM_TAGS:
+                multiple = True
+            else:
+                multiple = False
+
             for c in xml_tree.getchildren():
                 if c.tag == tag:
                     if hasattr(p.prop_type, 'append'):  # list-like obj/elem
@@ -40,6 +46,8 @@ def etree_to_obj_attributes(xml_tree, obj):
                         obj.__dict__[p.name].append(p.item_type(xml_tree=c))
                     else:  # single element
                         obj.__dict__[p.name] = p.prop_type(xml_tree=c)
+                    if not multiple:
+                        break
 
 
 def obj_attributes_to_etree(obj, root_tag):
@@ -47,34 +55,31 @@ def obj_attributes_to_etree(obj, root_tag):
 
     if obj.props.attributes:
         for attrib in obj.props.attributes:
-            attr = attrib.name
-            val = obj.__dict__.get(attr)
+            val = obj.__dict__.get(attrib.name)
             if val is not None:
-                xml_tree.set(config.XML_NAMES.get(attr, attr), str(val))
+                xml_tree.set(
+                    config.XML_NAMES.get(attrib.name, attrib.name),
+                    str(val)
+                )
 
     if obj.props.elements:
         for elem in obj.props.elements:
-            attr = elem.name
-            val = obj.__dict__.get(attr)
+            val = obj.__dict__.get(elem.name)
             if not val:
                 continue
-            name = config.XML_NAMES.get(attr, attr)
+            name = config.XML_NAMES.get(elem.name, elem.name)
             if hasattr(val, 'append'):  # list-like element
-                for o in obj.__dict__.get(attr):
+                for o in obj.__dict__.get(elem.name):
                     xml_tree.append(obj_attributes_to_etree(o, name))
-            elif attr == 'pcdata':
+            elif elem.name == 'pcdata':
                 xml_tree.text = val
-            elif attr == 'tail':
+            elif elem.name == 'tail':
                 xml_tree.tail = val
             else:  # single element
                 xml_tree.append(
-                    obj_attributes_to_etree(obj.__dict__.get(attr), name)
+                    obj_attributes_to_etree(obj.__dict__.get(elem.name), name)
                 )
     return xml_tree
-
-
-def get_xml_parser():
-    return etree.XMLParser(remove_blank_text=True)
 
 
 def unicode_sort(in_list):
@@ -84,11 +89,11 @@ def unicode_sort(in_list):
 
 
 def xmlfile_to_etree(filepath):
-    return etree.parse(str(filepath), get_xml_parser()).getroot()
+    return etree.parse(str(filepath), config.XML_PARSER).getroot()
 
 
 def xmlstring_to_etree(xmlstring):
-    return etree.fromstring(xmlstring, get_xml_parser())
+    return etree.fromstring(xmlstring, config.XML_PARSER)
 
 
 def etree_to_xmlstring(xml_tree):
@@ -275,7 +280,7 @@ def form_items_has_match(form_items, text, match_type):
             if text == str(form.text):
                 return True
         elif match_type == 'regex':
-            if regex.match(text, form.text):
+            if re.match(text, form.text):
                 return True
 
 

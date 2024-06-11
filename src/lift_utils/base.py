@@ -13,7 +13,7 @@ from .datatypes import Lang
 from .datatypes import Prop
 from .datatypes import Props
 from .datatypes import URL
-from .errors import RequiredValueException
+from .errors import RequiredValueError
 from .utils import etree_to_obj_attributes
 from .utils import etree_to_xmlstring
 from .utils import obj_attributes_to_etree
@@ -25,10 +25,8 @@ class LIFTUtilsBase:
     :ivar etree._Element xml_tree: The object's current data.
     """
     def __init__(self, xml_tree: etree._Element = None):
-        self.xml_tag = None
-        self.props = Props(lift_version=config.LIFT_VERSION)
-        self.props.attributes = []
-        self.props.elements = []
+        self._xml_tag = None
+        self.props = Props(attributes=list(), elements=list())
 
     def print(self, _format='xml'):
         """Print the object's data to stdout; as XML by default."""
@@ -53,7 +51,7 @@ class LIFTUtilsBase:
         etree_to_obj_attributes(xml_tree, self)
 
     def _to_xml_tree(self):
-        xml_tree = obj_attributes_to_etree(self, self.xml_tag)
+        xml_tree = obj_attributes_to_etree(self, self._xml_tag)
         return xml_tree
 
     def _to_xml(self, xml_tree=None):
@@ -91,7 +89,7 @@ class Span(LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'span'
+        self._xml_tag = 'span'
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
@@ -114,7 +112,7 @@ class Span(LIFTUtilsBase):
             if span_class is not None:
                 self.class_ = span_class
         else:
-            raise RequiredValueException(('text',))
+            raise RequiredValueError(('text',))
 
 
 class Trait(LIFTUtilsBase):
@@ -142,7 +140,7 @@ class Trait(LIFTUtilsBase):
             'elements',
             Prop('annotation_items', prop_type=list, item_type=Annotation)
         )
-        self.xml_tag = 'trait'
+        self._xml_tag = 'trait'
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -158,7 +156,7 @@ class Trait(LIFTUtilsBase):
             if trait_id is not None:
                 self.id = Key(trait_id)
         else:
-            raise RequiredValueException(('name', 'value'))
+            raise RequiredValueError(('name', 'value'))
 
     def __str__(self):
         return f"{self.name}: {self.value}"
@@ -197,7 +195,7 @@ class Text(LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'text'
+        self._xml_tag = 'text'
         # elements
         self.pcdata = None
         self.span_items: Optional[List[Span]] = None
@@ -209,7 +207,7 @@ class Text(LIFTUtilsBase):
         elif text is not None:
             self.pcdata = PCData(text)
         else:
-            raise RequiredValueException(('text',))
+            raise RequiredValueError(('text',))
 
     def __str__(self):
         if self.span_items:
@@ -242,7 +240,7 @@ class Form(LIFTUtilsBase):
         ]
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'form'
+        self._xml_tag = 'form'
         # attributes
         self.lang: Lang = None
         # elements
@@ -257,7 +255,7 @@ class Form(LIFTUtilsBase):
             self.lang = Lang(lang)
             self.text = Text(text=text)
         else:
-            raise RequiredValueException(('lang', 'text'))
+            raise RequiredValueError(('lang', 'text'))
 
     def __str__(self):
         return str(self.text)
@@ -283,7 +281,7 @@ class URLRef(LIFTUtilsBase):
             'elements',
             Prop('label', prop_type=Multitext)
         )
-        self.xml_tag = 'urlref'
+        self._xml_tag = 'urlref'
         # attributes
         self.href = None
         # elements
@@ -296,11 +294,11 @@ class URLRef(LIFTUtilsBase):
             if label is not None:
                 self.set_label(label)
         else:
-            raise RequiredValueException(('href',))
+            raise RequiredValueError(('href',))
 
     def set_label(self, label_dict):
         if not isinstance(label_dict, dict):
-            raise RequiredValueException(('dict of {{lang: text}} pairs',))
+            raise RequiredValueError(('dict of {{lang: text}} pairs',))
         self.label = Multitext(label_dict)
 
     def __str__(self):
@@ -328,7 +326,7 @@ class Multitext(Text):
             self.props.add_to('elements', e)
         # Multitext is only used as a super class for other classes, so it
         # doesn't have it's own XML tag.
-        self.xml_tag = None
+        del self._xml_tag
         # elements
         self.form_items: Optional[List[Form]] = None
         self.trait_items: Optional[List[Trait]] = None
@@ -349,6 +347,15 @@ class Multitext(Text):
             if ct > 1:
                 s = f"{s} ({ct} forms)"
         return s
+
+    def get_form_by_lang(self, lang):
+        """Return first form item with matching ``lang`` attribute.
+
+        :var str lang: Language code; e.g. "en".
+        """
+        for f in self.form_items:
+            if f.lang == lang:
+                return f
 
     def set_form_items(self, form_dict):
         self.form_items = []
@@ -374,7 +381,7 @@ class Gloss(Form):
             'elements',
             Prop('trait_items', prop_type=list, item_type=Trait)
         )
-        self.xml_tag = 'gloss'
+        self._xml_tag = 'gloss'
         # elements
         self.trait_items: Optional[List[Trait]] = None
 
@@ -384,7 +391,7 @@ class Gloss(Form):
             self.lang = Lang(lang)
             self.text = Text(text=text)
         else:
-            raise RequiredValueException(('lang', 'text'))
+            raise RequiredValueError(('lang', 'text'))
 
     def __str__(self):
         return f"{self.text} ({self.lang})"
@@ -421,7 +428,7 @@ class Annotation(Multitext):
         ]
         for a in attribs:
             self.props.add_to('attributes', a)
-        self.xml_tag = 'annotation'
+        self._xml_tag = 'annotation'
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -438,7 +445,7 @@ class Annotation(Multitext):
             if when is not None:
                 self.when = DateTime(when)
         else:
-            raise RequiredValueException(('name', 'value'))
+            raise RequiredValueError(('name', 'value'))
 
 
 class Field(Multitext):
@@ -473,7 +480,7 @@ class Field(Multitext):
             elems.append(Prop('form_items', prop_type=list, item_type=Span))
         for e in elems:
             self.props.add_to('elements', e)
-        self.xml_tag = 'field'
+        self._xml_tag = 'field'
         # attributes
         if config.LIFT_VERSION == '0.13':
             self.type: Key = None
@@ -501,7 +508,7 @@ class Field(Multitext):
                 value = 'field_type'
             else:
                 value = 'name'
-            raise RequiredValueException((value,))
+            raise RequiredValueError((value,))
 
 
 class Extensible(LIFTUtilsBase):
@@ -539,7 +546,7 @@ class Extensible(LIFTUtilsBase):
             self.props.add_to('elements', e)
         # Extensible is only used as a super class for other classes, so it
         # doesn't need its own XML tag.
-        self.xml_tag = None
+        self._xml_tag = None
         # attributes
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
