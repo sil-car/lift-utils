@@ -10,8 +10,6 @@ from .datatypes import PCData
 from .datatypes import DateTime
 from .datatypes import Key
 from .datatypes import Lang
-from .datatypes import Prop
-from .datatypes import Props
 from .datatypes import URL
 from .errors import RequiredValueError
 from .utils import etree_to_obj_attributes
@@ -24,9 +22,10 @@ class LIFTUtilsBase:
 
     :ivar etree._Element xml_tree: The object's current data.
     """
+
     def __init__(self, xml_tree: etree._Element = None):
         self._xml_tag = None
-        self.props = Props(attributes=list(), elements=list())
+        # self.props = Props(attributes=list(), elements=list())
 
     def print(self, _format='xml'):
         """Print the object's data to stdout; as XML by default."""
@@ -46,12 +45,23 @@ class LIFTUtilsBase:
             self.__dict__[_name].append(new_obj)
         return len(self.__dict__.get(_name)) - 1
 
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
+
     def _update_from_xml(self, xml_tree):
         # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self)
+        etree_to_obj_attributes(
+            xml_tree,
+            self,
+            self._get_properties()
+        )
 
     def _to_xml_tree(self):
-        xml_tree = obj_attributes_to_etree(self, self._xml_tag)
+        xml_tree = obj_attributes_to_etree(
+            self,
+            self._xml_tag,
+            self._get_properties()
+        )
         return xml_tree
 
     def _to_xml(self, xml_tree=None):
@@ -74,21 +84,6 @@ class Span(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        attribs = [
-            Prop('lang', prop_type=Lang),
-            Prop('href', prop_type=URL),
-            Prop('class_', prop_type=str),
-        ]
-        for a in attribs:
-            self.props.add_to('attributes', a)
-        elems = [
-            Prop('pcdata', required=True, prop_type=PCData),
-            Prop('tail', prop_type=PCData),
-            Prop('span_items', prop_type=list, item_type=Span),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
         self._xml_tag = 'span'
         # attributes
         self.lang: Optional[Lang] = None
@@ -114,6 +109,16 @@ class Span(LIFTUtilsBase):
         else:
             raise RequiredValueError(('text',))
 
+    def __str__(self):
+        s = self.pcdata
+        if self.span_items:
+            for item in self.span_items:
+                s += item.pcdata
+                if item.tail:
+                    s += item.tail
+        if self.tail:
+            s += self.tail
+
 
 class Trait(LIFTUtilsBase):
     """An important mechanism for giving type information to an object.
@@ -128,18 +133,6 @@ class Trait(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        attribs = [
-            Prop('name', required=True, prop_type=Key),
-            Prop('value', required=True, prop_type=Key),
-            Prop('id', prop_type=Key),
-        ]
-        for a in attribs:
-            self.props.add_to('attributes', a)
-        self.props.add_to(
-            'elements',
-            Prop('annotation_items', prop_type=list, item_type=Annotation)
-        )
         self._xml_tag = 'trait'
         # attributes
         self.name: Key = None
@@ -188,13 +181,6 @@ class Text(LIFTUtilsBase):
         subinit=False
     ):
         super().__init__()
-        # properties
-        elems = [
-            Prop('pcdata', required=True, prop_type=PCData),
-            Prop('span_items', prop_type=list, item_type=Span),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
         self._xml_tag = 'text'
         # elements
         self.pcdata = None
@@ -229,17 +215,6 @@ class Form(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        self.props.add_to(
-            'attributes',
-            Prop('lang', required=True, prop_type=Lang)
-        )
-        elems = [
-            Prop('text', required=True, prop_type=Text),
-            Prop('annotation_items', prop_type=list, item_type=Annotation),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
         self._xml_tag = 'form'
         # attributes
         self.lang: Lang = None
@@ -272,15 +247,6 @@ class URLRef(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        self.props.add_to(
-            'attributes',
-            Prop('href', required=True, prop_type=URL)
-        )
-        self.props.add_to(
-            'elements',
-            Prop('label', prop_type=Multitext)
-        )
         self._xml_tag = 'urlref'
         # attributes
         self.href = None
@@ -317,13 +283,6 @@ class Multitext(Text):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__(xml_tree=False)
-        # properties
-        elems = [
-            Prop('form_items', prop_type=list, item_type=Form),
-            Prop('trait_items', prop_type=list, item_type=Trait),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
         # Multitext is only used as a super class for other classes, so it
         # doesn't have it's own XML tag.
         del self._xml_tag
@@ -376,11 +335,6 @@ class Gloss(Form):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__(xml_tree=False)
-        # properties
-        self.props.add_to(
-            'elements',
-            Prop('trait_items', prop_type=list, item_type=Trait)
-        )
         self._xml_tag = 'gloss'
         # elements
         self.trait_items: Optional[List[Trait]] = None
@@ -419,15 +373,6 @@ class Annotation(Multitext):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        attribs = [
-            Prop('name', required=True, prop_type=Key),
-            Prop('value', required=True, prop_type=Key),
-            Prop('who', prop_type=Key),
-            Prop('when', prop_type=DateTime),
-        ]
-        for a in attribs:
-            self.props.add_to('attributes', a)
         self._xml_tag = 'annotation'
         # attributes
         self.name: Key = None
@@ -461,25 +406,6 @@ class Field(Multitext):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        attribs = [
-            Prop('date_created', prop_type=DateTime),
-            Prop('date_modified', prop_type=DateTime),
-        ]
-        if config.LIFT_VERSION == '0.13':
-            attribs.append(Prop('type', required=True, prop_type=Key))
-        else:
-            attribs.append(Prop('name', required=True, prop_type=Key))
-        for a in attribs:
-            self.props.add_to('attributes', a)
-        elems = [
-            Prop('annotation_items', prop_type=list, item_type=Annotation),
-            Prop('trait_items', prop_type=list, item_type=Trait),
-        ]
-        if config.LIFT_VERSION == '0.13':
-            elems.append(Prop('form_items', prop_type=list, item_type=Span))
-        for e in elems:
-            self.props.add_to('elements', e)
         self._xml_tag = 'field'
         # attributes
         if config.LIFT_VERSION == '0.13':
@@ -492,7 +418,10 @@ class Field(Multitext):
         if config.LIFT_VERSION == '0.13':
             # self.trait_items: Optional[List[Flag]] = None
             self.trait_items: Optional[List[Trait]] = None
-            self.form_items: Optional[List[Span]] = None
+            # NOTE: I think there must be a typo in the docs. I think the
+            # 'form_items' class should be 'Form', which is already accounted
+            # for in the subclassing of 'Multitext'.
+            # self.form_items: Optional[List[Span]] = None
         else:
             self.trait_items: Optional[List[Trait]] = None
         self.annotation_items: Optional[List[Annotation]] = None
@@ -530,20 +459,6 @@ class Extensible(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        attribs = [
-            Prop('date_created', prop_type=DateTime),
-            Prop('date_modified', prop_type=DateTime),
-        ]
-        for a in attribs:
-            self.props.add_to('attributes', a)
-        elems = [
-            Prop('field_items', prop_type=list, item_type=Field),
-            Prop('trait_items', prop_type=list, item_type=Trait),
-            Prop('annotation_items', prop_type=list, item_type=Annotation),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
         # Extensible is only used as a super class for other classes, so it
         # doesn't need its own XML tag.
         self._xml_tag = None
@@ -601,3 +516,67 @@ class Extensible(LIFTUtilsBase):
 
     def set_date_modified(self):
         self.date_modified = DateTime()
+
+
+def get_properties(class_, lift_version):
+    classes = (class_, *class_.__bases__)
+    props = {}
+
+    if not hasattr(class_, '__bases__'):
+        print('no bases:', class_)
+        return props
+
+    props['attributes'] = {}
+    props['elements'] = {}
+    if Span in classes:
+        props['attributes']['lang'] = (Lang, False)
+        props['attributes']['href'] = (URL, False)
+        props['attributes']['class_'] = (str, False)
+        props['elements']['pcdata'] = (PCData, True)
+        props['elements']['tail'] = (PCData, False)
+        props['elements']['span_items'] = (list, Span, False)
+    if Trait in classes:
+        props['attributes']['name'] = (Key, True)
+        props['attributes']['value'] = (Key, True)
+        props['attributes']['id'] = (Key, False)
+        props['elements']['annotation_items'] = (list, Annotation, False)
+    if Text in classes:
+        props['elements']['pcdata'] = (PCData, True)
+        props['elements']['span_items'] = (list, Span, False)
+    if Form in classes:
+        props['attributes']['lang'] = (Lang, True)
+        props['elements']['text'] = (Text, True)
+        props['elements']['annotation_items'] = (list, Annotation, False)
+    if URLRef in classes:
+        props['attributes']['href'] = (URL, True)
+        props['elements']['label'] = (Multitext, False)
+    if Multitext in classes:
+        props['elements']['form_items'] = (list, Form, False)
+        props['elements']['trait_items'] = (list, Trait, False)
+    if Gloss in classes:
+        props['elements']['trait_items'] = (list, Trait, False)
+    if Annotation in classes:
+        props['attributes']['name'] = (Key, True)
+        props['attributes']['value'] = (Key, True)
+        props['attributes']['who'] = (Key, False)
+        props['attributes']['when'] = (DateTime, False)
+    if Field in classes:
+        props['attributes']['date_created'] = (DateTime, False)
+        props['attributes']['date_modified'] = (DateTime, False)
+        if lift_version == '0.13':
+            props['attributes']['type'] = (Key, True)
+            # NOTE: See note about 'form_items' in class definition for 'Field'
+            # above.
+            # props['elements']['form_items'] = (list, Span, False)
+        else:
+            props['attributes']['name'] = (Key, True)
+        props['elements']['annotation_items'] = (list, Annotation, False)
+        props['elements']['trait_items'] = (list, Trait, False)
+    if Extensible in classes:
+        props['attributes']['date_created'] = (DateTime, False)
+        props['attributes']['date_modified'] = (DateTime, False)
+        props['elements']['field_items'] = (list, Field, False)
+        props['elements']['trait_items'] = (list, Trait, False)
+        props['elements']['annotation_items'] = (list, Annotation, False)
+
+    return props

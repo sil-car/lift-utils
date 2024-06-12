@@ -15,23 +15,27 @@ def ellipsize(string, length):
     return string
 
 
-def etree_to_obj_attributes(xml_tree, obj):
-    if obj.props.attributes:
-        for p in obj.props.attributes:
-            key = config.XML_NAMES.get(p.name, p.name)
+def etree_to_obj_attributes(xml_tree, obj, props):
+    prop_attribs = props.get('attributes')
+    if prop_attribs:
+        for name, values in prop_attribs.items():
+            key = config.XML_NAMES.get(name, name)
             if key in xml_tree.attrib.keys():
-                obj.__dict__[p.name] = p.prop_type(xml_tree.attrib.get(key))
+                obj.__dict__[name] = values[0](xml_tree.attrib.get(key))
 
-    if obj.props.elements:
-        for p in obj.props.elements:
-            if xml_tree.text and p.name == 'pcdata':
-                obj.__dict__[p.name] = p.prop_type(xml_tree.text)
+    prop_elems = props.get('elements')
+    if prop_elems:
+        for name, values in prop_elems.items():
+            if name == 'pcdata':
+                if xml_tree.text:
+                    obj.__dict__[name] = values[0](xml_tree.text)
                 continue
-            elif xml_tree.tail and p.name == 'tail':
-                obj.__dict__[p.name] = p.prop_type(xml_tree.tail)
+            elif name == 'tail':
+                if xml_tree.tail:
+                    obj.__dict__[name] = values[0](xml_tree.tail)
                 continue
 
-            tag = config.XML_NAMES.get(p.name, p.name)
+            tag = config.XML_NAMES.get(name, name)
             if tag in config.MULTIPLE_ITEM_TAGS:
                 multiple = True
             else:
@@ -39,45 +43,47 @@ def etree_to_obj_attributes(xml_tree, obj):
 
             for c in xml_tree.getchildren():
                 if c.tag == tag:
-                    if hasattr(p.prop_type, 'append'):  # list-like obj/elem
-                        if not obj.__dict__.get(p.name):
+                    if hasattr(values[0], 'append'):  # list-like obj/elem
+                        if not obj.__dict__.get(name):
                             # Instantiate list-like object.
-                            obj.__dict__[p.name] = p.prop_type()
-                        obj.__dict__[p.name].append(p.item_type(xml_tree=c))
+                            obj.__dict__[name] = values[0]()
+                        obj.__dict__[name].append(values[1](xml_tree=c))
                     else:  # single element
-                        obj.__dict__[p.name] = p.prop_type(xml_tree=c)
+                        obj.__dict__[name] = values[0](xml_tree=c)
                     if not multiple:
                         break
 
 
-def obj_attributes_to_etree(obj, root_tag):
+def obj_attributes_to_etree(obj, root_tag, props):
     xml_tree = etree.Element(root_tag)
 
-    if obj.props.attributes:
-        for attrib in obj.props.attributes:
-            val = obj.__dict__.get(attrib.name)
+    prop_attribs = props.get('attributes')
+    if prop_attribs:
+        for name, values in prop_attribs.items():
+            val = obj.__dict__.get(name)
             if val is not None:
-                xml_tree.set(
-                    config.XML_NAMES.get(attrib.name, attrib.name),
-                    str(val)
-                )
+                xml_tree.set(config.XML_NAMES.get(name, name), str(val))
 
-    if obj.props.elements:
-        for elem in obj.props.elements:
-            val = obj.__dict__.get(elem.name)
+    prop_elems = props.get('elements')
+    if prop_elems:
+        for name, values in prop_elems.items():
+            val = obj.__dict__.get(name)
             if not val:
                 continue
-            name = config.XML_NAMES.get(elem.name, elem.name)
+            xname = config.XML_NAMES.get(name, name)
             if hasattr(val, 'append'):  # list-like element
-                for o in obj.__dict__.get(elem.name):
-                    xml_tree.append(obj_attributes_to_etree(o, name))
-            elif elem.name == 'pcdata':
+                for o in obj.__dict__.get(name):
+                    xml_tree.append(
+                        obj_attributes_to_etree(o, xname, o._get_properties())
+                    )
+            elif name == 'pcdata':
                 xml_tree.text = val
-            elif elem.name == 'tail':
+            elif name == 'tail':
                 xml_tree.tail = val
             else:  # single element
+                o = obj.__dict__.get(name)
                 xml_tree.append(
-                    obj_attributes_to_etree(obj.__dict__.get(elem.name), name)
+                    obj_attributes_to_etree(o, xname, o._get_properties())
                 )
     return xml_tree
 
@@ -273,14 +279,22 @@ def search_sense(
 
 def form_items_has_match(form_items, text, match_type):
     for form in form_items:
+        if form.__class__.__name__ == 'Span':
+            value = ''
+            if form.pcdata:
+                value += str(form.pcdata)
+            if form.tail:
+                value += str(form.tail)
+        else:
+            value = str(form.text)
         if match_type == 'contains':
-            if text in str(form.text):
+            if text in value:
                 return True
         elif match_type == 'exact':
-            if text == str(form.text):
+            if text == value:
                 return True
         elif match_type == 'regex':
-            if re.match(text, form.text):
+            if re.match(text, value):
                 return True
 
 

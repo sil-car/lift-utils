@@ -118,13 +118,7 @@ class TestExtensible(unittest.TestCase):
         ]
 
         xml = f"""
-        <etymology dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" type="Etype" source="Esource">
-            <field type=""/>
-            <field type=""/>
-            <trait name="" value=""/>
-            <trait name="" value=""/>
-            <annotation name="" value=""/>
-            <annotation name="" value=""/>
+        <etymology type="Etype" source="Esource" dateCreated="{obj.date_created}" dateModified="{obj.date_modified}">
             <gloss lang="">
                 <text/>
             </gloss>
@@ -134,6 +128,12 @@ class TestExtensible(unittest.TestCase):
             <form lang="">
                 <text/>
             </form>
+            <field type=""/>
+            <field type=""/>
+            <trait name="" value=""/>
+            <trait name="" value=""/>
+            <annotation name="" value=""/>
+            <annotation name="" value=""/>
         </etymology>
         """
         xml_tree = utils.xmlstring_to_etree(xml)

@@ -5,11 +5,15 @@ from typing import List
 from typing import Optional
 
 from . import config
+from .base import Annotation
 from .base import Extensible
+from .base import Field
+from .base import Form
+from .base import Trait
 from .base import LIFTUtilsBase
 from .base import Multitext
+from .datatypes import DateTime
 from .datatypes import Key
-from .datatypes import Prop
 from .datatypes import URL
 
 
@@ -27,11 +31,6 @@ class FieldDefn(Multitext):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        self.props.add_to(
-            'attributes',
-            Prop('tag', required=True, prop_type=Key)
-        )
         self._xml_tag = 'field'
         # attributes
         self.tag = tag
@@ -42,6 +41,9 @@ class FieldDefn(Multitext):
     def __str__(self):
         forms = 'forms' if len(self.form_items) > 1 else 'form'
         return f"{self.tag} ({len(self.form_items)} {forms})"
+
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class FieldDefinition(LIFTUtilsBase):
@@ -55,22 +57,6 @@ class FieldDefinition(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        attribs = [
-            Prop('name', required=True, prop_type=Key),
-            Prop('class_', prop_type=str),
-            Prop('type', prop_type=str),
-            Prop('option_range', prop_type=Key),
-            Prop('writing_system', prop_type=str),
-        ]
-        for a in attribs:
-            self.props.add_to('attributes', a)
-        elems = [
-            Prop('label', prop_type=Multitext),
-            Prop('description', prop_type=Multitext),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
         self._xml_tag = 'field'
         # attributes
         self.name: Key = None
@@ -88,6 +74,9 @@ class FieldDefinition(LIFTUtilsBase):
     def __str__(self):
         return self.name
 
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
+
 
 class FieldDefns(LIFTUtilsBase):
     """This is a simple list of ``field-defn`` elements.
@@ -100,17 +89,15 @@ class FieldDefns(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        self.props.add_to(
-            'elements',
-            Prop('field_items', prop_type=list, item_type=FieldDefn)
-        )
         self._xml_tag = 'fields'
         # elements
         self.field_items: Optional[List[FieldDefn]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
+
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class Fields(LIFTUtilsBase):
@@ -122,22 +109,18 @@ class Fields(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        self.props.add_to(
-            'elements',
-            Prop('field_items', prop_type=list, item_type=FieldDefinition)  # noqa: E501
-        )
         # elements
         self.field_items: Optional[List[FieldDefinition]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
 
-class RangeElement(Extensible, LIFTUtilsBase):
+
+class RangeElement13(LIFTUtilsBase):
     """The description of a particular range element found in a ``range``.
-
-    .. note:: Does not inherit from Extensible in LIFT v0.13 (FieldWorks).
     """
 
     def __init__(
@@ -145,25 +128,7 @@ class RangeElement(Extensible, LIFTUtilsBase):
         elem_id: Key = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        if config.LIFT_VERSION == '0.13':
-            LIFTUtilsBase.__init__(self)
-        else:
-            Extensible.__init__(self)
-        # properties
-        attribs = [
-            Prop('id', required=True, prop_type=Key),
-            Prop('parent', prop_type=Key),
-            Prop('guid', prop_type=str),
-        ]
-        for a in attribs:
-            self.props.add_to('attributes', a)
-        elems = [
-            Prop('description_items', prop_type=list, item_type=Multitext),
-            Prop('label_items', prop_type=list, item_type=Multitext),
-            Prop('abbrev_items', prop_type=list, item_type=Multitext),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
+        super().__init__()
         self._xml_tag = 'range-element'
         # attributes
         self.id = elem_id
@@ -177,45 +142,79 @@ class RangeElement(Extensible, LIFTUtilsBase):
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
 
-class Range(Extensible, LIFTUtilsBase):
-    """A set of ``range-elements``.
-    It is used to identify both the group of ``range-elements`` but also to
-    some extent their type.
+
+class RangeElement(Extensible):
+    """The description of a particular range element found in a ``range``.
 
     .. note:: Does not inherit from Extensible in LIFT v0.13 (FieldWorks).
     """
 
     def __init__(
         self,
+        elem_id: Key = None,
+        xml_tree: Optional[etree._Element] = None
+    ):
+        super().__init__()
+        self._xml_tag = 'range-element'
+        # attributes
+        self.id = elem_id
+        self.parent: Key = None
+        self.guid: str = None
+        # elements
+        self.description_items: Optional[List[Multitext]] = None
+        self.label_items: Optional[List[Multitext]] = None
+        self.abbrev_items: Optional[List[Multitext]] = None
+
+        if xml_tree is not None:
+            self._update_from_xml(xml_tree)
+
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
+
+
+class Range13(LIFTUtilsBase):
+    """A set of ``range-elements``.
+    It is used to identify both the group of ``range-elements`` but also to
+    some extent their type.
+    """
+    def __init__(
+        self,
         range_id: Key = None,
         xml_tree: Optional[etree._Element] = None
     ):
-        if config.LIFT_VERSION == '0.13':
-            LIFTUtilsBase.__init__(self)
-        else:
-            Extensible.__init__(self)
-        # properties
-        attribs = [
-            Prop('id', required=True, prop_type=Key),
-            Prop('guid', prop_type=str),
-            Prop('href', prop_type=URL),
-        ]
-        for a in attribs:
-            self.props.add_to('attributes', a)
-        elems = [
-            Prop(
-                'range_element_items',
-                required=True,
-                prop_type=list,
-                item_type=RangeElement
-            ),
-            Prop('description', prop_type=Multitext),
-            Prop('label_items', prop_type=list, item_type=Multitext),
-            Prop('abbrev_items', prop_type=list, item_type=Multitext),
-        ]
-        for e in elems:
-            self.props.add_to('elements', e)
+        super().__init__()
+        self._xml_tag = 'range'
+        # attributes
+        self.id = range_id
+        self.guid: Optional[str] = None
+        self.href: Optional[URL] = None
+        # elements
+        self.description: Optional[Multitext] = None
+        self.range_element_items: List[RangeElement13] = None
+        self.label_items: List[Multitext] = None
+        self.abbrev_items: List[Multitext] = None
+
+        if xml_tree is not None:
+            self._update_from_xml(xml_tree)
+
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
+
+
+class Range(Extensible):
+    """A set of ``range-elements``.
+    It is used to identify both the group of ``range-elements`` but also to
+    some extent their type.
+    """
+    def __init__(
+        self,
+        range_id: Key = None,
+        xml_tree: Optional[etree._Element] = None
+    ):
+        super().__init__()
         self._xml_tag = 'range'
         # attributes
         self.id = range_id
@@ -230,6 +229,9 @@ class Range(Extensible, LIFTUtilsBase):
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
 
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
+
 
 class Ranges(LIFTUtilsBase):
     """The root element in a Lift Ranges file.
@@ -240,17 +242,18 @@ class Ranges(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        self.props.add_to(
-            'elements',
-            Prop('range_items', required=True, prop_type=list, item_type=Range),  # noqa: E501
-        )
         self._xml_tag = 'ranges'
         # elements
-        self.range_items: List[Range] = None
+        if config.LIFT_VERSION == '0.13':
+            self.range_items: List[Range13] = None
+        else:
+            self.range_items: List[Range] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
+
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class Header(LIFTUtilsBase):
@@ -271,17 +274,6 @@ class Header(LIFTUtilsBase):
         xml_tree: Optional[etree._Element] = None
     ):
         super().__init__()
-        # properties
-        elems = [
-            Prop('description', prop_type=Multitext),
-            Prop('ranges', prop_type=Ranges),
-        ]
-        if config.LIFT_VERSION == '0.13':
-            elems.append(Prop('fields', prop_type=FieldDefns))
-        else:
-            elems.append(Prop('fields', prop_type=Fields))
-        for e in elems:
-            self.props.add_to('elements', e)
         self._xml_tag = 'header'
         # elements
         self.description: Optional[Multitext] = None
@@ -298,8 +290,78 @@ class Header(LIFTUtilsBase):
         s = 'Header'
         if self.description:
             s = str(self.description)
-        if self.ranges:
-            s += f": {len(self.ranges)} ranges"
+        if self.ranges and self.ranges.range_items:
+            s += f": {len(self.range_items)} ranges"
         if self.fields:
             s += f", {len(self.fields)} fields"
         return s
+
+    def _get_properties(self):
+        return get_properties(self.__class__, config.LIFT_VERSION)
+
+
+def get_properties(class_, lift_version):
+    classes = (class_, *class_.__bases__)
+    props = {}
+
+    if not hasattr(class_, '__bases__'):
+        print('no bases:', class_)
+        return props
+
+    props['attributes'] = {}
+    props['elements'] = {}
+    if Multitext in classes:
+        props['elements']['form_items'] = (list, Form, False)
+        props['elements']['trait_items'] = (list, Trait, False)
+    if FieldDefn in classes:
+        props['attributes']['tag'] = (Key, True)
+    if FieldDefinition in classes:
+        props['attributes']['name'] = (Key, True)
+        props['attributes']['class_'] = (str, False)
+        props['attributes']['type'] = (str, False)
+        props['attributes']['option_range'] = (Key, False)
+        props['attributes']['writing_system'] = (str, False)
+        props['elements']['label'] = (Multitext, False)
+        props['elements']['description'] = (Multitext, False)
+    if FieldDefns in classes:
+        props['elements']['field_items'] = (list, FieldDefn, False)
+    if Fields in classes:
+        props['elements']['field_items'] = (list, FieldDefinition, False)
+    if RangeElement in classes or RangeElement13 in classes:
+        props['attributes']['id'] = (Key, True)
+        props['attributes']['parent'] = (Key, False)
+        props['attributes']['guid'] = (str, False)
+        props['elements']['description_items'] = (list, Multitext, False)
+        props['elements']['label_items'] = (list, Multitext, False)
+        props['elements']['abbrev_items'] = (list, Multitext, False)
+    if Range in classes or Range13 in classes:
+        props['attributes']['id'] = (Key, True)
+        props['attributes']['guid'] = (str, False)
+        props['attributes']['href'] = (URL, False)
+        if lift_version == '0.13':
+            props['elements']['range_element_items'] = (list, RangeElement13, True)  # noqa: E501
+        else:
+            props['elements']['range_element_items'] = (list, RangeElement, True)  # noqa: E501
+        props['elements']['description'] = (Multitext, False)
+        props['elements']['label_items'] = (list, Multitext, False)
+        props['elements']['abbrev_items'] = (list, Multitext, False)
+    if Ranges in classes:
+        if lift_version == '0.13':
+            props['elements']['range_items'] = (list, Range13, True)
+        else:
+            props['elements']['range_items'] = (list, Range, True)
+    if Header in classes:
+        props['elements']['description'] = (Multitext, False)
+        props['elements']['ranges'] = (Ranges, False)
+        if lift_version == '0.13':
+            props['elements']['fields'] = (FieldDefns, False)
+        else:
+            props['elements']['fields'] = (Fields, False)
+    if Extensible in classes:
+        props['attributes']['date_created'] = (DateTime, False)
+        props['attributes']['date_modified'] = (DateTime, False)
+        props['elements']['field_items'] = (list, Field, False)
+        props['elements']['trait_items'] = (list, Trait, False)
+        props['elements']['annotation_items'] = (list, Annotation, False)
+
+    return props
