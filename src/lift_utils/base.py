@@ -69,6 +69,11 @@ class LIFTUtilsBase:
             xml_tree = self._to_xml_tree()
         return etree_to_xmlstring(xml_tree)
 
+    def show(self):
+        """Print an overview of the object in the terminal window."""
+        for k, v in self.__dict__.items():
+            print(f"{k}: {v}")
+
 
 class Span(LIFTUtilsBase):
     """A Unicode string marked with language and formatting information.
@@ -523,7 +528,7 @@ def get_properties(class_, lift_version):
     props = {}
 
     if not hasattr(class_, '__bases__'):
-        print('no bases:', class_)
+        print('This class has no bases:', class_)
         return props
 
     props['attributes'] = {}

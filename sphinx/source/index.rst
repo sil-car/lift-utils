@@ -12,17 +12,17 @@ the XML-based `LIFT format <https://github.com/sillsdev/lift-standard>`_.
 Get basic lexicon details:
 
 >>> from lift_utils import Lexicon
->>> lex = Lexicon("sango.lift")
->>> print(len(lex.entry_items))
-3507
+>>> sg_lex = Lexicon("~/lift/sango LIFT export/sango LIFT export.lift")
+>>> print(len(sg_lex.entry_items))
+3479
 
 Get details about entries and their senses:
 
->>> print(lex.entry_items[0])
-kêtê ngû sô asua pë…    pool                            Nom
->>> print(lex.entry_items[0].sense_items[0])
-pool            Nom             None
->>> lex.show()  # list all lexicon entries, sorted by lexical-unit
+>>> print(sg_lex.entry_items[0])
+kêtê ngû sô asua pë…	kêtê ngû sô asua pëpe_000d9e27-d103-4601-a4b1-6c3ee5ef4c01
+>>> print(sg_lex.entry_items[0].sense_items[0])
+pool                	Noun      	27bb9896-e413-4c14-8cdc-cbe26ecbc148
+>>> sg_lex.show()  # list all lexicon entries, sorted by lexical-unit
 # ...
 zo wa (sg)              who?                            zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883
 zôâ (sg)                island                          zôâ_d10bd14f-eed6-42c9-bbfb-e0f22c5acd8f
@@ -39,30 +39,79 @@ zûku (sg)               spill, turn (a container) upside down   zûku_51a7b1be-
 zûku li (sg)            hang one's head, bow            zûku li_1a258482-1d61-44f4-b7a9-24f4bad575cc
 zûsuka (sg)             until                           zûsuka_8c5e481c-8811-482e-bff0-126282c829ab
 zûu (sg)                go down                         zûu_137d7f37-ceff-464a-9d7f-00febbcfd439
->>> item = lex.get_item_by_id('zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883')
+>>> item = sg_lex.get_item_by_id('zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883')
 >>> type(item)
 <class 'lift_utils.lexicon.Entry'>
->>> item.__dict__
-{'xml_tree': <Element entry at 0x7f382bcb6940>, 'xml_tag': 'entry', 'props': <lift_utils.datatypes.Props object at 0x7f3822b7dc40>, 'date_created': '2017-02-25T11:03:30Z', 'date_modified': '2022-05-07T14:15:56Z', 'field_items': None, 'trait_items': [<lift_utils.base.Trait object at 0x7f3822b8bd00>], 'annotation_items': None, 'id': 'zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883', 'guid': 'be18403e-c45d-4fb9-9d5a-35d26bf0b883', 'order': None, 'date_deleted': None, 'lexical_unit': <lift_utils.base.Multitext object at 0x7f3822b8bf10>, 'citation': None, 'pronunciation_items': None, 'variant_items': None, 'sense_items': [<lift_utils.lexicon.Sense object at 0x7f3822b8e160>], 'note_items': None, 'relation_items': [<lift_utils.lexicon.Relation object at 0x7f3822b8eb20>], 'etymology_items': None}
+>>> item.show()
+_xml_tag: entry
+date_created: 2017-02-25T11:03:30Z
+date_modified: 2022-05-07T14:15:56Z
+field_items: None
+trait_items: [<lift_utils.base.Trait object at 0x7fd777f4cbb0>]
+annotation_items: None
+id: zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883
+guid: be18403e-c45d-4fb9-9d5a-35d26bf0b883
+order: None
+date_deleted: None
+lexical_unit: zo wa (sg)
+citation: None
+pronunciation_items: None
+variant_items: None
+sense_items: [<lift_utils.lexicon.Sense object at 0x7fd777f48fd0>]
+note_items: None
+relation_items: [<lift_utils.lexicon.Relation object at 0x7fd777f4c130>]
+etymology_items: None
 
 Search the lexicon:
 
->>> lex.find('house')  # returns first item whose glosses contain the search term
-<lift_utils.lexicon.Sense object at 0x7f3da9c919d0>
->>> len(lex.find_all('house'))  # find_all returns a list of all matching items
+>>> sg_lex.find('house')  # 'find' returns first item whose glosses contain the search term
+<lift_utils.lexicon.Sense object at 0x7f3689d9e5b0>
+>>> len(sg_lex.find_all('house'))  # 'find_all' returns a list of all matching items
 13
->>> len(lex.find_all('Nom', field='grammatical-info'))  # search other fields as well
-2381
+>>> len(sg_lex.find_all('Noun', field='grammatical-info'))  # search other fields as well
+2357
 
-Add an annotation to an item:
+Compare data across multiple lexicons:
 
->>> print(item.annotation_items)
-None
->>> from lift_utils import base
->>> from lift_utils.datatypes import Lang
->>> item.annotation_items = [base.Annotation()]
->>> item.annotation_items[0].form_items = [base.Form(lang=Lang('en'), text=base.Text('This is a sample annotation'))]
->>> lex.to_lift("outfile.lift")  # save to file; verify that annotation has been added
+>>> import multiprocessing as mp
+>>> from tabulate import tabulate  # pip install tabulate
+>>> cawls = [f"{n:04d}" for n in range(1, 1701)]  # CAWL numbers, 0001 to 1700
+>>> def lus_from_lift(lift, cawls):  # prepare multiprocess function
+...     lex = Lexicon(lift)
+...     lexical_units = []
+...     for cawl in cawls:
+...         lexical_unit = None
+...         item = lex.find(cawl, field='CAWL', match_type='exact')
+...         if item and item.id:
+...             parent = lex.get_item_parent_by_id(item.id)
+...             if parent:
+...                 lexical_unit = parent.lexical_unit
+...         lexical_units.append(lexical_unit)
+...     return lexical_units
+...
+>>> lifts = [
+...     '~/lift/Bhogoto FLEx LIFT export/Bhogoto FLEx LIFT export.lift',
+...     '~/lift/Gbagiri FLEx LIFT export/FLEx LIFT export.lift',
+...     '~/lift/Gbanu FLEx LIFT export/FLEx LIFT export.lift',
+... ]
+>>> with mp.Pool(3) as p:  # use multiprocessing to handle 3 files at once
+...     lus_by_lex = p.starmap(lus_from_lift, ((lift, cawls) for lift in lifts))
+...
+>>> table = zip(cawls, *lus_by_lex)  # convert "columns" to "rows" for table
+>>> print(tabulate(table))  # shows 4 columns: CAWL#, Bhogoto, Gbagiri, Gbanu
+----  -----------------------------------------  ---------------  ---------------------------
+0001  tɛɛ (bdt-CF)                                                tɛ (gbv)
+0002  ndara (bdt-CF) (3 forms)                   ndara (gbv)      ndara te wire (gbv)
+0003  zu (bdt-CF) (3 forms)                      zu (gbv)         zu (gbv)
+0004  baŋge (bdt-CF)                                              ngɔri (gbv)
+0005  dɔɔti ri (bdt-CF)                          ri (gbv)         ri (gbv)
+# ...
+1696  demɔ (bdt-CF) (3 forms)
+1697  mɔ nɛ de nɛ (bdt-CF)                                        dɛ ɗãa tom (gbv)
+1698  eyɛ (bdt-CF)
+1699  ɛ̧ɛ (bdt-CF)
+1700  hoo hoo (bdt-CF)
+----  -----------------------------------------  ---------------  ---------------------------
 
 
 .. toctree::

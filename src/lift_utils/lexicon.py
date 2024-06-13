@@ -655,30 +655,6 @@ class Entry(Extensible):
         self.set_date_modified()
         self.lexical_unit = Multitext(forms_dict)
 
-    def show(self):
-        """Print an overview of the ``entry`` in the terminal window."""
-        # Add header.
-        text = ['\nEntry\n============']
-        # Add overview line.
-        if self.lexical_unit:
-            text.append(f"{self.lexical_unit}; {self.get_grammatical_info()}")
-        # Add traits.
-        if self.trait_items:
-            text.append('; '.join([str(t) for t in self.trait_items]))
-        # Add senses.
-        if self.sense_items:
-            text.append('\n'.join([f"sense: {str(s)}" for s in self.sense_items]))  # noqa: E501
-        # Add variants.
-        if self.variant_items:
-            text.append('; '.join(str(v) for v in self.variant_items))
-        # Add notes.
-        if self.note_items:
-            text.append('; '.join(str(n) for n in self.note_items))
-        # Add etymologies.
-        if self.etymology_items:
-            text.append('; '.join(str(e) for e in self.etymology_items))
-        print('\n'.join(text))
-
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
 
