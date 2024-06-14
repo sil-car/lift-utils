@@ -30,6 +30,7 @@ dynamic = ["version"]
 #get-usb-files = "silcar_it_tools.usb_utils:cli_get_usb_files"
 
 [project.urls]
+Documentation = "https://sil-car.github.io/lift-utils"
 Homepage = "https://sil-car.github.io/lift-utils"
 Issues = "https://github.com/sil-car/lift-utils/issues"
 Source = "https://github.com/sil-car/lift-utils"

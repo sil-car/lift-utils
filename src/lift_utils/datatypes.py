@@ -3,6 +3,8 @@
 import uuid
 from typing import List
 
+from .utils import get_current_timestamp
+
 
 class PCData(str):
     def __new__(cls, text=None):
@@ -16,6 +18,8 @@ class DateTime(str):
     def __new__(cls, text=None):
         if text is not None:
             return super().__new__(cls, text)
+        else:
+            return get_current_timestamp()
 
 
 class Key(str):
@@ -63,15 +67,18 @@ class Prop:
 class Props:
     def __init__(
         self,
-        lift_version: str = None,
         attributes: List[Prop] = None,
         elements: List[Prop] = None,
     ):
-        self.lift_version = lift_version
         self.attributes = attributes
         self.elements = elements
 
     def add_to(self, prop_group_name, prop_obj):
-        prop_group = self.__dict__.get(prop_group_name)
-        if prop_obj.name not in (p.name for p in prop_group):
+        if prop_group_name == 'attributes':
+            prop_group = self.attributes
+            prop_group_names = (p.name for p in self.attributes)
+        elif prop_group_name == 'elements':
+            prop_group = self.elements
+            prop_group_names = (p.name for p in self.elements)
+        if prop_obj.name not in prop_group_names:
             prop_group.append(prop_obj)

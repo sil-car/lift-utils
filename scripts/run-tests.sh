@@ -10,7 +10,7 @@ fi
 
 # Run tests.
 if [[ $1 == '-v' ]]; then
-    python3 -m unittest -v
+    python -m unittest -v
 else
-    python3 -m unittest -b
+    python -m unittest -b
 fi
