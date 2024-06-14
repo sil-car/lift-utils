@@ -1,0 +1,33 @@
+:py:mod:`lift_utils.errors`
+===========================
+
+.. py:module:: lift_utils.errors
+
+
+Module Contents
+---------------
+
+.. py:exception:: InvalidExtensionError(filename)
+
+
+   Bases: :py:obj:`Exception`
+
+   Common base class for all non-exit exceptions.
+
+
+.. py:exception:: RequiredValueError(values)
+
+
+   Bases: :py:obj:`Exception`
+
+   Common base class for all non-exit exceptions.
+
+
+.. py:exception:: UnsupportedActionException(version)
+
+
+   Bases: :py:obj:`Exception`
+
+   Common base class for all non-exit exceptions.
+
+

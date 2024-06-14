@@ -101,7 +101,7 @@ Classes
 
 
 
-.. py:class:: Props(lift_version: str = None, attributes: List[Prop] = None, elements: List[Prop] = None)
+.. py:class:: Props(attributes: List[Prop] = None, elements: List[Prop] = None)
 
 
    .. py:method:: add_to(prop_group_name, prop_obj)

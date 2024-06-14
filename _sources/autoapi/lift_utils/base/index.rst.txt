@@ -32,8 +32,16 @@ Classes
 
 
 
+Functions
+~~~~~~~~~
 
-.. py:class:: Annotation(xml_tree: Optional[lxml.etree._Element] = None)
+.. autoapisummary::
+
+   lift_utils.base.get_properties
+
+
+
+.. py:class:: Annotation(name: str = None, value: str = None, who: str = None, when: str = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Multitext`
@@ -59,8 +67,23 @@ Classes
    :ivar Optional[List[Annotation]] annotation: Adds meta-information
        describing the element.
 
+   .. py:method:: add_annotation(name=None, value=None, who=None, when=None)
 
-.. py:class:: Field(xml_tree: Optional[lxml.etree._Element] = None)
+
+   .. py:method:: add_field(name=None)
+
+
+   .. py:method:: add_trait(name=None, value=None, trait_id=None)
+
+
+   .. py:method:: set_date_created()
+
+
+   .. py:method:: set_date_modified()
+
+
+
+.. py:class:: Field(field_type: str = None, name: str = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Multitext`
@@ -91,7 +114,7 @@ Classes
    This is specified by the ``lang`` attribute.
 
 
-.. py:class:: Gloss(xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Gloss(lang: str = None, text: str = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Form`
@@ -99,6 +122,9 @@ Classes
    A representation of a sense's gloss.
    It's given in a particular language and script as specified by the ``lang``
    attribute.
+
+   .. py:method:: set_trait_items(trait_dict)
+
 
 
 .. py:class:: LIFTUtilsBase(xml_tree: lxml.etree._Element = None)
@@ -113,8 +139,13 @@ Classes
       Print the object's data to stdout; as XML by default.
 
 
+   .. py:method:: show()
 
-.. py:class:: Multitext(xml_tree: Optional[lxml.etree._Element] = None)
+      Print an overview of the object in the terminal window.
+
+
+
+.. py:class:: Multitext(form_dict: dict = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`Text`
@@ -122,8 +153,18 @@ Classes
    Allows for different representations of the same information.
    It can be in a given language, or in multiple languages.
 
+   .. py:method:: get_form_by_lang(lang)
 
-.. py:class:: Span(xml_tree: Optional[lxml.etree._Element] = None)
+      Return first form item with matching ``lang`` attribute.
+
+      :var str lang: Language code; e.g. "en".
+
+
+   .. py:method:: set_form_items(form_dict)
+
+
+
+.. py:class:: Span(text: str = None, tail: str = None, lang: str = None, href: str = None, span_class: str = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -132,7 +173,7 @@ Classes
        
 
 
-.. py:class:: Text(text: lift_utils.datatypes.PCData = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Text(text: str = None, xml_tree: Optional[lxml.etree._Element] = None, subinit=False)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -141,7 +182,7 @@ Classes
        
 
 
-.. py:class:: Trait(xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Trait(name: str = None, value: str = None, trait_id: str = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -150,12 +191,18 @@ Classes
    It can also be used for adding binary constraints.
 
 
-.. py:class:: URLRef(href: lift_utils.datatypes.URL = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: URLRef(href: str = None, label: dict = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
 
    This is a URL with a caption.
        
+
+   .. py:method:: set_label(label_dict)
+
+
+
+.. py:function:: get_properties(class_, lift_version)
 
 

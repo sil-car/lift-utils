@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>lift_utils &#8212; LIFT Utils 0.2.1 documentation</title>
+    <title>lift_utils &#8212; LIFT Utils 0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=d31ea6cb" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=158ece9d"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=73b1e7da"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -18,7 +18,7 @@
     <link rel="prev" title="API Reference" href="../index.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>LIFT Utils 0.2.1 documentation</span></a></h1>
+          <span>LIFT Utils 0.3 documentation</span></a></h1>
         <h2 class="heading"><span>lift_utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lift_utils.base</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lift_utils.config</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="datatypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lift_utils.datatypes</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lift_utils.errors</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="header/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lift_utils.header</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="lexicon/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lift_utils.lexicon</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lift_utils.utils</span></code></a></li>
@@ -101,16 +102,45 @@ relation in that it has no referent in the lexicon.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="lift_utils.Entry.get_gloss">
-<span class="sig-name descname"><span class="pre">get_gloss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sense_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#lift_utils.Entry.get_gloss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get gloss details for a given sense index and language.
-Defaults to index 0 and English.</p>
+<dt class="sig sig-object py" id="lift_utils.Entry.add_etymology">
+<span class="sig-name descname"><span class="pre">add_etymology</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Etymology" title="lift_utils.lexicon.Etymology"><span class="pre">Etymology</span></a></span></span><a class="headerlink" href="#lift_utils.Entry.add_etymology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Etymology</span></code> item to the entry.
+Returns the new object, which can then be used to add data to it.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lift_utils.Entry.get_grammatical_info">
-<span class="sig-name descname"><span class="pre">get_grammatical_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sense_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.GrammaticalInfo" title="lift_utils.lexicon.GrammaticalInfo"><span class="pre">GrammaticalInfo</span></a></span></span><a class="headerlink" href="#lift_utils.Entry.get_grammatical_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get basic grammatical info for a given sense index [default=0].</p>
+<dt class="sig sig-object py" id="lift_utils.Entry.add_note">
+<span class="sig-name descname"><span class="pre">add_note</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Note" title="lift_utils.lexicon.Note"><span class="pre">Note</span></a></span></span><a class="headerlink" href="#lift_utils.Entry.add_note" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Note</span></code> item to the entry.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Entry.add_pronunciation">
+<span class="sig-name descname"><span class="pre">add_pronunciation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Phonetic" title="lift_utils.lexicon.Phonetic"><span class="pre">Phonetic</span></a></span></span><a class="headerlink" href="#lift_utils.Entry.add_pronunciation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Phonetic</span></code> item to the entry.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Entry.add_relation">
+<span class="sig-name descname"><span class="pre">add_relation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Relation" title="lift_utils.lexicon.Relation"><span class="pre">Relation</span></a></span></span><a class="headerlink" href="#lift_utils.Entry.add_relation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Relation</span></code> item to the entry.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Entry.add_sense">
+<span class="sig-name descname"><span class="pre">add_sense</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.Sense" title="lift_utils.Sense"><span class="pre">Sense</span></a></span></span><a class="headerlink" href="#lift_utils.Entry.add_sense" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Sense</span></code> item to the entry.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Entry.add_variant">
+<span class="sig-name descname"><span class="pre">add_variant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Variant" title="lift_utils.lexicon.Variant"><span class="pre">Variant</span></a></span></span><a class="headerlink" href="#lift_utils.Entry.add_variant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Variant</span></code> item to the entry.
+Returns the new object, which can then be used to add data to it.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -120,9 +150,27 @@ Defaults to index 0 and English.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lift_utils.Entry.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Entry.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print an overview of the <code class="docutils literal notranslate"><span class="pre">entry</span></code> in the terminal window.</p>
+<dt class="sig sig-object py" id="lift_utils.Entry.set_citation">
+<span class="sig-name descname"><span class="pre">set_citation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forms_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Entry.set_citation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the entry’s <code class="docutils literal notranslate"><span class="pre">Citation</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forms_dict</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">dict</span></code> keys are language codes,
+values are the text descriptions of the <code class="docutils literal notranslate"><span class="pre">Citation</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Entry.set_lexical_unit">
+<span class="sig-name descname"><span class="pre">set_lexical_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forms_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Entry.set_lexical_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the entry’s <code class="docutils literal notranslate"><span class="pre">LexicalUnit</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forms_dict</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">dict</span></code> keys are lanuage codes,
+values are text descriptions of the <code class="docutils literal notranslate"><span class="pre">LexicalUnit</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -148,26 +196,93 @@ lexicon.</p></li>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Lexicon.add_entry">
+<span class="sig-name descname"><span class="pre">add_entry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.Entry" title="lift_utils.Entry"><span class="pre">Entry</span></a></span></span><a class="headerlink" href="#lift_utils.Lexicon.add_entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Entry</span></code> to the lexicon.
+Returns the <code class="docutils literal notranslate"><span class="pre">Entry</span></code> object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.Lexicon.find">
-<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gloss'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.Entry" title="lift_utils.Entry"><span class="pre">Entry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lift_utils.Sense" title="lift_utils.Sense"><span class="pre">Sense</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lift_utils.Lexicon.find" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gloss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'contains'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.Entry" title="lift_utils.Entry"><span class="pre">Entry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lift_utils.Sense" title="lift_utils.Sense"><span class="pre">Sense</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lift_utils.Lexicon.find" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the first matching <code class="docutils literal notranslate"><span class="pre">Entry</span></code> or <code class="docutils literal notranslate"><span class="pre">Sense</span></code> item.
-The field searched can be “lexical-unit”, “variant”, “gloss”, or
-“definition”, as well as any fields defined in the LIFT file’s header.</p>
+The field searched can be the entry’s “lexical-unit” or “variant”
+field, the sense’s “gloss” [default], “definition”, or
+“grammatical-info” field, as well as any fields defined in the LIFT
+file’s header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The search term.</p></li>
+<li><p><strong>field</strong> (<em>str</em>) – The field to be searched [default is “gloss”].</p></li>
+<li><p><strong>match_type</strong> (<em>str</em>) – The kind comparison between the search term and
+the field’s data. Possible values are “contains” [default],
+“exact”, or “regex”.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.Lexicon.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gloss'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lift_utils.Entry" title="lift_utils.Entry"><span class="pre">Entry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lift_utils.Sense" title="lift_utils.Sense"><span class="pre">Sense</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lift_utils.Lexicon.find_all" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gloss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'contains'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lift_utils.Entry" title="lift_utils.Entry"><span class="pre">Entry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lift_utils.Sense" title="lift_utils.Sense"><span class="pre">Sense</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lift_utils.Lexicon.find_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all matching <code class="docutils literal notranslate"><span class="pre">Entry</span></code> or <code class="docutils literal notranslate"><span class="pre">Sense</span></code> items.
-The field searched can be “lexical-unit”, “variant”, “gloss”,
-“definition”, or “grammatical-info”, as well as any fields defined in
-the LIFT file’s header.</p>
+The field searched can be the entry’s “lexical-unit” or “variant”
+field, the sense’s “gloss” [default], “definition”, or
+“grammatical-info” field, as well as any fields defined in the LIFT
+file’s header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The search term.</p></li>
+<li><p><strong>field</strong> (<em>str</em>) – The field to be searched [default is “gloss”].</p></li>
+<li><p><strong>match_type</strong> (<em>str</em>) – The kind comparison between the search term and
+the field’s data. Possible values are “contains” [default],
+“exact”, or “regex”.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.Lexicon.get_item_by_id">
 <span class="sig-name descname"><span class="pre">get_item_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.Entry" title="lift_utils.Entry"><span class="pre">Entry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lift_utils.Sense" title="lift_utils.Sense"><span class="pre">Sense</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lift_utils.Lexicon.get_item_by_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an entry or sense by its <code class="docutils literal notranslate"><span class="pre">RefId</span></code>.</p>
+<dd><p>Return an entry or sense by its <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>refid</strong> (<em>str</em>) – The <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute of the entry or sense.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Lexicon.get_item_parent_by_id">
+<span class="sig-name descname"><span class="pre">get_item_parent_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.Entry" title="lift_utils.Entry"><span class="pre">Entry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lift_utils.Sense" title="lift_utils.Sense"><span class="pre">Sense</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lift_utils.Lexicon.get_item_parent_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an sense’s parent item by the sense’s <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>refid</strong> (<em>str</em>) – The <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute of the entry or sense.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Lexicon.get_range_elements">
+<span class="sig-name descname"><span class="pre">get_range_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">range_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Lexicon.get_range_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator object that lists all the names defined in the
+header for the given <code class="docutils literal notranslate"><span class="pre">range</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>range_name</strong> (<em>str</em>) – The name of the header range.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Lexicon.get_ranges">
+<span class="sig-name descname"><span class="pre">get_ranges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Lexicon.get_ranges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator object that lists all the range names defined in
+the header.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -182,6 +297,11 @@ the LIFT file’s header.</p>
 <dd><p>Save the <code class="docutils literal notranslate"><span class="pre">Lexicon</span></code> as a LIFT file.
 The LIFT-RANGES file will be automatically created in the same folder
 as the LIFT file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Full or relative path to new LIFT file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -219,28 +339,103 @@ to be static.</p></li>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.add_example">
+<span class="sig-name descname"><span class="pre">add_example</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Example" title="lift_utils.lexicon.Example"><span class="pre">Example</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.add_example" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Example</span></code> item to the sense.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.add_gloss">
+<span class="sig-name descname"><span class="pre">add_gloss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lang</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="base/index.html#lift_utils.base.Gloss" title="lift_utils.base.Gloss"><span class="pre">lift_utils.base.Gloss</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.add_gloss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a <code class="docutils literal notranslate"><span class="pre">Gloss</span></code> item to the sense.
+Returns the new object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lang</strong> (<em>str</em>) – The gloss’s language.</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – The actual gloss text.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.add_illustration">
+<span class="sig-name descname"><span class="pre">add_illustration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">href</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="base/index.html#lift_utils.base.URLRef" title="lift_utils.base.URLRef"><span class="pre">lift_utils.base.URLRef</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.add_illustration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a <code class="docutils literal notranslate"><span class="pre">URLRef</span></code> illustration item to the sense.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.add_note">
+<span class="sig-name descname"><span class="pre">add_note</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Note" title="lift_utils.lexicon.Note"><span class="pre">Note</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.add_note" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Note</span></code> item to the sense.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.add_relation">
+<span class="sig-name descname"><span class="pre">add_relation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Relation" title="lift_utils.lexicon.Relation"><span class="pre">Relation</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.add_relation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Relation</span></code> item to the sense.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.add_reversal">
+<span class="sig-name descname"><span class="pre">add_reversal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.Reversal" title="lift_utils.lexicon.Reversal"><span class="pre">Reversal</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.add_reversal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Reversal</span></code> item to the sense.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.add_subsense">
+<span class="sig-name descname"><span class="pre">add_subsense</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Sense.add_subsense" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an empty <code class="docutils literal notranslate"><span class="pre">Subense</span></code> item to the sense.
+Returns the new object, which can then be used to add data to it.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.Sense.get_gloss">
 <span class="sig-name descname"><span class="pre">get_gloss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#lift_utils.Sense.get_gloss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get gloss details for a given language.
-Defaults to English.</p>
+<dd><p>Get the gloss for a given language.
+Defaults to English; falls back otherwise to the first gloss.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.Sense.get_grammatical_info">
 <span class="sig-name descname"><span class="pre">get_grammatical_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lexicon/index.html#lift_utils.lexicon.GrammaticalInfo" title="lift_utils.lexicon.GrammaticalInfo"><span class="pre">GrammaticalInfo</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.get_grammatical_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get basic grammatical info.</p>
+<dd><p>Return the grammatical-info part of speech value.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.Sense.get_id">
 <span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="datatypes/index.html#lift_utils.datatypes.RefId" title="lift_utils.datatypes.RefId"><span class="pre">lift_utils.datatypes.RefId</span></a></span></span><a class="headerlink" href="#lift_utils.Sense.get_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the object’s unique identifier</p>
+<dd><p>Return the object’s <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lift_utils.Sense.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Sense.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print an overview of the <code class="docutils literal notranslate"><span class="pre">sense</span></code> in the terminal window.</p>
+<dt class="sig sig-object py" id="lift_utils.Sense.set_definition">
+<span class="sig-name descname"><span class="pre">set_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forms_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Sense.set_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the sense’s definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forms_dict</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">dict</span></code> keys are language codes,
+values are the text for each definition.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lift_utils.Sense.set_grammatical_info">
+<span class="sig-name descname"><span class="pre">set_grammatical_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.Sense.set_grammatical_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the sense’s <code class="docutils literal notranslate"><span class="pre">GrammaticalInfo</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – The part of speech tag in the <code class="docutils literal notranslate"><span class="pre">grammatical-info</span></code>
+range.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

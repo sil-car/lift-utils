@@ -13,7 +13,7 @@ Module Contents
 ---------------
 
 .. py:data:: LIB_VERSION
-   :value: '0.2.1'
+   :value: '0.3'
 
    
 
@@ -35,7 +35,16 @@ Module Contents
 
    
 
+.. py:data:: MULTIPLE_ITEM_TAGS
+   :value: ('abbrev', 'annotation', 'description', 'entry', 'etymology', 'example', 'field', 'form',...
+
+   
+
 .. py:data:: XML_NAMES
+
+   
+
+.. py:data:: XML_PARSER
 
    
 

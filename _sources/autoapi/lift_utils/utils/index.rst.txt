@@ -21,7 +21,11 @@ Functions
    lift_utils.utils.ellipsize
    lift_utils.utils.etree_to_obj_attributes
    lift_utils.utils.etree_to_xmlstring
-   lift_utils.utils.get_xml_parser
+   lift_utils.utils.form_items_has_match
+   lift_utils.utils.get_current_timestamp
+   lift_utils.utils.get_writing_systems_from_entry
+   lift_utils.utils.get_ws_from_field_items
+   lift_utils.utils.get_ws_from_sense
    lift_utils.utils.obj_attributes_to_etree
    lift_utils.utils.search_entry
    lift_utils.utils.search_sense
@@ -34,22 +38,34 @@ Functions
 .. py:function:: ellipsize(string, length)
 
 
-.. py:function:: etree_to_obj_attributes(xml_tree, obj)
+.. py:function:: etree_to_obj_attributes(xml_tree, obj, props)
 
 
 .. py:function:: etree_to_xmlstring(xml_tree)
 
 
-.. py:function:: get_xml_parser()
+.. py:function:: form_items_has_match(form_items, text, match_type)
 
 
-.. py:function:: obj_attributes_to_etree(obj, root_tag)
+.. py:function:: get_current_timestamp()
 
 
-.. py:function:: search_entry(entry, text, field, target_groups, header_fields, get_all)
+.. py:function:: get_writing_systems_from_entry(entry) -> dict
 
 
-.. py:function:: search_sense(sense, text, field, target_groups, header_fields, get_all)
+.. py:function:: get_ws_from_field_items(field_items)
+
+
+.. py:function:: get_ws_from_sense(sense) -> list
+
+
+.. py:function:: obj_attributes_to_etree(obj, root_tag, props)
+
+
+.. py:function:: search_entry(entry, text, field, target_groups, header_fields, match_type, get_all)
+
+
+.. py:function:: search_sense(sense, text, field, target_groups, header_fields, match_type, get_all)
 
 
 .. py:function:: unicode_sort(in_list)

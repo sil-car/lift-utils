@@ -23,9 +23,19 @@ Classes
    lift_utils.header.Fields
    lift_utils.header.Header
    lift_utils.header.Range
+   lift_utils.header.Range13
    lift_utils.header.RangeElement
+   lift_utils.header.RangeElement13
    lift_utils.header.Ranges
 
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   lift_utils.header.get_properties
 
 
 
@@ -90,23 +100,40 @@ Classes
 .. py:class:: Range(range_id: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
-   Bases: :py:obj:`lift_utils.base.Extensible`, :py:obj:`lift_utils.base.LIFTUtilsBase`
+   Bases: :py:obj:`lift_utils.base.Extensible`
 
    A set of ``range-elements``.
    It is used to identify both the group of ``range-elements`` but also to
    some extent their type.
 
-   .. note:: Does not inherit from Extensible in LIFT v0.13 (FieldWorks).
+
+.. py:class:: Range13(range_id: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
+
+
+   Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
+
+   A set of ``range-elements``.
+   It is used to identify both the group of ``range-elements`` but also to
+   some extent their type.
 
 
 .. py:class:: RangeElement(elem_id: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
 
 
-   Bases: :py:obj:`lift_utils.base.Extensible`, :py:obj:`lift_utils.base.LIFTUtilsBase`
+   Bases: :py:obj:`lift_utils.base.Extensible`
 
    The description of a particular range element found in a ``range``.
 
    .. note:: Does not inherit from Extensible in LIFT v0.13 (FieldWorks).
+
+
+.. py:class:: RangeElement13(elem_id: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None)
+
+
+   Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
+
+   The description of a particular range element found in a ``range``.
+       
 
 
 .. py:class:: Ranges(xml_tree: Optional[lxml.etree._Element] = None)
@@ -116,5 +143,8 @@ Classes
 
    The root element in a Lift Ranges file.
        
+
+
+.. py:function:: get_properties(class_, lift_version)
 
 
