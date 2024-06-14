@@ -424,16 +424,16 @@ class Sense(Extensible):
     def __str__(self):
         return self._summary_line()
 
-    def add_example(self) -> int:
+    def add_example(self) -> Example:
         """Add an empty ``Example`` item to the sense.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('example_items', Example)
 
-    def add_gloss(self, lang, text) -> int:
+    def add_gloss(self, lang, text) -> Gloss:
         """Add a ``Gloss`` item to the sense.
-        Returns the index of the new item.
+        Returns the new object.
 
         :var str lang: The gloss's language.
         :var str text: The actual gloss text.
@@ -441,37 +441,37 @@ class Sense(Extensible):
         self.set_date_modified()
         return self._add_list_item('gloss_items', Gloss, lang=lang, text=text)
 
-    def add_illustration(self, href=None) -> int:
-        """Add an ``URLRef`` illustration item to the sense.
-        Returns the index of the new item.
+    def add_illustration(self, href=None) -> URLRef:
+        """Add a ``URLRef`` illustration item to the sense.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('illustration_items', URLRef, href=href)
 
-    def add_note(self) -> int:
+    def add_note(self) -> Note:
         """Add an empty ``Note`` item to the sense.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('note_items', Note)
 
-    def add_relation(self) -> int:
+    def add_relation(self) -> Relation:
         """Add an empty ``Relation`` item to the sense.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('relation_items', Relation)
 
-    def add_reversal(self) -> int:
+    def add_reversal(self) -> Reversal:
         """Add an empty ``Reversal`` item to the sense.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('reversal_items', Reversal)
 
-    def add_subsense(self) -> int:
+    def add_subsense(self):
         """Add an empty ``Subense`` item to the sense.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('subsense_items', Sense)
@@ -514,15 +514,11 @@ class Sense(Extensible):
     def set_grammatical_info(self, value: str):
         """Set the sense's ``GrammaticalInfo``.
 
-        :var str value: The part of speech tag into the ``grammatical-info``
+        :var str value: The part of speech tag in the ``grammatical-info``
             range.
         """
         self.set_date_modified()
         self.grammatical_info = GrammaticalInfo(value=value)
-
-    def show(self):
-        """Print an overview of the ``sense`` in the terminal window."""
-        print(self)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -591,44 +587,52 @@ class Entry(Extensible):
     def __str__(self):
         return self._summary_line()
 
-    def add_etymology(self) -> int:
+    def add_etymology(self) -> Etymology:
         """Add an empty ``Etymology`` item to the entry.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('etymology_items', Etymology)
 
-    def add_note(self) -> int:
+    def add_note(self) -> Note:
         """Add an empty ``Note`` item to the entry.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('note_items', Note)
 
-    def add_pronunciation(self) -> int:
+    def add_pronunciation(self) -> Phonetic:
         """Add an empty ``Phonetic`` item to the entry.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('pronunciation_items', Phonetic)
 
-    def add_relation(self) -> int:
+    def add_relation(self) -> Relation:
         """Add an empty ``Relation`` item to the entry.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('relation_items', Relation)
 
-    def add_sense(self) -> int:
+    def add_sense(self) -> Sense:
         """Add an empty ``Sense`` item to the entry.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
-        return self._add_list_item('sense_items', Sense)
+        sense = self._add_list_item('sense_items', Sense)
+        sense.date_created = DateTime()
+        new_id = RefId()
+        # NOTE: When creating an entry from a lexicon we can check all existing
+        # IDs to make sure the generated one is unique. But when creating a
+        # sense from an entry we don't have the ability to access the lexicon
+        # directly. Will just assume for now that the generated ID is unique.
+        sense.id = new_id
+        return sense
 
-    def add_variant(self) -> int:
+    def add_variant(self) -> Variant:
         """Add an empty ``Variant`` item to the entry.
-        Returns the index of the new item. Use this index to add data to it.
+        Returns the new object, which can then be used to add data to it.
         """
         self.set_date_modified()
         return self._add_list_item('variant_items', Variant)
@@ -718,13 +722,17 @@ class Lexicon(LIFTUtilsBase):
             s += f"; produced by {self.producer}"
         return s
 
-    def add_entry(self):
-        self._add_list_item('entry_items', Entry)
-        self.entry_items[-1].date_created = DateTime()
+    def add_entry(self) -> Entry:
+        """Add an empty ``Entry`` to the lexicon.
+        Returns the ``Entry`` object, which can then be used to add data to it.
+        """
+        entry = self._add_list_item('entry_items', Entry)
+        entry.date_created = DateTime()
         new_id = RefId()
         while self.get_item_by_id(new_id):  # make sure it's unique
             new_id = RefId()
-        self.entry_items[-1].id = new_id
+        entry.id = new_id
+        return entry
 
     def find(
         self,
@@ -785,14 +793,31 @@ class Lexicon(LIFTUtilsBase):
         """
         return self._item_from_id(refid, item_type='parent')
 
+    def get_range_elements(self, range_name):
+        """Returns a generator object that lists all the names defined in the
+        header for the given ``range``.
+
+        :var str range_name: The name of the header range.
+        """
+        for r in self.header.ranges.range_items:
+            if r.id == range_name:
+                for e in r.range_element_items:
+                    yield e.id
+
+    def get_ranges(self):
+        """Returns a generator object that lists all the range names defined in
+        the header.
+        """
+        for r in self.header.ranges.range_items:
+            yield r.id
+
     def show(self):
         """Print an overview of the ``Lexicon`` in the terminal window."""
-        text = "No entries."
+        text = None
         if self.entry_items:
             summary_lines = [e._summary_line('en') for e in self.entry_items]  # noqa: E501
             slist = utils.unicode_sort(summary_lines)
-            nl = '\n'
-            text = nl.join(slist)
+            text = '\n'.join(slist)
         print(text)
 
     def to_lift(self, file_path: str):

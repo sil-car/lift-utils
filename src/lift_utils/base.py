@@ -43,7 +43,7 @@ class LIFTUtilsBase:
             self.__dict__[_name] = [new_obj]
         else:
             self.__dict__[_name].append(new_obj)
-        return len(self.__dict__.get(_name)) - 1
+        return new_obj
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -72,7 +72,8 @@ class LIFTUtilsBase:
     def show(self):
         """Print an overview of the object in the terminal window."""
         for k, v in self.__dict__.items():
-            print(f"{k}: {v}")
+            if not k.startswith('_'):
+                print(f"{k}: {v}")
 
 
 class Span(LIFTUtilsBase):

@@ -24,21 +24,21 @@ kêtê ngû sô asua pë…	kêtê ngû sô asua pëpe_000d9e27-d103-4601-a4b1-6
 pool                	Noun      	27bb9896-e413-4c14-8cdc-cbe26ecbc148
 >>> sg_lex.show()  # list all lexicon entries, sorted by lexical-unit
 # ...
-zo wa (sg)              who?                            zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883
-zôâ (sg)                island                          zôâ_d10bd14f-eed6-42c9-bbfb-e0f22c5acd8f
-zonga (sg)              insult                          zonga_0c9f35f3-3a3f-4660-aa2b-55a701cf2c68
-zonyön (sg)             onion                           zonyön_8fbfa01d-c5e8-4a4f-b848-013f601de4d4
-zöröndö (sg)            help, rescue                    zöröndö_5d26b3de-26cb-42d2-86ee-33e018ec88c7
-zovokö (sg)             African                         zovokö_3e959588-8541-411d-aba5-4a00d39d66ba
-zovukö (sg)             African                         zovukö_cc8ad26d-3d79-4249-9c80-1af9fd2185c6
-zozo (sg)               palm rat                        zozo_72b4fcfe-3112-4f92-aee7-248d708b6bd4
-zû (sg)                 descend                         zû_ed13b0f7-24b4-4233-a6ae-a1e6f0060416
-zû na sêse (sg)         land, alight                    zû na sêse_8e32a3f1-1db7-4fdc-a0f1-5c5ccb7c7ca8
-zûâ (sg)                island                          zûâ_115eccf6-19af-439f-b134-07ae1b11b51f
-zûku (sg)               spill, turn (a container) upside down   zûku_51a7b1be-cb53-40c7-8b0e-fde1ab9cc3f0
-zûku li (sg)            hang one's head, bow            zûku li_1a258482-1d61-44f4-b7a9-24f4bad575cc
-zûsuka (sg)             until                           zûsuka_8c5e481c-8811-482e-bff0-126282c829ab
-zûu (sg)                go down                         zûu_137d7f37-ceff-464a-9d7f-00febbcfd439
+zo wa (sg)              zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883
+zôâ (sg)                zôâ_d10bd14f-eed6-42c9-bbfb-e0f22c5acd8f
+zonga (sg)              zonga_0c9f35f3-3a3f-4660-aa2b-55a701cf2c68
+zonyön (sg)             zonyön_8fbfa01d-c5e8-4a4f-b848-013f601de4d4
+zöröndö (sg)            zöröndö_5d26b3de-26cb-42d2-86ee-33e018ec88c7
+zovokö (sg)             zovokö_3e959588-8541-411d-aba5-4a00d39d66ba
+zovukö (sg)             zovukö_cc8ad26d-3d79-4249-9c80-1af9fd2185c6
+zozo (sg)               zozo_72b4fcfe-3112-4f92-aee7-248d708b6bd4
+zû (sg)                 zû_ed13b0f7-24b4-4233-a6ae-a1e6f0060416
+zû na sêse (sg)         zû na sêse_8e32a3f1-1db7-4fdc-a0f1-5c5ccb7c7ca8
+zûâ (sg)                zûâ_115eccf6-19af-439f-b134-07ae1b11b51f
+zûku (sg)               zûku_51a7b1be-cb53-40c7-8b0e-fde1ab9cc3f0
+zûku li (sg)            zûku li_1a258482-1d61-44f4-b7a9-24f4bad575cc
+zûsuka (sg)             zûsuka_8c5e481c-8811-482e-bff0-126282c829ab
+zûu (sg)                zûu_137d7f37-ceff-464a-9d7f-00febbcfd439
 >>> item = sg_lex.get_item_by_id('zo wa_be18403e-c45d-4fb9-9d5a-35d26bf0b883')
 >>> type(item)
 <class 'lift_utils.lexicon.Entry'>
@@ -70,6 +70,89 @@ Search the lexicon:
 13
 >>> len(sg_lex.find_all('Noun', field='grammatical-info'))  # search other fields as well
 2357
+
+Edit the lexicon:
+
+>>> new_entry = sg_lex.add_entry()
+>>> new_entry.show()
+date_created: 2024-06-14T12:00:47Z
+date_modified: None
+field_items: None
+trait_items: None
+annotation_items: None
+id: bb11d621-8b09-4c2f-b572-2d2f3e90f9e1
+guid: None
+order: None
+date_deleted: None
+lexical_unit: None
+citation: None
+pronunciation_items: None
+variant_items: None
+sense_items: None
+note_items: None
+relation_items: None
+etymology_items: None
+>>> new_entry.set_lexical_unit({'sg': 'fîni yê'})
+>>> new_entry.show()
+date_created: 2024-06-14T12:00:47Z
+date_modified: 2024-06-14T12:08:04Z
+field_items: None
+trait_items: None
+annotation_items: None
+id: bb11d621-8b09-4c2f-b572-2d2f3e90f9e1
+guid: None
+order: None
+date_deleted: None
+lexical_unit: fîni yê (sg)  # <-- updated lexical_unit
+citation: None
+pronunciation_items: None
+variant_items: None
+sense_items: None
+note_items: None
+relation_items: None
+etymology_items: None
+>>> new_sense = new_entry.add_sense()
+>>> new_sense.show()
+date_created: 2024-06-14T14:32:36Z
+date_modified: 2024-06-14T14:33:51Z
+field_items: None
+trait_items: None
+annotation_items: None
+id: 0dc5ccdb-01c3-4af0-879f-73c7fd79bb35
+order: None
+grammatical_info: None
+gloss_items: None
+definition: None
+relation_items: None
+note_items: None
+example_items: None
+reversal_items: None
+illustration_items: None
+subsense_items: None
+>>> for e in sg_lex.get_range_elements('grammatical-info'):
+...     print(e)
+...
+Adverb
+Noun
+# ...
+>>> new_sense.set_grammatical_info('Noun')
+>>> new_sense.show()
+date_created: 2024-06-14T14:32:36Z
+date_modified: 2024-06-14T14:33:51Z
+field_items: None
+trait_items: None
+annotation_items: None
+id: 0dc5ccdb-01c3-4af0-879f-73c7fd79bb35
+order: None
+grammatical_info: Noun  # <-- updated grammatical_info
+gloss_items: None
+definition: None
+relation_items: None
+note_items: None
+example_items: None
+reversal_items: None
+illustration_items: None
+subsense_items: None
 
 Compare data across multiple lexicons:
 
@@ -131,7 +214,7 @@ Roadmap
    * - v0.2
      - write support for LIFT files
    * - v0.3
-     - add helper methods to facilitate lexicon manipulation
+     - add helper methods to facilitate lexicon searching and manipulation
 
 Indexes
 =======
