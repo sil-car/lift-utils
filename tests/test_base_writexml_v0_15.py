@@ -1,17 +1,10 @@
 # flake8: noqa: E501
 
 import unittest
-from lxml import etree
 
-from lift_utils import base
-from lift_utils import config
-from lift_utils import datatypes
-from lift_utils import utils
-from lift_utils.lexicon import Etymology
+from lift_utils import base, config, datatypes, utils
 
-from .utils import compare_xml_trees
-
-LIFT_VERSION = '0.15'
+LIFT_VERSION = "0.15"
 
 
 class TestAnnotation(unittest.TestCase):
@@ -21,12 +14,7 @@ class TestAnnotation(unittest.TestCase):
         value = "annotation-value"
         who = "Annotation Who"
         when = "0000-00-00"
-        obj = base.Annotation(
-            name=name,
-            value=value,
-            who=who,
-            when=when
-        )
+        obj = base.Annotation(name=name, value=value, who=who, when=when)
 
         xml = f"""
         <annotation name="{name}" value="{value}" who="{who}" when="{when}"/>
@@ -34,7 +22,7 @@ class TestAnnotation(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -55,16 +43,18 @@ class TestField(unittest.TestCase):
             ),
         ]
         obj.trait_items = [
-            base.Trait(name='', value=''),
-            base.Trait(name='', value=''),
+            base.Trait(name="", value=""),
+            base.Trait(name="", value=""),
         ]
         obj.form_items = [
-            base.Form(lang='', text=''),
-            base.Form(lang='', text=''),
+            base.Form(lang="", text=""),
+            base.Form(lang="", text=""),
         ]
 
         xml = f"""
         <field dateCreated="{obj.date_created}" dateModified="{obj.date_modified}" name="{obj.name}">
+            <annotation name="" value=""/>
+            <annotation name="" value=""/>
             <form lang="">
                 <text/>
             </form>
@@ -73,15 +63,13 @@ class TestField(unittest.TestCase):
             </form>
             <trait name="" value=""/>
             <trait name="" value=""/>
-            <annotation name="" value=""/>
-            <annotation name="" value=""/>
         </field>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(obj._to_xml_tree(), xml_tree)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -100,17 +88,17 @@ class TestForm(unittest.TestCase):
             ),
         ]
 
-        xml = f"""
+        xml = """
         <form lang="en">
+            <annotation name="" value=""/>
+            <annotation name="" value=""/>
             <text/>
-            <annotation name="" value=""/>
-            <annotation name="" value=""/>
         </form>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -123,7 +111,7 @@ class TestGloss(unittest.TestCase):
             base.Trait(name="", value=""),
         ]
 
-        xml = f"""
+        xml = """
         <gloss lang="">
             <text/>
             <trait name="" value=""/>
@@ -133,7 +121,7 @@ class TestGloss(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -142,7 +130,7 @@ class TestSpan(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         text = "test text"
         obj = base.Span(text=text)
-        obj.lang = datatypes.Lang('en')
+        obj.lang = datatypes.Lang("en")
         obj.href = datatypes.URL("https://example.com")
         obj.class_ = "TestClass"
         obj.tail = datatypes.PCData(" a tail.")
@@ -155,7 +143,7 @@ class TestSpan(unittest.TestCase):
         xml_tree = xml_tree.getchildren()[0]
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -168,21 +156,21 @@ class TestText(unittest.TestCase):
             base.Span(text=""),
         ]
 
-        xml = f"""
+        xml = """
         <text>Test text<span/><span/></text>
         """
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
 class TestTrait(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
-        obj = base.Trait(name='TraitName', value='TraitValue')
-        obj.id = datatypes.Key('TraitID')
+        obj = base.Trait(name="TraitName", value="TraitValue")
+        obj.id = datatypes.Key("TraitID")
         obj.annotation_items = [
             base.Annotation(name="", value=""),
             base.Annotation(name="", value=""),
@@ -197,7 +185,7 @@ class TestTrait(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -207,7 +195,7 @@ class TestURLRef(unittest.TestCase):
         obj = base.URLRef(href="https://example.com")
         obj.label = base.Multitext()
 
-        xml = f"""
+        xml = """
         <urlref href="https://example.com">
             <label/>
         </urlref>
@@ -215,5 +203,5 @@ class TestURLRef(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
