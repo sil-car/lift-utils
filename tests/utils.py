@@ -1,7 +1,5 @@
 from lxml import etree
 
-from lift_utils import config
-
 
 def test_attribs(test_cls, obj, attribs):
     for attrib in attribs:
@@ -30,6 +28,19 @@ def test_properties(test_cls, props, optional=None):
                 test_cls.assertTrue(hasattr(test_cls.obj, prop))
         except AssertionError as e:
             raise Exception(f'"{prop}" {str(e)}')
+
+
+def test_class_properties(test_cls):
+    for group in (
+        test_cls.obj._attributes_required,
+        test_cls.obj._elements_required,
+    ):
+        test_properties(test_cls, group, optional=False)
+    for group in (
+        test_cls.obj._attributes_optional,
+        test_cls.obj._elements_optional,
+    ):
+        test_properties(test_cls, group, optional=True)
 
 
 def compare_xml_trees(tree1, tree2):
