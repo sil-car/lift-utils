@@ -5,7 +5,7 @@ from lxml import etree
 from lift_utils import base, config
 
 from . import DATA_PATH
-from .utils import test_properties
+from .utils import test_class_properties, test_properties
 
 ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_v0.13_FW.lift")
 LIFT_VERSION = "0.13"
@@ -18,17 +18,7 @@ class TestAnnotation(unittest.TestCase):
         self.obj = base.Annotation(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            print(group)
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestExtensible(unittest.TestCase):
@@ -37,16 +27,7 @@ class TestExtensible(unittest.TestCase):
         self.obj = base.Extensible(etree.parse(ENTRY_LIFT_GOOD).getroot())
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestField(unittest.TestCase):
@@ -56,16 +37,7 @@ class TestField(unittest.TestCase):
         self.obj = base.Field(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestForm(unittest.TestCase):
@@ -75,16 +47,7 @@ class TestForm(unittest.TestCase):
         self.obj = base.Form(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestGloss(unittest.TestCase):
@@ -94,16 +57,7 @@ class TestGloss(unittest.TestCase):
         self.obj = base.Gloss(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestMultitextText(unittest.TestCase):
@@ -137,16 +91,7 @@ class TestMultitextForm(unittest.TestCase):
         self.obj = base.Multitext(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestSpan(unittest.TestCase):
@@ -177,16 +122,7 @@ class TestText(unittest.TestCase):
         self.obj = base.Text(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestTrait(unittest.TestCase):
@@ -196,16 +132,7 @@ class TestTrait(unittest.TestCase):
         self.obj = base.Trait(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
 
 
 class TestURLRef(unittest.TestCase):
@@ -215,13 +142,4 @@ class TestURLRef(unittest.TestCase):
         self.obj = base.URLRef(xml_tree=self.xml_tree)
 
     def test_properties(self):
-        for group in (
-            self.obj._attributes_required,
-            self.obj._elements_required,
-        ):
-            test_properties(self, group, optional=False)
-        for group in (
-            self.obj._attributes_optional,
-            self.obj._elements_optional,
-        ):
-            test_properties(self, group, optional=True)
+        test_class_properties(self)
