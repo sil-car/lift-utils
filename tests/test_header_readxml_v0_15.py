@@ -5,7 +5,7 @@ from lxml import etree
 from lift_utils import config, header
 
 from . import DATA_PATH
-from .utils import get_props, test_attribs, test_elems
+from .utils import test_class_properties, test_properties
 
 HEADER_LIFT_GOOD = str(DATA_PATH / "header_good_v0.15.lift")
 LIFT_VERSION = config.LIFT_VERSION_LATEST
@@ -18,17 +18,8 @@ class TestFieldDefinition(unittest.TestCase):
         self.obj = header.FieldDefinition(xml_tree=self.xml_tree)
         self.props = header.get_properties(header.FieldDefinition, config.LIFT_VERSION)  # noqa: E501
 
-    def test_attribs(self):
-        required = get_props(self.props, prop_type="attributes")
-        test_attribs(self, self.obj, required)
-        optional = get_props(self.props, prop_type="attributes", optional=True)
-        test_attribs(self, self.obj, optional)
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type="elements")
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type="elements", optional=True)
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        test_class_properties(self)
 
 
 class TestFields(unittest.TestCase):
@@ -38,14 +29,8 @@ class TestFields(unittest.TestCase):
         self.obj = header.Fields(xml_tree=self.xml_tree)
         self.props = header.get_properties(header.Fields, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        pass  # no attributes to test
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type="elements")
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type="elements", optional=True)
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        test_class_properties(self)
 
     def test_items(self):
         self.assertTrue(len(self.obj.field_items) > 1)
@@ -58,14 +43,8 @@ class TestHeader(unittest.TestCase):
         self.obj = header.Header(xml_tree=self.xml_tree)
         self.props = header.get_properties(header.Header, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        pass  # no attributes to test
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type="elements")
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type="elements", optional=True)
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        test_class_properties(self)
 
 
 class TestRanges(unittest.TestCase):
@@ -75,14 +54,8 @@ class TestRanges(unittest.TestCase):
         self.obj = header.Ranges(xml_tree=self.xml_tree)
         self.props = header.get_properties(header.Ranges, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        pass  # no attributes
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type="elements")
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type="elements", optional=True)
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        test_class_properties(self)
 
     def test_items(self):
         self.assertTrue(len(self.obj.range_items) > 1)
@@ -95,20 +68,21 @@ class TestRange(unittest.TestCase):
         self.obj = header.Range(xml_tree=self.xml_tree)
         self.props = header.get_properties(header.Range, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        required = get_props(self.props, prop_type="attributes")
-        test_attribs(self, self.obj, required)
-        optional = get_props(self.props, prop_type="attributes", optional=True)
-        test_attribs(self, self.obj, optional)
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type="elements")
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type="elements", optional=True)
-        optional.remove("annotation_items")
-        optional.remove("field_items")
-        optional.remove("trait_items")
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        for group in (
+            self.obj._attributes_required,
+            self.obj._elements_required,
+        ):
+            test_properties(self, group, optional=False)
+        elem_optional = self.obj._elements_optional.copy()
+        elem_optional.discard("annotation")
+        elem_optional.discard("field")
+        elem_optional.discard("trait")
+        for group in (
+            self.obj._attributes_optional,
+            elem_optional,
+        ):
+            test_properties(self, group, optional=True)
 
 
 class TestRangeElement(unittest.TestCase):
@@ -118,17 +92,18 @@ class TestRangeElement(unittest.TestCase):
         self.obj = header.RangeElement(xml_tree=self.xml_tree)
         self.props = header.get_properties(header.RangeElement, config.LIFT_VERSION)  # noqa: E501
 
-    def test_attribs(self):
-        required = get_props(self.props, prop_type="attributes")
-        test_attribs(self, self.obj, required)
-        optional = get_props(self.props, prop_type="attributes", optional=True)
-        test_attribs(self, self.obj, optional)
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type="elements")
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type="elements", optional=True)
-        optional.remove("annotation_items")
-        optional.remove("field_items")
-        optional.remove("trait_items")
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        for group in (
+            self.obj._attributes_required,
+            self.obj._elements_required,
+        ):
+            test_properties(self, group, optional=False)
+        elem_optional = self.obj._elements_optional.copy()
+        elem_optional.discard("annotation")
+        elem_optional.discard("field")
+        elem_optional.discard("trait")
+        for group in (
+            self.obj._attributes_optional,
+            elem_optional,
+        ):
+            test_properties(self, group, optional=True)
