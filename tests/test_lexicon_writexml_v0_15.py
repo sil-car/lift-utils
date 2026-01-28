@@ -2,7 +2,7 @@ import unittest
 
 from lift_utils import base, config, datatypes, lexicon, utils
 
-LIFT_VERSION = "0.15"
+LIFT_VERSION = config.LIFT_VERSION_LATEST
 
 
 class TestEntry(unittest.TestCase):
@@ -91,8 +91,8 @@ class TestExtensible(unittest.TestCase):
         obj.date_created = datatypes.DateTime("0000-00-00")
         obj.date_modified = datatypes.DateTime("0000-00-00")
         obj.field_items = [
-            base.Field(field_type=""),
-            base.Field(field_type=""),
+            base.Field(name="", field_type=""),
+            base.Field(name="", field_type=""),
         ]
         obj.trait_items = [
             base.Trait(name="", value=""),
@@ -114,8 +114,8 @@ class TestExtensible(unittest.TestCase):
             <form lang="">
                 <text/>
             </form>
-            <field type=""/>
-            <field type=""/>
+            <field name="" type=""/>
+            <field name= "" type=""/>
             <trait name="" value=""/>
             <trait name="" value=""/>
             <annotation name="" value=""/>
