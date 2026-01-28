@@ -1,30 +1,21 @@
-# flake8: noqa
-
 import unittest
-from lxml import etree
 
-from .utils import compare_xml_trees
+from lift_utils import base, config, datatypes, lexicon, utils
 
-from lift_utils import base
-from lift_utils import config
-from lift_utils import datatypes
-from lift_utils import lexicon
-from lift_utils import utils
-
-LIFT_VERSION = '0.13'
+LIFT_VERSION = "0.15"
 
 
 class TestEntry(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Entry()
-        obj.id = lexicon.RefId('unique-entry-and-sense-id')
+        obj.id = lexicon.RefId("unique-entry-and-sense-id")
         obj.lexical_unit = lexicon.Multitext()
         obj.sense_items = [lexicon.Sense()]
         obj.date_created = None
         obj.sense_items[0].date_created = None
 
-        xml = f"""
+        xml = """
         <entry id="unique-entry-and-sense-id">
             <lexical-unit/>
             <sense/>
@@ -33,24 +24,21 @@ class TestEntry(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
 class TestEtymology(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
-        obj = lexicon.Etymology(
-            etym_type=datatypes.Key("Etype"),
-            source="Esource"
-        )
+        obj = lexicon.Etymology(etym_type=datatypes.Key("Etype"), source="Esource")
         obj.gloss_items = [
             base.Gloss(lang="", text=""),
             base.Gloss(lang="", text=""),
         ]
         obj.form = base.Form(lang="", text="")
 
-        xml = f"""
+        xml = """
         <etymology type="Etype" source="Esource">
             <gloss lang="">
                 <text/>
@@ -66,7 +54,7 @@ class TestEtymology(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -74,12 +62,10 @@ class TestExample(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Example()
-        obj.source = base.Key('example source')
-        obj.translation_items = [
-            lexicon.Translation()
-        ]
+        obj.source = base.Key("example source")
+        obj.translation_items = [lexicon.Translation()]
 
-        xml = f"""
+        xml = """
         <example source="example source">
             <translation/>
         </example>
@@ -87,7 +73,7 @@ class TestExample(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -101,7 +87,7 @@ class TestExtensible(unittest.TestCase):
             base.Gloss(lang="", text=""),
             base.Gloss(lang="", text=""),
         ]
-        obj.form = base.Form(lang='', text='')
+        obj.form = base.Form(lang="", text="")
         obj.date_created = datatypes.DateTime("0000-00-00")
         obj.date_modified = datatypes.DateTime("0000-00-00")
         obj.field_items = [
@@ -109,8 +95,8 @@ class TestExtensible(unittest.TestCase):
             base.Field(field_type=""),
         ]
         obj.trait_items = [
-            base.Trait(name='', value=''),
-            base.Trait(name='', value=''),
+            base.Trait(name="", value=""),
+            base.Trait(name="", value=""),
         ]
         obj.annotation_items = [
             base.Annotation(name="", value=""),
@@ -139,7 +125,7 @@ class TestExtensible(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -148,10 +134,10 @@ class TestGrammaticalInfo(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.GrammaticalInfo(value="g-i-value")
         obj.trait_items = [
-            base.Trait(name='', value=''),
+            base.Trait(name="", value=""),
         ]
 
-        xml = f"""
+        xml = """
         <grammatical-info value="g-i-value">
             <trait name="" value=""/>
         </grammatical-info>
@@ -159,13 +145,13 @@ class TestGrammaticalInfo(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
 class TestLexicon(unittest.TestCase):
     def test_xml(self):
-        obj = lexicon.Lexicon(version='0.13')
+        obj = lexicon.Lexicon(version="0.13")
         obj.producer = f"LIFTUtils {config.LIB_VERSION}"
         obj.entry_items = [
             lexicon.Entry(),
@@ -180,7 +166,7 @@ class TestLexicon(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -190,13 +176,10 @@ class TestNote(unittest.TestCase):
         obj = lexicon.Note()
         obj.type = datatypes.Key("note-type")
         obj.form_items = [
-            base.Form(
-                lang=datatypes.Lang("en"),
-                text=base.Text("This is a note")
-            )
+            base.Form(lang=datatypes.Lang("en"), text=base.Text("This is a note"))
         ]
 
-        xml = f"""
+        xml = """
         <note type="note-type">
             <form lang="en">
                 <text>This is a note</text>
@@ -207,14 +190,14 @@ class TestNote(unittest.TestCase):
         # compare_xml_trees(obj._to_xml_tree(), xml_tree)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
 class TestPhonetic(unittest.TestCase):
     def test_xml(self):
-        href1 = 'https://example.com'
-        href2 = 'file:///home/user/audio.wav'
+        href1 = "https://example.com"
+        href2 = "file:///home/user/audio.wav"
         config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Phonetic()
         obj.media_items = [
@@ -238,7 +221,7 @@ class TestPhonetic(unittest.TestCase):
         # compare_xml_trees(obj._to_xml_tree(), xml_tree)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -246,14 +229,11 @@ class TestRelation(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Relation(
-            rel_type=base.Key("rel-type"),
-            ref=lexicon.RefId("ref-id")
+            rel_type=base.Key("rel-type"), ref=lexicon.RefId("ref-id")
         )
-        obj.usage_items = [
-            base.Multitext()
-        ]
+        obj.usage_items = [base.Multitext()]
 
-        xml = f"""
+        xml = """
         <relation type="rel-type" ref="ref-id">
             <usage/>
         </relation>
@@ -261,7 +241,7 @@ class TestRelation(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -272,7 +252,7 @@ class TestReversal(unittest.TestCase):
         obj.main = lexicon.Reversal()
         obj.grammatical_info = lexicon.GrammaticalInfo(value="g-i-value")
 
-        xml = f"""
+        xml = """
         <reversal>
             <main/>
             <grammatical-info value="g-i-value"/>
@@ -281,7 +261,7 @@ class TestReversal(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -295,7 +275,7 @@ class TestSense(unittest.TestCase):
         obj.date_created = None
         obj.subsense_items[0].date_created = None
 
-        xml = f"""
+        xml = """
         <sense>
             <grammatical-info/>
             <definition/>
@@ -305,7 +285,7 @@ class TestSense(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -313,12 +293,10 @@ class TestTranslation(unittest.TestCase):
     def test_xml(self):
         config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Translation()
-        obj.type = base.Key('literal')
-        obj.form_items = [
-            base.Form(lang="", text="")
-        ]
+        obj.type = base.Key("literal")
+        obj.form_items = [base.Form(lang="", text="")]
 
-        xml = f"""
+        xml = """
         <translation type="literal">
             <form lang="">
                 <text/>
@@ -328,7 +306,7 @@ class TestTranslation(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
 
 
@@ -339,7 +317,7 @@ class TestVariant(unittest.TestCase):
         obj.pronunciation_items = [lexicon.Phonetic()]
         obj.relation_items = [lexicon.Relation()]
 
-        xml = f"""
+        xml = """
         <variant>
             <pronunciation/>
             <relation/>
@@ -348,5 +326,5 @@ class TestVariant(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
