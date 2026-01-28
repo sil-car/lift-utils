@@ -16,7 +16,6 @@ class TestFieldDefinition(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//field")  # noqa: E501
         self.obj = header.FieldDefinition(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.FieldDefinition, config.LIFT_VERSION)  # noqa: E501
 
     def test_properties(self):
         test_class_properties(self)
@@ -27,7 +26,6 @@ class TestFields(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//fields")  # noqa: E501
         self.obj = header.Fields(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Fields, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -41,7 +39,6 @@ class TestHeader(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//header")  # noqa: E501
         self.obj = header.Header(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Header, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -52,7 +49,6 @@ class TestRanges(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//ranges")  # noqa: E501
         self.obj = header.Ranges(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Ranges, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -66,7 +62,6 @@ class TestRange(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//range")  # noqa: E501
         self.obj = header.Range(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Range, config.LIFT_VERSION)
 
     def test_properties(self):
         for group in (
@@ -90,7 +85,6 @@ class TestRangeElement(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//range-element")  # noqa: E501
         self.obj = header.RangeElement(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.RangeElement, config.LIFT_VERSION)  # noqa: E501
 
     def test_properties(self):
         for group in (

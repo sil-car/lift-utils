@@ -16,7 +16,6 @@ class TestAnnotation(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find(".//annotation")  # noqa: E501
         self.obj = base.Annotation(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.Annotation, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -26,7 +25,6 @@ class TestExtensible(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
         self.obj = base.Extensible(etree.parse(ENTRY_LIFT_GOOD).getroot())
-        self.props = base.get_properties(base.Extensible, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -37,7 +35,6 @@ class TestField(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find(".//field")
         self.obj = base.Field(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.Field, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -48,7 +45,6 @@ class TestForm(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find(".//form")
         self.obj = base.Form(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.Form, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -59,7 +55,6 @@ class TestGloss(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find(".//gloss")
         self.obj = base.Gloss(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.Gloss, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -70,7 +65,6 @@ class TestMultitext(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find(".//annotation")  # noqa: E501
         self.obj = base.Multitext(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.Multitext, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -81,7 +75,6 @@ class TestSpan(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find(".//span")
         self.obj = base.Span(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.Span, config.LIFT_VERSION)
 
     def test_properties(self):
         for group in (
@@ -109,7 +102,6 @@ class TestText(unittest.TestCase):
                 break
         if not self.obj:
             raise AssertionError
-        self.props = base.get_properties(base.Text, config.LIFT_VERSION)
 
     def test_properties(self):
         for group in (
@@ -131,7 +123,6 @@ class TestTrait(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find("trait")
         self.obj = base.Trait(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.Trait, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
@@ -142,7 +133,6 @@ class TestURLRef(unittest.TestCase):
         config.LIFT_VERSION = LIFT_VERSION
         self.xml_tree = etree.parse(ENTRY_LIFT_GOOD).getroot().find(".//urlref")  # noqa: E501
         self.obj = base.URLRef(xml_tree=self.xml_tree)
-        self.props = base.get_properties(base.URLRef, config.LIFT_VERSION)
 
     def test_properties(self):
         test_class_properties(self)
