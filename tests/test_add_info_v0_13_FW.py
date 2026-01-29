@@ -2,8 +2,9 @@ import unittest
 
 from lift_utils import base, datatypes, errors, lexicon
 
-from . import LEXICON
+from . import SANGO_LIFT
 
+LEXICON = lexicon.Lexicon(SANGO_LIFT)
 FIRST_ENTRY = LEXICON.entry_items[0]
 FIRST_ENTRY_LAST_MODIFIED = FIRST_ENTRY.date_modified
 FIRST_SENSE = FIRST_ENTRY.sense_items[0]
