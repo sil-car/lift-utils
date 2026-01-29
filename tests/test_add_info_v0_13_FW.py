@@ -221,8 +221,8 @@ class TestModifyLexiconItems(unittest.TestCase):
         )
         media_item = entry.pronunciation_items[0].media_items[0]
         self.assertEqual(media_item.href, "file:///home/user/pronunciation.wav")
-        self.assertEqual(len(media_item.label_items[0].form_items), 2)
-        for f in media_item.label_items[0].form_items:
+        self.assertEqual(len(media_item.label.form_items), 2)
+        for f in media_item.label.form_items:
             self.assertIn(f.lang, labels.keys())
             self.assertIn(str(f.text), labels.values())
         self.assertIsNotNone(self.entry.date_modified)
