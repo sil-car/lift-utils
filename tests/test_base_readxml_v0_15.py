@@ -9,6 +9,7 @@ from .utils import test_class_properties, test_properties
 
 ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_v0.15.lift")
 LIFT_VERSION = config.LIFT_VERSION_LATEST
+config.LIFT_VERSION = None
 
 
 class TestAnnotation(unittest.TestCase):
@@ -20,6 +21,9 @@ class TestAnnotation(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestExtensible(unittest.TestCase):
     def setUp(self):
@@ -28,6 +32,9 @@ class TestExtensible(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestField(unittest.TestCase):
@@ -39,6 +46,9 @@ class TestField(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestForm(unittest.TestCase):
     def setUp(self):
@@ -48,6 +58,9 @@ class TestForm(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestGloss(unittest.TestCase):
@@ -59,6 +72,9 @@ class TestGloss(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestMultitext(unittest.TestCase):
     def setUp(self):
@@ -68,6 +84,9 @@ class TestMultitext(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestSpan(unittest.TestCase):
@@ -89,6 +108,9 @@ class TestSpan(unittest.TestCase):
             elements_optional,
         ):
             test_properties(self, group, optional=True)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestText(unittest.TestCase):
@@ -117,6 +139,9 @@ class TestText(unittest.TestCase):
         ):
             test_properties(self, group, optional=True)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestTrait(unittest.TestCase):
     def setUp(self):
@@ -127,6 +152,9 @@ class TestTrait(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestURLRef(unittest.TestCase):
     def setUp(self):
@@ -136,3 +164,6 @@ class TestURLRef(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None

@@ -9,6 +9,7 @@ from .utils import test_class_properties, test_properties
 
 HEADER_LIFT_GOOD = str(DATA_PATH / "header_good_v0.15.lift")
 LIFT_VERSION = config.LIFT_VERSION_LATEST
+config.LIFT_VERSION = None
 
 
 class TestFieldDefinition(unittest.TestCase):
@@ -19,6 +20,9 @@ class TestFieldDefinition(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestFields(unittest.TestCase):
@@ -33,6 +37,9 @@ class TestFields(unittest.TestCase):
     def test_items(self):
         self.assertTrue(len(self.obj.field_items) > 1)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestHeader(unittest.TestCase):
     def setUp(self):
@@ -42,6 +49,9 @@ class TestHeader(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRanges(unittest.TestCase):
@@ -55,6 +65,9 @@ class TestRanges(unittest.TestCase):
 
     def test_items(self):
         self.assertTrue(len(self.obj.range_items) > 1)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRange(unittest.TestCase):
@@ -79,6 +92,9 @@ class TestRange(unittest.TestCase):
         ):
             test_properties(self, group, optional=True)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestRangeElement(unittest.TestCase):
     def setUp(self):
@@ -101,3 +117,6 @@ class TestRangeElement(unittest.TestCase):
             elem_optional,
         ):
             test_properties(self, group, optional=True)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None

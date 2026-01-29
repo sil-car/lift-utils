@@ -9,6 +9,7 @@ from .utils import test_class_properties, test_properties
 
 ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_v0.13_FW.lift")
 LIFT_VERSION = "0.13"
+config.LIFT_VERSION = None
 
 
 class TestAnnotation(unittest.TestCase):
@@ -20,6 +21,9 @@ class TestAnnotation(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestExtensible(unittest.TestCase):
     def setUp(self):
@@ -28,6 +32,9 @@ class TestExtensible(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestField(unittest.TestCase):
@@ -39,6 +46,9 @@ class TestField(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestForm(unittest.TestCase):
     def setUp(self):
@@ -49,6 +59,9 @@ class TestForm(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestGloss(unittest.TestCase):
     def setUp(self):
@@ -58,6 +71,9 @@ class TestGloss(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestMultitextText(unittest.TestCase):
@@ -83,6 +99,9 @@ class TestMultitextText(unittest.TestCase):
         ):
             test_properties(self, group, optional=True)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestMultitextForm(unittest.TestCase):
     def setUp(self):
@@ -92,6 +111,9 @@ class TestMultitextForm(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestSpan(unittest.TestCase):
@@ -114,6 +136,9 @@ class TestSpan(unittest.TestCase):
         ):
             test_properties(self, group, optional=True)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestText(unittest.TestCase):
     def setUp(self):
@@ -123,6 +148,9 @@ class TestText(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestTrait(unittest.TestCase):
@@ -134,6 +162,9 @@ class TestTrait(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestURLRef(unittest.TestCase):
     def setUp(self):
@@ -143,3 +174,6 @@ class TestURLRef(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None

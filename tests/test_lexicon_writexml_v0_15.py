@@ -3,11 +3,14 @@ import unittest
 from lift_utils import base, config, datatypes, lexicon, utils
 
 LIFT_VERSION = config.LIFT_VERSION_LATEST
+config.LIFT_VERSION = None
 
 
 class TestEntry(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Entry()
         obj.id = lexicon.RefId("unique-entry-and-sense-id")
         obj.lexical_unit = lexicon.Multitext()
@@ -27,10 +30,15 @@ class TestEntry(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestEtymology(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Etymology(etym_type=datatypes.Key("Etype"), source="Esource")
         obj.gloss_items = [
             base.Gloss(lang="", text=""),
@@ -57,10 +65,15 @@ class TestEtymology(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestExample(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Example()
         obj.source = base.Key("example source")
         obj.translation_items = [lexicon.Translation()]
@@ -76,10 +89,15 @@ class TestExample(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestExtensible(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Etymology()
         obj.type = datatypes.Key("Etype")
         obj.source = "Esource"
@@ -128,10 +146,15 @@ class TestExtensible(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestGrammaticalInfo(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.GrammaticalInfo(value="g-i-value")
         obj.trait_items = [
             base.Trait(name="", value=""),
@@ -147,6 +170,9 @@ class TestGrammaticalInfo(unittest.TestCase):
             utils.etree_to_xmlstring(obj._to_xml_tree()),
             utils.etree_to_xmlstring(xml_tree),
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestLexicon(unittest.TestCase):
@@ -169,10 +195,15 @@ class TestLexicon(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestNote(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Note()
         obj.type = datatypes.Key("note-type")
         obj.form_items = [
@@ -193,12 +224,17 @@ class TestNote(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestPhonetic(unittest.TestCase):
+    def setUp(self):
+        config.LIFT_VERSION = LIFT_VERSION
+
     def test_xml(self):
         href1 = "https://example.com"
         href2 = "file:///home/user/audio.wav"
-        config.LIFT_VERSION = LIFT_VERSION
         obj = lexicon.Phonetic()
         obj.media_items = [
             base.URLRef(href=href1),
@@ -224,10 +260,15 @@ class TestPhonetic(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestRelation(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Relation(
             rel_type=base.Key("rel-type"), ref=lexicon.RefId("ref-id")
         )
@@ -244,10 +285,15 @@ class TestRelation(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestReversal(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Reversal()
         obj.main = lexicon.Reversal()
         obj.grammatical_info = lexicon.GrammaticalInfo(value="g-i-value")
@@ -264,10 +310,15 @@ class TestReversal(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestSense(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Sense()
         obj.grammatical_info = lexicon.GrammaticalInfo()
         obj.definition = lexicon.Multitext()
@@ -288,10 +339,15 @@ class TestSense(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestTranslation(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Translation()
         obj.type = base.Key("literal")
         obj.form_items = [base.Form(lang="", text="")]
@@ -309,10 +365,15 @@ class TestTranslation(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestVariant(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = lexicon.Variant()
         obj.pronunciation_items = [lexicon.Phonetic()]
         obj.relation_items = [lexicon.Relation()]
@@ -328,3 +389,6 @@ class TestVariant(unittest.TestCase):
             utils.etree_to_xmlstring(obj._to_xml_tree()),
             utils.etree_to_xmlstring(xml_tree),
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None

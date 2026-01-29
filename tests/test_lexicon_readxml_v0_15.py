@@ -9,6 +9,7 @@ from .utils import test_class_properties
 
 LIFT_GOOD = str(DATA_PATH / "lexicon_good_v0.15.lift")
 LIFT_VERSION = "0.15"
+config.LIFT_VERSION = None
 
 
 class TestEntry(unittest.TestCase):
@@ -20,6 +21,9 @@ class TestEntry(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestEtymology(unittest.TestCase):
     def setUp(self):
@@ -29,6 +33,9 @@ class TestEtymology(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestExample(unittest.TestCase):
@@ -40,6 +47,9 @@ class TestExample(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestGrammaticalInfo(unittest.TestCase):
     def setUp(self):
@@ -49,6 +59,9 @@ class TestGrammaticalInfo(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestLexicon(unittest.TestCase):
@@ -60,6 +73,9 @@ class TestLexicon(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestNote(unittest.TestCase):
     def setUp(self):
@@ -69,6 +85,9 @@ class TestNote(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestPhonetic(unittest.TestCase):
@@ -80,6 +99,9 @@ class TestPhonetic(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestRelation(unittest.TestCase):
     def setUp(self):
@@ -89,6 +111,9 @@ class TestRelation(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestReversal(unittest.TestCase):
@@ -100,6 +125,9 @@ class TestReversal(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestSense(unittest.TestCase):
     def setUp(self):
@@ -109,6 +137,9 @@ class TestSense(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestTranslation(unittest.TestCase):
@@ -120,6 +151,9 @@ class TestTranslation(unittest.TestCase):
     def test_properties(self):
         test_class_properties(self)
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestVariant(unittest.TestCase):
     def setUp(self):
@@ -129,3 +163,6 @@ class TestVariant(unittest.TestCase):
 
     def test_properties(self):
         test_class_properties(self)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None

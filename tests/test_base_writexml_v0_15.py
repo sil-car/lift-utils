@@ -5,11 +5,14 @@ import unittest
 from lift_utils import base, config, datatypes, utils
 
 LIFT_VERSION = "0.15"
+config.LIFT_VERSION = None
 
 
 class TestAnnotation(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         name = "annotation-name"
         value = "annotation-value"
         who = "Annotation Who"
@@ -25,10 +28,15 @@ class TestAnnotation(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestField(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = base.Field(name="field-type")
         obj.date_created = datatypes.DateTime("0000-00-00")
         obj.date_modified = datatypes.DateTime("0000-00-00")
@@ -72,10 +80,15 @@ class TestField(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestForm(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = base.Form(lang="en", text="")
         obj.annotation_items = [
             base.Annotation(
@@ -101,10 +114,15 @@ class TestForm(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestGloss(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = base.Gloss(lang="", text="")
         obj.trait_items = [
             base.Trait(name="", value=""),
@@ -124,10 +142,15 @@ class TestGloss(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestSpan(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         text = "test text"
         obj = base.Span(text=text)
         obj.lang = datatypes.Lang("en")
@@ -146,10 +169,15 @@ class TestSpan(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestText(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = base.Text("Test text")
         obj.span_items = [
             base.Span(text=""),
@@ -165,10 +193,15 @@ class TestText(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestTrait(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = base.Trait(name="TraitName", value="TraitValue")
         obj.id = datatypes.Key("TraitID")
         obj.annotation_items = [
@@ -188,10 +221,15 @@ class TestTrait(unittest.TestCase):
             utils.etree_to_xmlstring(xml_tree),
         )
 
+    def tearDown(self):
+        config.LIFT_VERSION = None
+
 
 class TestURLRef(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = base.URLRef(href="https://example.com")
         obj.label = base.Multitext()
 
@@ -205,3 +243,6 @@ class TestURLRef(unittest.TestCase):
             utils.etree_to_xmlstring(obj._to_xml_tree()),
             utils.etree_to_xmlstring(xml_tree),
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None

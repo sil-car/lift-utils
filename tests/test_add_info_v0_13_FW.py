@@ -4,6 +4,8 @@ from lift_utils import base, datatypes, errors, lexicon
 
 from . import SANGO_LIFT
 
+# NOTE: Loading the LEXICON one time because of heavy CPU overhead, and because
+# modfied times will change during testing.
 LEXICON = lexicon.Lexicon(SANGO_LIFT)
 FIRST_ENTRY = LEXICON.entry_items[0]
 FIRST_ENTRY_LAST_MODIFIED = FIRST_ENTRY.date_modified

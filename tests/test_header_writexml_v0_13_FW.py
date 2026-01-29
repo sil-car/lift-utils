@@ -11,13 +11,16 @@ from lift_utils import datatypes
 from lift_utils import header
 from lift_utils import utils
 
-LIFT_VERSION = '0.13'
+LIFT_VERSION = "0.13"
+config.LIFT_VERSION = None
 
 
 class TestFieldDefn(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        obj = header.FieldDefn(tag=base.Key('field-tag'))
+
+    def test_xml(self):
+        obj = header.FieldDefn(tag=base.Key("field-tag"))
         obj.form_items = [base.Form(lang="", text="")]
 
         xml = f"""
@@ -30,13 +33,18 @@ class TestFieldDefn(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestFieldDefns(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = header.FieldDefns()
         obj.field_items = [
             header.FieldDefn(),
@@ -50,13 +58,18 @@ class TestFieldDefns(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestHeader(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = header.Header()
         obj.ranges = header.Ranges()
         obj.ranges.range_items = [
@@ -64,9 +77,9 @@ class TestHeader(unittest.TestCase):
             header.Range(),
         ]
         for r in obj.ranges.range_items:
-            r.href = base.URL('///fake/path')
-        obj.ranges.range_items[0].id = base.Key('range-1')
-        obj.ranges.range_items[1].id = base.Key('range-2')
+            r.href = base.URL("///fake/path")
+        obj.ranges.range_items[0].id = base.Key("range-1")
+        obj.ranges.range_items[1].id = base.Key("range-2")
         obj.fields = header.FieldDefns()
         obj.fields.field_items = [
             header.FieldDefn(),
@@ -89,17 +102,21 @@ class TestHeader(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(obj.xml_tree, xml_tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj.xml_tree),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(obj.xml_tree), utils.etree_to_xmlstring(xml_tree)
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRange(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_xml(self):
         obj = header.Range()
-        obj.id = base.Key('range-id')
-        obj.href = base.URL('///fake/path')
+        obj.id = base.Key("range-id")
+        obj.href = base.URL("///fake/path")
         obj.range_element_items = [header.RangeElement()]
         obj.xml_tree = obj._to_xml_tree()
 
@@ -111,15 +128,19 @@ class TestRange(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(obj.xml_tree, xml_tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj.xml_tree),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(obj.xml_tree), utils.etree_to_xmlstring(xml_tree)
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRangeElement(unittest.TestCase):
-    def test_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        obj = header.RangeElement(elem_id='range-element-id')
+
+    def test_xml(self):
+        obj = header.RangeElement(elem_id="range-element-id")
         obj.label_items = [base.Multitext()]
 
         xml = f"""
@@ -130,13 +151,18 @@ class TestRangeElement(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         self.assertEqual(
             utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree),
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRanges(unittest.TestCase):
-    def test_lift_xml(self):
+    def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
+
+    def test_lift_xml(self):
         obj = header.Ranges()
         obj.range_items = [
             header.Range(),
@@ -150,6 +176,8 @@ class TestRanges(unittest.TestCase):
         xml_tree = utils.xmlstring_to_etree(xml)
         # compare_xml_trees(self.obj.xml_tree, xml_tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj.xml_tree),
-            utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(obj.xml_tree), utils.etree_to_xmlstring(xml_tree)
         )
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
