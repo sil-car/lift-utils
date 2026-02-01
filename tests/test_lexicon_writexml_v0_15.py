@@ -108,8 +108,8 @@ class TestExtensible(unittest.TestCase):
         obj.date_created = datatypes.DateTime("0000-00-00")
         obj.date_modified = datatypes.DateTime("0000-00-00")
         obj.field_items = [
-            base.Field(name="", field_type=""),
-            base.Field(name="", field_type=""),
+            base.Field(name=""),
+            base.Field(name=""),
         ]
         obj.trait_items = [
             base.Trait(name="", value=""),
@@ -131,8 +131,8 @@ class TestExtensible(unittest.TestCase):
             <form lang="">
                 <text/>
             </form>
-            <field name="" type=""/>
-            <field name= "" type=""/>
+            <field name=""/>
+            <field name= ""/>
             <trait name="" value=""/>
             <trait name="" value=""/>
             <annotation name="" value=""/>
@@ -175,6 +175,9 @@ class TestGrammaticalInfo(unittest.TestCase):
 
 
 class TestLexicon(unittest.TestCase):
+    def setUp(self):
+        config.LIFT_VERSION = LIFT_VERSION
+
     def test_xml(self):
         obj = lexicon.Lexicon(version="0.13")
         obj.producer = f"LIFTUtils {config.LIB_VERSION}"
