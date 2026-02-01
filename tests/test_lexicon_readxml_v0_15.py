@@ -9,7 +9,6 @@ from .utils import test_class_properties
 
 LIFT_GOOD = str(DATA_PATH / "lexicon_good_v0.15.lift")
 LIFT_VERSION = "0.15"
-config.LIFT_VERSION = None
 
 
 class TestEntry(unittest.TestCase):

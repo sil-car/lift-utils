@@ -12,7 +12,6 @@ from lift_utils import header
 from lift_utils import utils
 
 LIFT_VERSION = "0.13"
-config.LIFT_VERSION = None
 
 
 class TestFieldDefn(unittest.TestCase):

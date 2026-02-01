@@ -9,7 +9,6 @@ from .utils import test_class_properties, test_properties
 
 ENTRY_LIFT_GOOD = str(DATA_PATH / "entry_good_v0.15.lift")
 LIFT_VERSION = config.LIFT_VERSION_LATEST
-config.LIFT_VERSION = None
 
 
 class TestAnnotation(unittest.TestCase):

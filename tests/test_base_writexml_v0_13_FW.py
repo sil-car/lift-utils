@@ -5,7 +5,6 @@ import unittest
 from lift_utils import base, config, datatypes, utils
 
 LIFT_VERSION = "0.13"
-config.LIFT_VERSION = None
 
 
 class TestAnnotation(unittest.TestCase):

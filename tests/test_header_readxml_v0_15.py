@@ -9,7 +9,6 @@ from .utils import test_class_properties, test_properties
 
 HEADER_LIFT_GOOD = str(DATA_PATH / "header_good_v0.15.lift")
 LIFT_VERSION = config.LIFT_VERSION_LATEST
-config.LIFT_VERSION = None
 
 
 class TestFieldDefinition(unittest.TestCase):

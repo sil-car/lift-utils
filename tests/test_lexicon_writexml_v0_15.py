@@ -3,7 +3,6 @@ import unittest
 from lift_utils import base, config, datatypes, lexicon, utils
 
 LIFT_VERSION = config.LIFT_VERSION_LATEST
-config.LIFT_VERSION = None
 
 
 class TestEntry(unittest.TestCase):
