@@ -1,5 +1,12 @@
 """Manipulate LIFT files and data"""
 
-from .lexicon import Lexicon  # noqa: F401
-from .lexicon import Entry  # noqa: F401
-from .lexicon import Sense  # noqa: F401
+from .config import LIB_VERSION
+from .lexicon import Entry, Lexicon, Sense
+
+__all__ = [
+    Entry,
+    Lexicon,
+    Sense,
+]
+
+__version__ = LIB_VERSION
