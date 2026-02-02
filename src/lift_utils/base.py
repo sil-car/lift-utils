@@ -33,53 +33,6 @@ class LIFTUtilsBase:
         # Link to parent node for tree traversal.
         self.parent = parent
 
-    @staticmethod
-    def etree_to_obj_attributes(xml_tree, obj):
-        # Convert XML attributes to python properties.
-        attribs = [a for a in obj._attributes_required]
-        attribs.extend([a for a in obj._attributes_optional])
-        for xml_name in attribs:
-            py_name = obj.prop_name_from_xml_name(xml_name)
-            py_cls = obj.tag_classes.get(xml_name)
-            if xml_name in xml_tree.attrib.keys():
-                setattr(
-                    obj,
-                    py_name,
-                    py_cls(xml_tree.attrib.get(xml_name)),
-                )
-
-        # Convert properties to XML elements.
-        elems = [e for e in obj._elements_required]
-        elems.extend([e for e in obj._elements_optional])
-        for xml_name in elems:
-            py_name = obj.prop_name_from_xml_name(xml_name)
-            py_cls = obj.tag_classes.get(xml_name)
-            if xml_name == "pcdata":
-                if xml_tree.text:
-                    setattr(obj, py_name, py_cls(xml_tree.text))
-                continue
-            elif xml_name == "tail":
-                if xml_tree.tail:
-                    setattr(obj, py_name, py_cls(xml_tree.tail))
-                continue
-
-            if xml_name in config.MULTIPLE_ITEM_TAGS:
-                multiple = True
-            else:
-                multiple = False
-
-            for c in xml_tree.getchildren():
-                if c.tag == xml_name:
-                    if py_name.endswith("_items"):  # list-like obj/elem
-                        if not getattr(obj, py_name):
-                            # Instantiate list-like object.
-                            setattr(obj, py_name, list())
-                        getattr(obj, py_name).append(py_cls(xml_tree=c, parent=obj))
-                    else:  # single element
-                        setattr(obj, py_name, py_cls(xml_tree=c, parent=obj))
-                    if not multiple:
-                        break
-
     def print(self, _format="xml"):
         """Print the node's data to stdout; as XML by default."""
         try:
@@ -89,14 +42,6 @@ class LIFTUtilsBase:
                 raise NotImplementedError
         except BrokenPipeError:
             sys.stdout = None
-
-    def _add_list_item(self, _name, _class, **kwargs):
-        new_obj = _class(parent=self, **kwargs)
-        if getattr(self, _name) is None:
-            setattr(self, _name, [new_obj])
-        else:
-            getattr(self, _name).append(new_obj)
-        return new_obj
 
     def prop_name_from_xml_name(self, xml_name):
         """Return the object property name from the given XML attribute or
@@ -132,14 +77,65 @@ class LIFTUtilsBase:
                 name = "name"
         return name
 
-    def _update_attribs_and_elems(self):
-        for prop_type, prop_data in self._properties.items():
-            for importance, values in prop_data.items():
-                getattr(self, f"_{prop_type}_{importance}").update(values)
+    def show(self):
+        """Print an overview of the object in the terminal window."""
+        for k, v in self.__dict__.items():
+            if not k.startswith("_"):
+                print(f"{k}: {v}")
+
+    def _add_list_item(self, _name, _class, **kwargs):
+        new_obj = _class(parent=self, **kwargs)
+        if getattr(self, _name) is None:
+            setattr(self, _name, [new_obj])
+        else:
+            getattr(self, _name).append(new_obj)
+        return new_obj
 
     def _from_xml_tree(self, xml_tree):
-        # Update object attributes.
-        LIFTUtilsBase.etree_to_obj_attributes(xml_tree, self)
+        # Convert XML attributes to python properties.
+        attribs = [a for a in self._attributes_required]
+        attribs.extend([a for a in self._attributes_optional])
+        for xml_name in attribs:
+            py_name = self.prop_name_from_xml_name(xml_name)
+            py_cls = self.tag_classes.get(xml_name)
+            if xml_name in xml_tree.attrib.keys():
+                setattr(
+                    self,
+                    py_name,
+                    py_cls(xml_tree.attrib.get(xml_name)),
+                )
+
+        # Convert properties to XML elements.
+        elems = [e for e in self._elements_required]
+        elems.extend([e for e in self._elements_optional])
+        for xml_name in elems:
+            py_name = self.prop_name_from_xml_name(xml_name)
+            py_cls = self.tag_classes.get(xml_name)
+            if xml_name == "pcdata":
+                if xml_tree.text:
+                    setattr(self, py_name, py_cls(xml_tree.text))
+                continue
+            elif xml_name == "tail":
+                if xml_tree.tail:
+                    setattr(self, py_name, py_cls(xml_tree.tail))
+                continue
+
+            if xml_name in config.MULTIPLE_ITEM_TAGS:
+                multiple = True
+            else:
+                multiple = False
+
+            for c in xml_tree.getchildren():
+                if c.tag == xml_name:
+                    if py_name.endswith("_items"):  # list-like obj/elem
+                        if not getattr(self, py_name):
+                            # Instantiate list-like object.
+                            setattr(self, py_name, list())
+                        getattr(self, py_name).append(py_cls(xml_tree=c, parent=self))
+                    else:  # single element
+                        setattr(self, py_name, py_cls(xml_tree=c, parent=self))
+                    if not multiple:
+                        break
 
     def _to_xml_tree(self, tag=None):
         # TODO: Why isn't self.XML_TAG sufficient in every case here?
@@ -184,11 +180,10 @@ class LIFTUtilsBase:
             xml_tree = self._to_xml_tree()
         return etree_to_xmlstring(xml_tree)
 
-    def show(self):
-        """Print an overview of the object in the terminal window."""
-        for k, v in self.__dict__.items():
-            if not k.startswith("_"):
-                print(f"{k}: {v}")
+    def _update_attribs_and_elems(self):
+        for prop_type, prop_data in self._properties.items():
+            for importance, values in prop_data.items():
+                getattr(self, f"_{prop_type}_{importance}").update(values)
 
 
 class Span(LIFTUtilsBase):

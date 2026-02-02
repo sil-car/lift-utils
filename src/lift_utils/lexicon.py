@@ -1149,7 +1149,7 @@ class Lexicon(LIFTUtilsBase):
         # Allow global access to version number.
         config.LIFT_VERSION = self.version
         # Update object attributes.
-        LIFTUtilsBase.etree_to_obj_attributes(xml_tree, self)
+        super()._from_xml_tree(xml_tree)
         # Update header range data from external file(s).
         ext_hrefs = set()
         for r in self.header.ranges.range_items:
