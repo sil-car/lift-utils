@@ -17,12 +17,39 @@ def ellipsize(string, length):
 
 
 def etree_to_obj_attributes(xml_tree, obj, props):
-    prop_attribs = props.get("attributes")
-    if prop_attribs:
-        for name, values in prop_attribs.items():
-            key = config.PY_XML_NAMES.get(name, name)
-            if key in xml_tree.attrib.keys():
-                obj.__dict__[name] = values[0](xml_tree.attrib.get(key))
+    # Convert XML attributes to python properties.
+    attribs = [a for a in obj._attributes_required]
+    attribs.extend([a for a in obj._attributes_optional])
+    for xml_name in attribs:
+        py_name = obj.prop_name_from_xml_name(xml_name)
+        if xml_name in xml_tree.attrib.keys():
+            setattr(
+                obj,
+                py_name,
+                obj.tag_classes.get(xml_name)(xml_tree.attrib.get(xml_name)),
+            )
+
+    # Convert properties to XML elements.
+    # elems = [e for e in obj._elements_required]
+    # elems.extend([e for e in obj._elements_optional])
+    # for xml_name in elems:
+    #     py_name = obj.prop_name_from_xml_name(xml_name)
+    #     if xml_name == "pcdata":
+    #         if xml_tree.text:
+    #             setattr(obj, py_name, obj.tag_classes.get(xml_name)(xml_tree.text))
+    #         continue
+    #     elif xml_name == "tail":
+    #         if xml_tree.tail:
+    #             setattr(obj, py_name, obj.tag_classes.get(xml_name)(xml_tree.tail))
+    #         continue
+
+    #     if xml_name in config.MULTIPLE_ITEM_TAGS:
+    #         multiple = True
+    #     else:
+    #         multiple = False
+
+    #     for c in xml_tree.getchildren():
+    #         if c.tag == xml_name:
 
     prop_elems = props.get("elements")
     if prop_elems:
@@ -48,46 +75,11 @@ def etree_to_obj_attributes(xml_tree, obj, props):
                         if not obj.__dict__.get(name):
                             # Instantiate list-like object.
                             obj.__dict__[name] = values[0]()
-                        obj.__dict__[name].append(values[1](xml_tree=c))
+                        obj.__dict__[name].append(values[1](xml_tree=c, parent=obj))
                     else:  # single element
-                        obj.__dict__[name] = values[0](xml_tree=c)
+                        obj.__dict__[name] = values[0](xml_tree=c, parent=obj)
                     if not multiple:
                         break
-
-
-def obj_attributes_to_etree(obj, root_tag):
-    xml_tree = etree.Element(root_tag)
-
-    # Convert properties to XML attributes.
-    attribs = [a for a in obj._attributes_required]
-    attribs.extend([a for a in obj._attributes_optional])
-    for xml_name in attribs:
-        # Get attribute's value from attribute's XML name, which might be
-        # different from the Python name.
-        val = getattr(obj, obj.prop_name_from_xml_name(xml_name))
-        if val is not None:
-            xml_tree.set(xml_name, str(val))
-
-    # Convert properties to XML elements.
-    elems = [e for e in obj._elements_required]
-    elems.extend([e for e in obj._elements_optional])
-    for xml_name in elems:
-        py_name = obj.prop_name_from_xml_name(xml_name)
-        val = getattr(obj, py_name)
-        if not val:
-            continue
-        if hasattr(val, "append"):  # list-like child element
-            for o in getattr(obj, py_name):
-                xml_tree.append(obj_attributes_to_etree(o, xml_name))
-        elif py_name == "pcdata":  # special text element
-            xml_tree.text = val
-        elif py_name == "tail":  # special tail element
-            xml_tree.tail = val
-        else:  # single child element
-            o = getattr(obj, py_name)
-            xml_tree.append(obj_attributes_to_etree(o, xml_name))
-
-    return xml_tree
 
 
 def unicode_sort(in_list):
@@ -248,9 +240,6 @@ def search_sense(sense, text, field, target_groups, header_fields, match_type, g
                     items.append(sense)
     elif field == "definition":
         if not sense.definition or not sense.definition.form_items:  # noqa: E501
-            # print(f"{sense.definition=}")
-            if sense.definition and sense.definition.form_items is not None:
-                print(f"{sense.definition.form_items=}")
             if not get_all:
                 return
             else:

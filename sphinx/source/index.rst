@@ -43,7 +43,7 @@ zûu (sg)                zûu_137d7f37-ceff-464a-9d7f-00febbcfd439
 >>> type(item)
 <class 'lift_utils.lexicon.Entry'>
 >>> item.show()
-_xml_tag: entry
+xml_tag: entry
 date_created: 2017-02-25T11:03:30Z
 date_modified: 2022-05-07T14:15:56Z
 field_items: None

@@ -8,36 +8,43 @@ from lxml import etree
 from . import config
 from .datatypes import URL, DateTime, Key, Lang, PCData
 from .errors import RequiredValueError
-from .utils import etree_to_obj_attributes, etree_to_xmlstring, obj_attributes_to_etree
+from .utils import etree_to_obj_attributes, etree_to_xmlstring
 
 
 class LIFTUtilsBase:
-    """This is a base class for all LIFT-related objects in this package.
+    """This is a base class for all LIFT nodes.
 
-    :ivar etree._Element xml_tree: The object's current data.
+    :ivar etree._Element xml_tree: The node's current data.
     """
 
-    ATTRIBUTES_REQUIRED = set()
-    ATTRIBUTES_OPTIONAL = set()
-    ELEMENTS_REQUIRED = set()
-    ELEMENTS_OPTIONAL = set()
+    XML_TAG = None
 
-    def __init__(self, xml_tree: etree._Element = None):
-        self._set_attribs_and_elems()
-        self._xml_tag = None
+    def __init__(self, parent=None, xml_tree: etree._Element = None):
+        # Store names of required and optional attributes and elements for this
+        # node for later verification.
+        self._properties = dict()
+        # Initialize property values.
+        self._attributes_required = set()
+        self._attributes_optional = set()
+        self._elements_required = set()
+        self._elements_optional = set()
+        # Store a cumulative dict of "tag name": "Python class".
+        self.tag_classes = dict()
+        # Link to parent node for tree traversal.
+        self.parent = parent
 
     def print(self, _format="xml"):
-        """Print the object's data to stdout; as XML by default."""
+        """Print the node's data to stdout; as XML by default."""
         try:
             if _format == "xml":
                 print(self._to_xml(), flush=True)
             else:
-                return
+                raise NotImplementedError
         except BrokenPipeError:
             sys.stdout = None
 
     def _add_list_item(self, _name, _class, **kwargs):
-        new_obj = _class(**kwargs)
+        new_obj = _class(parent=self, **kwargs)
         if getattr(self, _name) is None:
             setattr(self, _name, [new_obj])
         else:
@@ -48,6 +55,9 @@ class LIFTUtilsBase:
         return get_properties(self.__class__, config.LIFT_VERSION)
 
     def prop_name_from_xml_name(self, xml_name):
+        """Return the object property name from the given XML attribute or
+        element name."""
+
         name = None
         exc = {
             "description": (
@@ -70,37 +80,59 @@ class LIFTUtilsBase:
                 name = xml_name
         if name is None:
             name = config.XML_PY_NAMES.get(xml_name, xml_name)
+        if config.LIFT_VERSION == "0.13":
+            if self.__class__.__name__ == "Field" and name == "name":
+                name = "type"
+        else:
+            if self.__class__.__name__ == "Field" and name == "type":
+                name = "name"
         return name
 
-    def _set_attribs_and_elems(self):
-        c_props = (
-            "ATTRIBUTES_REQUIRED",
-            "ATTRIBUTES_OPTIONAL",
-            "ELEMENTS_REQUIRED",
-            "ELEMENTS_OPTIONAL",
-        )
-        s_props = (
-            "_attributes_required",
-            "_attributes_optional",
-            "_elements_required",
-            "_elements_optional",
-        )
-        for c, s in zip(c_props, s_props):
-            new_items = getattr(self, c).copy()
-            if hasattr(self, s):
-                # Super class already defines the properties; we need to add to
-                # them.
-                getattr(self, s).update(new_items)
-            else:
-                # Properties need to be definied initially.
-                setattr(self, s, new_items)
+    def _update_attribs_and_elems(self):
+        for prop_type, prop_data in self._properties.items():
+            for importance, values in prop_data.items():
+                getattr(self, f"_{prop_type}_{importance}").update(values)
 
     def _update_from_xml(self, xml_tree):
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self, self._get_properties())
 
-    def _to_xml_tree(self):
-        xml_tree = obj_attributes_to_etree(self, self._xml_tag)
+    def _to_xml_tree(self, tag=None):
+        # TODO: Why isn't self.XML_TAG sufficient in every case here?
+        if tag:
+            xml_tag = tag
+        else:
+            xml_tag = self.XML_TAG
+        xml_tree = etree.Element(xml_tag)
+
+        # Convert properties to XML attributes.
+        attribs = [a for a in self._attributes_required]
+        attribs.extend([a for a in self._attributes_optional])
+        for xml_name in attribs:
+            # Get attribute's value from attribute's XML name, which might be
+            # different from the Python name.
+            val = getattr(self, self.prop_name_from_xml_name(xml_name))
+            if val is not None:
+                xml_tree.set(xml_name, str(val))
+
+        # Convert properties to XML elements.
+        elems = [e for e in self._elements_required]
+        elems.extend([e for e in self._elements_optional])
+        for xml_name in elems:
+            py_name = self.prop_name_from_xml_name(xml_name)
+            val = getattr(self, py_name)
+            if not val:
+                continue
+            if hasattr(val, "append"):  # list-like child element
+                for o in getattr(self, py_name):
+                    xml_tree.append(o._to_xml_tree(tag=xml_name))
+            elif py_name == "pcdata":  # special text element
+                xml_tree.text = val
+            elif py_name == "tail":  # special tail element
+                xml_tree.tail = val
+            else:  # single child element
+                o = getattr(self, py_name)
+                xml_tree.append(o._to_xml_tree(tag=xml_name))
         return xml_tree
 
     def _to_xml(self, xml_tree=None):
@@ -118,10 +150,7 @@ class LIFTUtilsBase:
 class Span(LIFTUtilsBase):
     """A Unicode string marked with language and formatting information."""
 
-    ATTRIBUTES_REQUIRED = set()
-    ATTRIBUTES_OPTIONAL = set(("lang", "href", "class"))
-    ELEMENTS_REQUIRED = set(("pcdata",))
-    ELEMENTS_OPTIONAL = set(("tail", "span"))
+    XML_TAG = "span"
 
     def __init__(
         self,
@@ -131,10 +160,31 @@ class Span(LIFTUtilsBase):
         href: str = None,
         span_class: str = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "span"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("lang", "href", "class")),
+            },
+            "elements": {
+                "required": set(("pcdata",)),
+                "optional": set(("tail", "span")),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "lang": Lang,
+                "href": URL,
+                "class": str,
+                "pcdata": PCData,
+                "span": Span,
+            }
+        )
+
         # attributes
         self.lang: Optional[Lang] = None
         self.href: Optional[URL] = None
@@ -175,9 +225,7 @@ class Trait(LIFTUtilsBase):
     It can also be used for adding binary constraints.
     """
 
-    ATTRIBUTES_REQUIRED = set(("name", "value"))
-    ATTRIBUTES_OPTIONAL = set(("id",))
-    ELEMENTS_OPTIONAL = set(("annotation",))
+    XML_TAG = "trait"
 
     def __init__(
         self,
@@ -185,10 +233,30 @@ class Trait(LIFTUtilsBase):
         value: str = None,
         trait_id: str = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "trait"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("name", "value")),
+                "optional": set(("id",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("annotation",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "name": Key,
+                "value": Key,
+                "id": Key,
+                "annotation": Annotation,
+            }
+        )
+
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -218,24 +286,44 @@ class Flag(Trait):
         not defined; assumed to be equivalent to ``Trait``.
     """
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        super().__init__()
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        super().__init__(**kwargs)
 
 
 class Text(LIFTUtilsBase):
     """Contains textual data mixed with ``span`` elements only."""
 
-    ELEMENTS_REQUIRED = set(("pcdata",))
-    ELEMENTS_OPTIONAL = set(("span",))
+    XML_TAG = "text"
 
     def __init__(
-        self, text: str = None, xml_tree: Optional[etree._Element] = None, subinit=False
+        self,
+        text: str = None,
+        xml_tree: Optional[etree._Element] = None,
+        subinit=False,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "text"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(("pcdata",)),
+                "optional": set(("span",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "pcdata": PCData,
+                "span": Span,
+            }
+        )
+
         # elements
-        self.pcdata = None
+        self.pcdata: PCData = None
         self.span_items: Optional[List[Span]] = None
 
         if xml_tree is not None:
@@ -260,19 +348,36 @@ class Form(LIFTUtilsBase):
     This is specified by the ``lang`` attribute.
     """
 
-    ATTRIBUTES_REQUIRED = set(("lang",))
-    ELEMENTS_REQUIRED = set(("text",))
-    ELEMENTS_OPTIONAL = set(("annotation",))
+    XML_TAG = "form"
 
     def __init__(
         self,
         lang: Lang = None,
         text: Text = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "form"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("lang",)),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(("text",)),
+                "optional": set(("annotation",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "lang": Lang,
+                "text": Text,
+                "annotation": Annotation,
+            }
+        )
+
         # attributes
         self.lang: Lang = None
         # elements
@@ -296,20 +401,37 @@ class Form(LIFTUtilsBase):
 class URLRef(LIFTUtilsBase):
     """This is a URL with a caption."""
 
-    ATTRIBUTES_REQUIRED = set(("href",))
-    ELEMENTS_OPTIONAL = set(("label",))
+    XML_TAG = "urlref"
 
     def __init__(
         self,
         href: str = None,
         label: dict = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "urlref"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("href",)),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("label",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "href": URL,
+                "label": Multitext,
+            }
+        )
+
         # attributes
-        self.href = None
+        self.href: URL = None
         # elements
         # NOTE: `label` elements are not explicitly defined as possibly having
         # multple values here, but they are for LiftRanges and RangeElements.
@@ -338,26 +460,47 @@ class Multitext(Text):
     It can be in a given language, or in multiple languages.
     """
 
-    # NOTE: The "pcdata" element is required by Text class, which is
-    # inherited by Multitext. However, the Text class itself is optional,
-    # so "pcdata" is removed from self._elements_required and added to
-    # self._elements_optional.
-    ATTRIBUTES_REQUIRED = set()
-    ATTRIBUTES_OPTIONAL = set()
-    ELEMENTS_REQUIRED = set()
-    ELEMENTS_OPTIONAL = set(("pcdata", "span", "form", "trait"))
+    # Multitext is only used as a super class for other classes, so it
+    # doesn't have it's own XML tag.
+    XML_TAG = None
 
     def __init__(
         self,
         form_dict: dict = None,
         # trait_dict: dict = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__(xml_tree=False)
-        self._set_attribs_and_elems()
-        # Multitext is only used as a super class for other classes, so it
-        # doesn't have it's own XML tag.
-        del self._xml_tag
+        super().__init__(
+            xml_tree=False,
+            **kwargs,
+        )
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("form", "span", "trait")),
+            },
+        }
+        # NOTE: The "pcdata" element is required by Text class, which is
+        # inherited by Multitext. However, the Text class itself is optional,
+        # so "pcdata" is removed from self._elements_required and added to
+        # self._elements_optional.
+        tag = "pcdata"
+        self._elements_required.discard(tag)
+        self._elements_optional.add(tag)
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "form": Form,
+                "trait": Trait,
+            }
+        )
+
         # elements
         self.form_items: Optional[List[Form]] = None
         self.trait_items: Optional[List[Trait]] = None
@@ -400,20 +543,34 @@ class Gloss(Form):
     attribute.
     """
 
-    ATTRIBUTES_REQUIRED = set()
-    ATTRIBUTES_REQUIRED = set()
-    ELEMENTS_REQUIRED = set()
-    ELEMENTS_OPTIONAL = set(("trait",))
+    XML_TAG = "gloss"
 
     def __init__(
         self,
         lang: str = None,
         text: str = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__(xml_tree=False)
-        self._set_attribs_and_elems()
-        self._xml_tag = "gloss"
+        super().__init__(xml_tree=False, **kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("trait",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "trait": Trait,
+            }
+        )
+
         # elements
         self.trait_items: Optional[List[Trait]] = None
 
@@ -439,8 +596,7 @@ class Gloss(Form):
 class Annotation(Multitext):
     """Provides a mechanism for adding meta-information to almost any element."""
 
-    ATTRIBUTES_REQUIRED = set(("name", "value"))
-    ATTRIBUTES_OPTIONAL = set(("who", "when"))
+    XML_TAG = "annotation"
 
     def __init__(
         self,
@@ -449,17 +605,30 @@ class Annotation(Multitext):
         who: str = None,
         when: str = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        # NOTE: The "pcdata" element is required by Text class, which is
-        # inherited by Multitext. However, the Text class itself is optional,
-        # so "pcdata" is removed from self._elements_required and added to
-        # self._elements_optional.
-        tag = "pcdata"
-        self._elements_required.discard(tag)
-        self._elements_optional.add(tag)
-        self._xml_tag = "annotation"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("name", "value")),
+                "optional": set(("who", "when")),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "name": Key,
+                "value": Key,
+                "who": Key,
+                "when": DateTime,
+            }
+        )
+
         # attributes
         self.name: Key = None
         self.value: Key = None
@@ -485,29 +654,41 @@ class Field(Multitext):
     LIFT standard.
     """
 
-    ATTRIBUTES_REQUIRED_v13 = set(("type",))
-    ATTRIBUTES_REQUIRED = set(("name",))
-    ATTRIBUTES_OPTIONAL = set(("dateCreated", "dateModified"))
-    ELEMENTS_OPTIONAL = set(("annotation", "trait"))
+    XML_TAG = "field"
 
     def __init__(
         self,
         field_type: str = None,
         name: str = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("name",)),
+                "optional": set(("dateCreated", "dateModified")),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("annotation", "trait")),
+            },
+        }
         if config.LIFT_VERSION == "0.13":
-            self.ATTRIBUTES_REQUIRED = self.ATTRIBUTES_REQUIRED_v13.copy()
-        super().__init__()
-        self._set_attribs_and_elems()
-        # NOTE: The "pcdata" element is required by Text class, which is
-        # inherited by Multitext. However, the Text class itself is optional,
-        # so "pcdata" is removed from self._elements_required and added to
-        # self._elements_optional.
-        tag = "pcdata"
-        self._elements_required.discard(tag)
-        self._elements_optional.add(tag)
-        self._xml_tag = "field"
+            self._properties.get("attributes")["required"] = set(("type",))
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "type": Key,
+                "name": Key,
+                "dateCreated": DateTime,
+                "dateModified": DateTime,
+                "annotation": Annotation,
+                "trait": Trait,
+            }
+        )
+
         # attributes
         if config.LIFT_VERSION == "0.13":
             self.type: Key = None
@@ -529,16 +710,21 @@ class Field(Multitext):
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
-        elif config.LIFT_VERSION == "0.13" and field_type is not None:
-            self.type = Key(field_type)
-        elif config.LIFT_VERSION == "0.15" and name is not None:
-            self.name = Key(name)
+
+        missing_required_attrib = None
+        if config.LIFT_VERSION == "0.13":
+            if field_type is not None:
+                self.type = Key(field_type)
+            elif xml_tree is None:
+                missing_required_attrib = "field_type"
         else:
-            if config.LIFT_VERSION == "0.13":
-                value = "field_type"
-            else:
-                value = "name"
-            raise RequiredValueError((value,))
+            if name is not None:
+                self.name = Key(name)
+            elif xml_tree is None:
+                missing_required_attrib = "name"
+
+        if missing_required_attrib:
+            raise RequiredValueError((missing_required_attrib,))
 
 
 class Extensible(LIFTUtilsBase):
@@ -555,15 +741,34 @@ class Extensible(LIFTUtilsBase):
         describing the element.
     """
 
-    ATTRIBUTES_OPTIONAL = set(("dateCreated", "dateModified"))
-    ELEMENTS_OPTIONAL = set(("field", "trait", "annotation"))
+    # Extensible is only used as a super class for other classes, so it
+    # doesn't need its own XML tag.
+    XML_TAG = None
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        super().__init__()
-        self._set_attribs_and_elems()
-        # Extensible is only used as a super class for other classes, so it
-        # doesn't need its own XML tag.
-        self._xml_tag = None
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("dateCreated", "dateModified")),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("annotation", "field", "trait")),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "dateCreated": DateTime,
+                "dateModified": DateTime,
+                "field": Field,
+                "trait": Trait,
+                "annotation": Annotation,
+            }
+        )
+
         # attributes
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None

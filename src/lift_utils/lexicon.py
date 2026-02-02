@@ -38,12 +38,30 @@ class Note(Multitext, Extensible):
         ``range-element`` in the ``note-type`` range.
     """
 
-    ATTRIBUTES_OPTIONAL = set(("type",))
+    XML_TAG = "note"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        Extensible.__init__(self)
-        Multitext.__init__(self)
-        self._xml_tag = "note"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        # TODO: Can we just use super().__init__() here and elsewhere?
+        Extensible.__init__(self, **kwargs)
+        Multitext.__init__(self, **kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("type",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "type": Key,
+            }
+        )
+
         # attributes
         self.type: Optional[Key] = None
 
@@ -67,13 +85,29 @@ class Phonetic(Multitext, Extensible):
         Americanist, etc.
     """
 
-    ELEMENTS_OPTIONAL = set(("media",))
+    XML_TAG = "pronunciation"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        Extensible.__init__(self)
-        Multitext.__init__(self)
-        self._set_attribs_and_elems()
-        self._xml_tag = "pronunciation"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        Extensible.__init__(self, **kwargs)
+        Multitext.__init__(self, **kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("media",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "media": URLRef,
+            }
+        )
+
         # elements
         self.media_items: Optional[List[URLRef]] = None
         # NOTE: See note in base.Field definition re: superseded 'form_items'.
@@ -134,18 +168,37 @@ class Etymology(Extensible):
     :ivar Optional[Form] form: Holds the form of the etymological reference.
     """
 
-    ATTRIBUTES_REQUIRED = set(("type", "source"))
-    ELEMENTS_OPTIONAL = set(("gloss", "form"))
+    XML_TAG = "etymology"
 
     def __init__(
         self,
         etym_type: Key = None,
         source: str = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "etymology"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("source", "type")),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("form", "gloss")),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "type": Key,
+                "source": str,
+                "form": Form,
+                "gloss": Gloss,
+            }
+        )
+
         # attributes
         self.type = etym_type
         self.source = source
@@ -179,13 +232,31 @@ class GrammaticalInfo(LIFTUtilsBase):
         given by the ``value`` attribute.
     """
 
-    ATTRIBUTES_REQUIRED = set(("value",))
-    ELEMENTS_OPTIONAL = set(("trait",))
+    XML_TAG = "grammatical-info"
 
-    def __init__(self, value: str = None, xml_tree: Optional[etree._Element] = None):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "grammatical-info"
+    def __init__(
+        self, value: Key = None, xml_tree: Optional[etree._Element] = None, **kwargs
+    ):
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("value",)),
+                "optional": set(),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("trait",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "value": Key,
+                "trait": Trait,
+            }
+        )
+
         # attributes
         self.value = None
         # elements
@@ -218,13 +289,30 @@ class Reversal(Multitext):
         language.
     """
 
-    ATTRIBUTES_OPTIONAL = set(("type",))
-    ELEMENTS_OPTIONAL = set(("main", "grammatical-info"))
+    XML_TAG = "reversal"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "reversal"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("type",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("grammatical-info", "main")),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "type": Key,
+                "grammatical-info": GrammaticalInfo,
+                "main": Reversal,
+            }
+        )
+
         # attributes
         self.type: Optional[Key] = None
         # elements
@@ -244,12 +332,28 @@ class Translation(Multitext):
     :ivar Optional[Key] type: Gives the type of the translation.
     """
 
-    ATTRIBUTES_OPTIONAL = set(("type",))
+    XML_TAG = "translation"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "translation"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("type",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "type": Key,
+            }
+        )
+
         # attributes
         self.type: Optional[Key] = None
 
@@ -272,22 +376,42 @@ class Example(Multitext, Extensible):
     :ivar Optional[List[Note]] note_items: Holds notes on this example.
     """
 
-    ATTRIBUTES_OPTIONAL = set(("source",))
-    ELEMENTS_OPTIONAL = set(("translation",))
-    ELEMENTS_OPTIONAL_v15 = set(("translation", "note"))
+    XML_TAG = "example"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        if config.LIFT_VERSION == "0.15":
-            self.ELEMENTS_OPTIONAL = self.ELEMENTS_OPTIONAL_v15.copy()
-        Extensible.__init__(self)
-        Multitext.__init__(self)
-        self._set_attribs_and_elems()
-        self._xml_tag = "example"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        # TODO: Consider replacing these two __inits__ with super().__init__.
+        Extensible.__init__(self, **kwargs)
+        Multitext.__init__(self, **kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("source",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("translation", "note")),
+            },
+        }
+        if config.LIFT_VERSION == "0.13":
+            self._properties.get("elements")["optional"] = set(("translation",))
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "source": Key,
+                "translation": Translation,
+                "note": Note,
+            }
+        )
+
         # attributes
         self.source: Optional[Key] = None
         # elements
         self.translation_items: Optional[List[Translation]] = None
-        if config.LIFT_VERSION == "0.15":
+        if config.LIFT_VERSION == "0.13":
+            if hasattr(self, "note_items"):
+                del self.note_items
+        else:
             self.note_items: Optional[List[Note]] = None
 
         if xml_tree is not None:
@@ -309,19 +433,37 @@ class Relation(Extensible):
         languages or writing systems.
     """
 
-    ATTRIBUTES_REQUIRED = set(("type", "ref"))
-    ATTRIBUTES_OPTIONAL = set(("order",))
-    ELEMENTS_OPTIONAL = set(("usage",))
+    XML_TAG = "relation"
 
     def __init__(
         self,
         rel_type: Key = None,
         ref: RefId = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "relation"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("type", "ref")),
+                "optional": set(("order",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("usage",)),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "type": Key,
+                "ref": RefId,
+                "order": int,
+                "usage": Multitext,
+            }
+        )
+
         # attributes
         self.type = rel_type
         self.ref = ref
@@ -353,14 +495,31 @@ class Variant(Multitext, Extensible):
         relationship with other senses or entries in the lexicon.
     """
 
-    ATTRIBUTES_OPTIONAL = set(("ref",))
-    ELEMENTS_OPTIONAL = set(("pronunciation", "relation"))
+    XML_TAG = "variant"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        Extensible.__init__(self)
-        Multitext.__init__(self)
-        self._set_attribs_and_elems()
-        self._xml_tag = "variant"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        Extensible.__init__(self, **kwargs)
+        Multitext.__init__(self, **kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("ref",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("pronunciation", "relation")),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "ref": RefId,
+                "pronunciation": Phonetic,
+                "relation": Relation,
+            }
+        )
+
         # attributes
         self.ref: Optional[RefId] = None
         # elements
@@ -403,40 +562,66 @@ class Sense(Extensible):
     :ivar Optional[List[Sense]] subsense_items: Senses can form a hierarchy.
     """
 
-    ATTRIBUTES_OPTIONAL = set(("id", "order", "dateCreated", "dateModified"))
-    ELEMENTS_OPTIONAL = set(
-        (
-            "grammatical-info",
-            "definition",
-            "relation",
-            "note",
-            "example",
-            "reversal",
-            "illustration",
-            "subsense",
-            "gloss",
-        )
-    )
+    XML_TAG = "sense"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "sense"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(("id", "order")),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(
+                    (
+                        "definition",
+                        "example",
+                        "gloss",
+                        "grammatical-info",
+                        "illustration",
+                        "note",
+                        "relation",
+                        "reversal",
+                        "subsense",
+                    )
+                ),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "id": RefId,
+                "order": int,
+                "definition": Multitext,
+                "example": Example,
+                "gloss": Gloss,
+                "grammatical-info": GrammaticalInfo,
+                "illustration": URLRef,
+                "note": Note,
+                "relation": Relation,
+                "reversal": Reversal,
+                "subsense": Sense,
+            }
+        )
+
         # attributes
         self.id: Optional[RefId] = None
         self.order: Optional[int] = None
         # elements
-        self.grammatical_info: Optional[GrammaticalInfo] = None
+        self.definition: Optional[Multitext] = None
+        self.example_items: Optional[List[Example]] = None
         if config.LIFT_VERSION == "0.13":
+            self.tag_classes["gloss"] = Form
             self.gloss_items: Optional[List[Form]] = None
         else:
             self.gloss_items: Optional[List[Gloss]] = None
-        self.definition: Optional[Multitext] = None
-        self.relation_items: Optional[List[Relation]] = None
-        self.note_items: Optional[List[Note]] = None
-        self.example_items: Optional[List[Example]] = None
-        self.reversal_items: Optional[List[Reversal]] = None
+        self.grammatical_info: Optional[GrammaticalInfo] = None
         self.illustration_items: Optional[List[URLRef]] = None
+        self.note_items: Optional[List[Note]] = None
+        self.relation_items: Optional[List[Relation]] = None
+        self.reversal_items: Optional[List[Reversal]] = None
         self.subsense_items: Optional[List[Sense]] = None
 
         if xml_tree is not None:
@@ -580,45 +765,71 @@ class Entry(Extensible):
         relation in that it has no referent in the lexicon.
     """
 
-    ATTRIBUTES_OPTIONAL = set(
-        (
-            "id",
-            "guid",
-            "order",
-            "dateDeleted",
-        )
-    )
-    ELEMENTS_OPTIONAL = set(
-        (
-            "lexical-unit",
-            "citation",
-            "pronunciation",
-            "variant",
-            "sense",
-            "note",
-            "relation",
-            "etymology",
-        )
-    )
+    XML_TAG = "entry"
 
-    def __init__(self, xml_tree: Optional[etree._Element] = None):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "entry"
+    def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(),
+                "optional": set(
+                    (
+                        "guid",
+                        "id",
+                        "dateDeleted",
+                        "order",
+                    )
+                ),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(
+                    (
+                        "citation",
+                        "etymology",
+                        "lexical-unit",
+                        "note",
+                        "pronunciation",
+                        "relation",
+                        "sense",
+                        "variant",
+                    )
+                ),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "guid": str,
+                "id": RefId,
+                "dateDeleted": DateTime,
+                "order": int,
+                "citation": Multitext,
+                "etymology": Etymology,
+                "lexical-unit": Multitext,
+                "note": Note,
+                "pronunciation": Phonetic,
+                "relation": Relation,
+                "sense": Sense,
+                "variant": Variant,
+            }
+        )
+
         # attributes
         self.id: Optional[RefId] = None
         self.guid: Optional[str] = None  # deprecated
-        self.order: Optional[int] = None
         self.date_deleted: Optional[DateTime] = None
+        self.order: Optional[int] = None
         # elements
-        self.lexical_unit: Optional[Multitext] = None
         self.citation: Optional[Multitext] = None
-        self.pronunciation_items: Optional[List[Phonetic]] = None
-        self.variant_items: Optional[List[Variant]] = None
-        self.sense_items: Optional[List[Sense]] = None
-        self.note_items: Optional[List[Note]] = None
-        self.relation_items: Optional[List[Relation]] = None
         self.etymology_items: Optional[List[Etymology]] = None
+        self.lexical_unit: Optional[Multitext] = None
+        self.note_items: Optional[List[Note]] = None
+        self.pronunciation_items: Optional[List[Phonetic]] = None
+        self.relation_items: Optional[List[Relation]] = None
+        self.sense_items: Optional[List[Sense]] = None
+        self.variant_items: Optional[List[Variant]] = None
 
         if xml_tree is not None:
             self._update_from_xml(xml_tree)
@@ -727,27 +938,46 @@ class Lexicon(LIFTUtilsBase):
     :ivar Optional[Path] path: File path to a LIFT file to import.
     """
 
-    _producer = f"LIFT-Utils {config.LIB_VERSION}"
-    ATTRIBUTES_REQUIRED = set(("version",))
-    ATTRIBUTES_OPTIONAL = set(("producer",))
-    ELEMENTS_OPTIONAL = set(("header", "entry"))
+    XML_TAG = "lift"
 
     def __init__(
         self,
         path: Optional[Union[Path, str]] = None,
         version: str = None,
         xml_tree: Optional[etree._Element] = None,
+        **kwargs,
     ):
-        super().__init__()
-        self._set_attribs_and_elems()
-        self._xml_tag = "lift"
+        super().__init__(**kwargs)
+        # Define new properties.
+        self._properties = {
+            "attributes": {
+                "required": set(("version",)),
+                "optional": set(("producer",)),
+            },
+            "elements": {
+                "required": set(),
+                "optional": set(("entry", "header")),
+            },
+        }
+        self._update_attribs_and_elems()
+        self.tag_classes.update(
+            {
+                "version": str,
+                "producer": str,
+                "entry": Entry,
+                "header": Header,
+            }
+        )
+
         self.lift_xml_tree = None
         self.ranges_xml_tree = None
         self.analysis_writing_systems = None
         self.vernacular_writing_systems = None
         # attributes
         self.version = version
-        self.producer: Optional[str] = None
+        # Make version accessible globally.
+        config.LIFT_VERSION = self.version
+        self.producer: str = f"LIFT-Utils {config.LIB_VERSION}"
         # elements
         self.header: Optional[Header] = None
         self.entry_items: Optional[List[Entry]] = None
@@ -762,10 +992,7 @@ class Lexicon(LIFTUtilsBase):
             self._find_writing_systems()
 
     def __str__(self):
-        s = f"LIFT lexicon v{self.version}"
-        if self.producer:
-            s += f"; produced by {self.producer}"
-        return s
+        return f"LIFT lexicon v{self.version}; produced by {self.producer}"
 
     def add_entry(self) -> Entry:
         """Add an empty ``Entry`` to the lexicon.
@@ -865,7 +1092,6 @@ class Lexicon(LIFTUtilsBase):
             Path(file_path).expanduser().with_suffix(".lift")
         )  # ensure suffix  # noqa: E501
         ranges_file = outfile.with_suffix(".lift-ranges")
-        self.producer = Lexicon._producer
 
         # Write LIFT file.
         lift_tree = self._to_xml_tree()

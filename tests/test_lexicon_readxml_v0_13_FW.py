@@ -11,6 +11,19 @@ LIFT_GOOD = str(DATA_PATH / "lexicon_good_v0.13_FW.lift")
 LIFT_VERSION = "0.13"
 
 
+class TestBaseNode(unittest.TestCase):
+    def setUp(self):
+        config.LIFT_VERSION = LIFT_VERSION
+        self.xml_tree = etree.parse(LIFT_GOOD).getroot().find(".//entry")
+        self.entry = lexicon.Entry(xml_tree=self.xml_tree)
+
+    def test_parent(self):
+        # print(f"{self.entry.__dict__=}")
+        self.assertIsNone(self.entry.parent)
+        self.assertEqual(self.entry.etymology_items[0].parent, self.entry)
+        # raise
+
+
 class TestEntry(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
