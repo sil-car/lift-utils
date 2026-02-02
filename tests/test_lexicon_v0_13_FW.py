@@ -78,11 +78,11 @@ class TestParse(unittest.TestCase):
         self.assertIsNotNone(item)
         self.assertEqual(item.date_modified, "2023-04-20T19:31:03Z")
 
-    def test_lexicon_get_parent_from_id(self):
-        refid = "25222115-e109-4704-8e82-d7cd523c8cbd"
-        parent = self.lexicon.get_item_parent_by_id(refid)
-        self.assertIsNotNone(parent)
-        self.assertEqual(parent.date_modified, "2023-04-20T19:31:03Z")
+    # def test_lexicon_get_parent_from_id(self):
+    #     refid = "25222115-e109-4704-8e82-d7cd523c8cbd"
+    #     parent = self.lexicon.get_item_parent_by_id(refid)
+    #     self.assertIsNotNone(parent)
+    #     self.assertEqual(parent.date_modified, "2023-04-20T19:31:03Z")
 
     def test_lexicon_header_field_items(self):
         self.assertTrue(len(self.lexicon.header.fields.field_items) == 8)

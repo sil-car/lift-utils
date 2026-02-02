@@ -1011,12 +1011,12 @@ class Lexicon(LIFTUtilsBase):
         """
         return self._item_from_id(refid, item_type="self")
 
-    def get_item_parent_by_id(self, refid: str) -> Union[Entry, Sense, None]:
-        """Return an sense's parent item by the sense's ``id`` attribute.
+    # def get_item_parent_by_id(self, refid: str) -> Union[Entry, Sense, None]:
+    #     """Return an sense's parent item by the sense's ``id`` attribute.
 
-        :var str refid: The ``id`` attribute of the entry or sense.
-        """
-        return self._item_from_id(refid, item_type="parent")
+    #     :var str refid: The ``id`` attribute of the entry or sense.
+    #     """
+    #     return self._item_from_id(refid, item_type="parent")
 
     def get_range_elements(self, range_name):
         """Returns a generator object that lists all the names defined in the

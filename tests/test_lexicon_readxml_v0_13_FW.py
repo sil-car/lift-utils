@@ -18,10 +18,8 @@ class TestBaseNode(unittest.TestCase):
         self.entry = lexicon.Entry(xml_tree=self.xml_tree)
 
     def test_parent(self):
-        # print(f"{self.entry.__dict__=}")
-        self.assertIsNone(self.entry.parent)
-        self.assertEqual(self.entry.etymology_items[0].parent, self.entry)
-        # raise
+        self.assertIsNone(self.entry.parent_item)
+        self.assertEqual(self.entry.etymology_items[0].parent_item, self.entry)
 
 
 class TestEntry(unittest.TestCase):

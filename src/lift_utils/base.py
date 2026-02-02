@@ -55,7 +55,7 @@ class LIFTUtilsBase:
         "writing-system": "writing_system",
     }
 
-    def __init__(self, parent=None, xml_tree: etree._Element = None):
+    def __init__(self, parent_item=None, xml_tree: etree._Element = None):
         # Store names of required and optional attributes and elements for this
         # node for later verification.
         self._properties = dict()
@@ -69,7 +69,7 @@ class LIFTUtilsBase:
         # but this also needs to be referred to before all classes are defined.
         self.tag_classes = {"tail": PCData}
         # Link to parent node for tree traversal.
-        self.parent = parent
+        self.parent_item = parent_item
 
     def print(self, _format="xml"):
         """Print the node's data to stdout; as XML by default."""
@@ -122,7 +122,7 @@ class LIFTUtilsBase:
                 print(f"{k}: {v}")
 
     def _add_list_item(self, _name, _class, **kwargs):
-        new_obj = _class(parent=self, **kwargs)
+        new_obj = _class(parent_item=self, **kwargs)
         if getattr(self, _name) is None:
             setattr(self, _name, [new_obj])
         else:
@@ -165,9 +165,11 @@ class LIFTUtilsBase:
                         if not getattr(self, py_name):
                             # Instantiate list-like object.
                             setattr(self, py_name, list())
-                        getattr(self, py_name).append(py_cls(xml_tree=c, parent=self))
+                        getattr(self, py_name).append(
+                            py_cls(xml_tree=c, parent_item=self)
+                        )
                     else:  # single element
-                        setattr(self, py_name, py_cls(xml_tree=c, parent=self))
+                        setattr(self, py_name, py_cls(xml_tree=c, parent_item=self))
 
     def _to_xml_tree(self, tag=None):
         # TODO: Why isn't self.XML_TAG sufficient in every case here?
