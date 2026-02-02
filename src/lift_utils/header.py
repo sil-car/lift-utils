@@ -5,8 +5,8 @@ from typing import List, Optional
 from lxml import etree
 
 from . import config
-from .base import Annotation, Extensible, Field, Form, LIFTUtilsBase, Multitext, Trait
-from .datatypes import URL, DateTime, Key
+from .base import Extensible, LIFTUtilsBase, Multitext
+from .datatypes import URL, Key
 
 
 class FieldDefn(Multitext):
@@ -50,9 +50,6 @@ class FieldDefn(Multitext):
     def __str__(self):
         forms = "forms" if len(self.form_items) > 1 else "form"
         return f"{self.tag} ({len(self.form_items)} {forms})"
-
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class FieldDefinition(LIFTUtilsBase):
@@ -105,9 +102,6 @@ class FieldDefinition(LIFTUtilsBase):
     def __str__(self):
         return self.name
 
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
-
 
 class FieldDefns(LIFTUtilsBase):
     """This is a simple list of ``field-defn`` elements.
@@ -143,9 +137,6 @@ class FieldDefns(LIFTUtilsBase):
         if xml_tree is not None:
             self._from_xml_tree(xml_tree)
 
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
-
 
 class Fields(LIFTUtilsBase):
     """This is a simple list of ``field-definition`` elements."""
@@ -178,9 +169,6 @@ class Fields(LIFTUtilsBase):
 
         if xml_tree is not None:
             self._from_xml_tree(xml_tree)
-
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class RangeElement13(LIFTUtilsBase):
@@ -226,9 +214,6 @@ class RangeElement13(LIFTUtilsBase):
 
         if xml_tree is not None:
             self._from_xml_tree(xml_tree)
-
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class RangeElement(Extensible):
@@ -277,9 +262,6 @@ class RangeElement(Extensible):
 
         if xml_tree is not None:
             self._from_xml_tree(xml_tree)
-
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class Range13(LIFTUtilsBase):
@@ -331,9 +313,6 @@ class Range13(LIFTUtilsBase):
         if xml_tree is not None:
             self._from_xml_tree(xml_tree)
 
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
-
 
 class Range(Extensible):
     """A set of ``range-elements``.
@@ -384,9 +363,6 @@ class Range(Extensible):
         if xml_tree is not None:
             self._from_xml_tree(xml_tree)
 
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
-
 
 class Ranges(LIFTUtilsBase):
     """The root element in a Lift Ranges file."""
@@ -422,9 +398,6 @@ class Ranges(LIFTUtilsBase):
 
         if xml_tree is not None:
             self._from_xml_tree(xml_tree)
-
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
 
 
 class Header(LIFTUtilsBase):
@@ -485,73 +458,3 @@ class Header(LIFTUtilsBase):
         if self.fields:
             s += f", {len(self.fields)} fields"
         return s
-
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
-
-
-def get_properties(class_, lift_version):
-    classes = (class_, *class_.__bases__)
-    props = {}
-
-    if not hasattr(class_, "__bases__"):
-        print("no bases:", class_)
-        return props
-
-    props["attributes"] = {}
-    props["elements"] = {}
-    if Multitext in classes:
-        props["elements"]["form_items"] = (list, Form, False)
-        props["elements"]["trait_items"] = (list, Trait, False)
-    if FieldDefn in classes:
-        props["attributes"]["tag"] = (Key, True)
-    if FieldDefinition in classes:
-        props["attributes"]["name"] = (Key, True)
-        props["attributes"]["class_"] = (str, False)
-        props["attributes"]["type"] = (str, False)
-        props["attributes"]["option_range"] = (Key, False)
-        props["attributes"]["writing_system"] = (str, False)
-        props["elements"]["label"] = (Multitext, False)
-        props["elements"]["description"] = (Multitext, False)
-    if FieldDefns in classes:
-        props["elements"]["field_items"] = (list, FieldDefn, False)
-    if Fields in classes:
-        props["elements"]["field_items"] = (list, FieldDefinition, False)
-    if RangeElement in classes or RangeElement13 in classes:
-        props["attributes"]["id"] = (Key, True)
-        props["attributes"]["parent"] = (Key, False)
-        props["attributes"]["guid"] = (str, False)
-        props["elements"]["description_items"] = (list, Multitext, False)
-        props["elements"]["label_items"] = (list, Multitext, False)
-        props["elements"]["abbrev_items"] = (list, Multitext, False)
-    if Range in classes or Range13 in classes:
-        props["attributes"]["id"] = (Key, True)
-        props["attributes"]["guid"] = (str, False)
-        props["attributes"]["href"] = (URL, False)
-        if lift_version == "0.13":
-            props["elements"]["range_element_items"] = (list, RangeElement13, True)  # noqa: E501
-        else:
-            props["elements"]["range_element_items"] = (list, RangeElement, True)  # noqa: E501
-        props["elements"]["description"] = (Multitext, False)
-        props["elements"]["label_items"] = (list, Multitext, False)
-        props["elements"]["abbrev_items"] = (list, Multitext, False)
-    if Ranges in classes:
-        if lift_version == "0.13":
-            props["elements"]["range_items"] = (list, Range13, True)
-        else:
-            props["elements"]["range_items"] = (list, Range, True)
-    if Header in classes:
-        props["elements"]["description"] = (Multitext, False)
-        props["elements"]["ranges"] = (Ranges, False)
-        if lift_version == "0.13":
-            props["elements"]["fields"] = (FieldDefns, False)
-        else:
-            props["elements"]["fields"] = (Fields, False)
-    if Extensible in classes:
-        props["attributes"]["date_created"] = (DateTime, False)
-        props["attributes"]["date_modified"] = (DateTime, False)
-        props["elements"]["field_items"] = (list, Field, False)
-        props["elements"]["trait_items"] = (list, Trait, False)
-        props["elements"]["annotation_items"] = (list, Annotation, False)
-
-    return props

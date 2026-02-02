@@ -8,7 +8,7 @@ from lxml import etree
 from . import config
 from .datatypes import URL, DateTime, Key, Lang, PCData
 from .errors import RequiredValueError
-from .utils import etree_to_obj_attributes, etree_to_xmlstring
+from .utils import etree_to_xmlstring
 
 
 class LIFTUtilsBase:
@@ -33,6 +33,53 @@ class LIFTUtilsBase:
         # Link to parent node for tree traversal.
         self.parent = parent
 
+    @staticmethod
+    def etree_to_obj_attributes(xml_tree, obj):
+        # Convert XML attributes to python properties.
+        attribs = [a for a in obj._attributes_required]
+        attribs.extend([a for a in obj._attributes_optional])
+        for xml_name in attribs:
+            py_name = obj.prop_name_from_xml_name(xml_name)
+            py_cls = obj.tag_classes.get(xml_name)
+            if xml_name in xml_tree.attrib.keys():
+                setattr(
+                    obj,
+                    py_name,
+                    py_cls(xml_tree.attrib.get(xml_name)),
+                )
+
+        # Convert properties to XML elements.
+        elems = [e for e in obj._elements_required]
+        elems.extend([e for e in obj._elements_optional])
+        for xml_name in elems:
+            py_name = obj.prop_name_from_xml_name(xml_name)
+            py_cls = obj.tag_classes.get(xml_name)
+            if xml_name == "pcdata":
+                if xml_tree.text:
+                    setattr(obj, py_name, py_cls(xml_tree.text))
+                continue
+            elif xml_name == "tail":
+                if xml_tree.tail:
+                    setattr(obj, py_name, py_cls(xml_tree.tail))
+                continue
+
+            if xml_name in config.MULTIPLE_ITEM_TAGS:
+                multiple = True
+            else:
+                multiple = False
+
+            for c in xml_tree.getchildren():
+                if c.tag == xml_name:
+                    if py_name.endswith("_items"):  # list-like obj/elem
+                        if not getattr(obj, py_name):
+                            # Instantiate list-like object.
+                            setattr(obj, py_name, list())
+                        getattr(obj, py_name).append(py_cls(xml_tree=c, parent=obj))
+                    else:  # single element
+                        setattr(obj, py_name, py_cls(xml_tree=c, parent=obj))
+                    if not multiple:
+                        break
+
     def print(self, _format="xml"):
         """Print the node's data to stdout; as XML by default."""
         try:
@@ -50,9 +97,6 @@ class LIFTUtilsBase:
         else:
             getattr(self, _name).append(new_obj)
         return new_obj
-
-    def _get_properties(self):
-        return get_properties(self.__class__, config.LIFT_VERSION)
 
     def prop_name_from_xml_name(self, xml_name):
         """Return the object property name from the given XML attribute or
@@ -95,7 +139,7 @@ class LIFTUtilsBase:
 
     def _from_xml_tree(self, xml_tree):
         # Update object attributes.
-        etree_to_obj_attributes(xml_tree, self, self._get_properties())
+        LIFTUtilsBase.etree_to_obj_attributes(xml_tree, self)
 
     def _to_xml_tree(self, tag=None):
         # TODO: Why isn't self.XML_TAG sufficient in every case here?
@@ -823,67 +867,3 @@ class Extensible(LIFTUtilsBase):
 
     def set_date_modified(self):
         self.date_modified = DateTime()
-
-
-def get_properties(class_, lift_version):
-    classes = (class_, *class_.__bases__)
-    props = {}
-
-    if not hasattr(class_, "__bases__"):
-        print("This class has no bases:", class_)
-        return props
-
-    props["attributes"] = {}
-    props["elements"] = {}
-    if Span in classes:
-        props["attributes"]["lang"] = (Lang, False)
-        props["attributes"]["href"] = (URL, False)
-        props["attributes"]["class_"] = (str, False)
-        props["elements"]["pcdata"] = (PCData, True)
-        props["elements"]["tail"] = (PCData, False)
-        props["elements"]["span_items"] = (list, Span, False)
-    if Trait in classes:
-        props["attributes"]["name"] = (Key, True)
-        props["attributes"]["value"] = (Key, True)
-        props["attributes"]["id"] = (Key, False)
-        props["elements"]["annotation_items"] = (list, Annotation, False)
-    if Text in classes:
-        props["elements"]["pcdata"] = (PCData, True)
-        props["elements"]["span_items"] = (list, Span, False)
-    if Form in classes:
-        props["attributes"]["lang"] = (Lang, True)
-        props["elements"]["text"] = (Text, True)
-        props["elements"]["annotation_items"] = (list, Annotation, False)
-    if URLRef in classes:
-        props["attributes"]["href"] = (URL, True)
-        props["elements"]["label"] = (Multitext, False)
-    if Multitext in classes:
-        props["elements"]["form_items"] = (list, Form, False)
-        props["elements"]["trait_items"] = (list, Trait, False)
-    if Gloss in classes:
-        props["elements"]["trait_items"] = (list, Trait, False)
-    if Annotation in classes:
-        props["attributes"]["name"] = (Key, True)
-        props["attributes"]["value"] = (Key, True)
-        props["attributes"]["who"] = (Key, False)
-        props["attributes"]["when"] = (DateTime, False)
-    if Field in classes:
-        props["attributes"]["date_created"] = (DateTime, False)
-        props["attributes"]["date_modified"] = (DateTime, False)
-        if lift_version == "0.13":
-            props["attributes"]["type"] = (Key, True)
-            # NOTE: See note about 'form_items' in class definition for 'Field'
-            # above.
-            # props['elements']['form_items'] = (list, Span, False)
-        else:
-            props["attributes"]["name"] = (Key, True)
-        props["elements"]["annotation_items"] = (list, Annotation, False)
-        props["elements"]["trait_items"] = (list, Trait, False)
-    if Extensible in classes:
-        props["attributes"]["date_created"] = (DateTime, False)
-        props["attributes"]["date_modified"] = (DateTime, False)
-        props["elements"]["field_items"] = (list, Field, False)
-        props["elements"]["trait_items"] = (list, Trait, False)
-        props["elements"]["annotation_items"] = (list, Annotation, False)
-
-    return props

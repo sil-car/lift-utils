@@ -16,52 +16,6 @@ def ellipsize(string, length):
     return string
 
 
-def etree_to_obj_attributes(xml_tree, obj, props):
-    # Convert XML attributes to python properties.
-    attribs = [a for a in obj._attributes_required]
-    attribs.extend([a for a in obj._attributes_optional])
-    for xml_name in attribs:
-        py_name = obj.prop_name_from_xml_name(xml_name)
-        if xml_name in xml_tree.attrib.keys():
-            setattr(
-                obj,
-                py_name,
-                obj.tag_classes.get(xml_name)(xml_tree.attrib.get(xml_name)),
-            )
-
-    # Convert properties to XML elements.
-    elems = [e for e in obj._elements_required]
-    elems.extend([e for e in obj._elements_optional])
-    for xml_name in elems:
-        py_name = obj.prop_name_from_xml_name(xml_name)
-        py_cls = obj.tag_classes.get(xml_name)
-        if xml_name == "pcdata":
-            if xml_tree.text:
-                setattr(obj, py_name, py_cls(xml_tree.text))
-            continue
-        elif xml_name == "tail":
-            if xml_tree.tail:
-                setattr(obj, py_name, py_cls(xml_tree.tail))
-            continue
-
-        if xml_name in config.MULTIPLE_ITEM_TAGS:
-            multiple = True
-        else:
-            multiple = False
-
-        for c in xml_tree.getchildren():
-            if c.tag == xml_name:
-                if py_name.endswith("_items"):  # list-like obj/elem
-                    if not getattr(obj, py_name):
-                        # Instantiate list-like object.
-                        setattr(obj, py_name, list())
-                    getattr(obj, py_name).append(py_cls(xml_tree=c, parent=obj))
-                else:  # single element
-                    setattr(obj, py_name, py_cls(xml_tree=c, parent=obj))
-                if not multiple:
-                    break
-
-
 def unicode_sort(in_list):
     def fmt(string):
         return unidecode.unidecode(string.lower())
