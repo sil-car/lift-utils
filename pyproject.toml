@@ -25,9 +25,8 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-#[project.scripts]
-#exe-check = "silcar_it_tools.exe_check:cli_exe_check"
-#get-usb-files = "silcar_it_tools.usb_utils:cli_get_usb_files"
+[project.optional-dependencies]
+dev = ["tabulate"]
 
 [project.urls]
 Documentation = "https://sil-car.github.io/lift-utils"
