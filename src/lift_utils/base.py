@@ -29,7 +29,7 @@ class LIFTUtilsBase:
         self._elements_required = set()
         self._elements_optional = set()
         # Store a cumulative dict of "tag name": "Python class".
-        self.tag_classes = dict()
+        self.tag_classes = {"tail": PCData}
         # Link to parent node for tree traversal.
         self.parent = parent
 
@@ -93,7 +93,7 @@ class LIFTUtilsBase:
             for importance, values in prop_data.items():
                 getattr(self, f"_{prop_type}_{importance}").update(values)
 
-    def _update_from_xml(self, xml_tree):
+    def _from_xml_tree(self, xml_tree):
         # Update object attributes.
         etree_to_obj_attributes(xml_tree, self, self._get_properties())
 
@@ -195,7 +195,7 @@ class Span(LIFTUtilsBase):
         self.span_items: Optional[List[Span]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif text is not None:
             self.pcdata = PCData(text)
             if tail is not None:
@@ -265,7 +265,7 @@ class Trait(LIFTUtilsBase):
         self.annotation_items: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif name is not None and value is not None:
             self.name = Key(name)
             self.value = Key(value)
@@ -329,7 +329,7 @@ class Text(LIFTUtilsBase):
         if xml_tree is not None:
             if xml_tree is False:
                 return
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif text is not None:
             self.pcdata = PCData(text)
         else:
@@ -387,7 +387,7 @@ class Form(LIFTUtilsBase):
         if xml_tree is not None:
             if xml_tree is False:
                 return
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif lang is not None and text is not None:
             self.lang = Lang(lang)
             self.text = Text(text=text)
@@ -438,7 +438,7 @@ class URLRef(LIFTUtilsBase):
         self.label: Optional[Multitext] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif href is not None:
             self.href = URL(href)
             if label is not None:
@@ -508,7 +508,7 @@ class Multitext(Text):
         if xml_tree is not None:
             if xml_tree is False:
                 return
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif form_dict is not None:
             self.set_form_items(form_dict)
 
@@ -575,7 +575,7 @@ class Gloss(Form):
         self.trait_items: Optional[List[Trait]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif lang is not None and text is not None:
             self.lang = Lang(lang)
             self.text = Text(text=text)
@@ -636,7 +636,7 @@ class Annotation(Multitext):
         self.when: Optional[DateTime] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif name is not None and value is not None:
             self.name = Key(name)
             self.value = Key(value)
@@ -709,7 +709,7 @@ class Field(Multitext):
         self.annotation_items: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
         missing_required_attrib = None
         if config.LIFT_VERSION == "0.13":
@@ -783,7 +783,7 @@ class Extensible(LIFTUtilsBase):
         self.annotation_items: Optional[List[Annotation]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def add_annotation(self, name=None, value=None, who=None, when=None):
         return self._add_list_item(

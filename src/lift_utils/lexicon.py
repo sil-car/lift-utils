@@ -66,7 +66,7 @@ class Note(Multitext, Extensible):
         self.type: Optional[Key] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         return super().__str__()
@@ -115,7 +115,7 @@ class Phonetic(Multitext, Extensible):
         #     self.form_items: Optional[List[Span]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         return str(super())
@@ -207,7 +207,7 @@ class Etymology(Extensible):
         self.form: Optional[Form] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         return f"{self.type} ({self.source})"
@@ -263,7 +263,7 @@ class GrammaticalInfo(LIFTUtilsBase):
         self.trait_items: Optional[List[Trait]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         elif value is not None:
             self.value = Key(value)
 
@@ -320,7 +320,7 @@ class Reversal(Multitext):
         self.grammatical_info: Optional[GrammaticalInfo] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -358,7 +358,7 @@ class Translation(Multitext):
         self.type: Optional[Key] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -415,7 +415,7 @@ class Example(Multitext, Extensible):
             self.note_items: Optional[List[Note]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -472,7 +472,7 @@ class Relation(Extensible):
         self.usage_items: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         return f"{self.type}: {self.ref}"
@@ -527,7 +527,7 @@ class Variant(Multitext, Extensible):
         self.relation_items: Optional[List[Relation]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         return self.ref if self.ref else "variant"
@@ -625,7 +625,7 @@ class Sense(Extensible):
         self.subsense_items: Optional[List[Sense]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         else:
             self.set_date_created()
 
@@ -832,7 +832,7 @@ class Entry(Extensible):
         self.variant_items: Optional[List[Variant]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
         else:
             self.set_date_created()
 
@@ -988,7 +988,7 @@ class Lexicon(LIFTUtilsBase):
             else:
                 raise InvalidExtensionError(self.path.name)
         elif xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
             self._find_writing_systems()
 
     def __str__(self):
@@ -1153,7 +1153,7 @@ class Lexicon(LIFTUtilsBase):
         infile = Path(infile)
         if not infile.is_file():
             raise FileNotFoundError
-        self._update_from_xml(xmlfile_to_etree(infile))
+        self._from_xml_tree(xmlfile_to_etree(infile))
         self._find_writing_systems()
 
     def _item_from_id(self, refid, item_type="self"):
@@ -1180,7 +1180,7 @@ class Lexicon(LIFTUtilsBase):
                                 elif item_type == "parent":
                                     return sense
 
-    def _update_from_xml(self, xml_tree):
+    def _from_xml_tree(self, xml_tree):
         self.version = xml_tree.attrib.get("version")
         # Allow global access to version number.
         config.LIFT_VERSION = self.version

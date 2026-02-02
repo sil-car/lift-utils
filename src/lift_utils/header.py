@@ -45,7 +45,7 @@ class FieldDefn(Multitext):
         self.tag = tag
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         forms = "forms" if len(self.form_items) > 1 else "form"
@@ -100,7 +100,7 @@ class FieldDefinition(LIFTUtilsBase):
         self.description: Optional[Multitext] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         return self.name
@@ -141,7 +141,7 @@ class FieldDefns(LIFTUtilsBase):
         self.field_items: Optional[List[FieldDefn]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -177,7 +177,7 @@ class Fields(LIFTUtilsBase):
         self.field_items: Optional[List[FieldDefinition]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -225,7 +225,7 @@ class RangeElement13(LIFTUtilsBase):
         self.abbrev_items: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -276,7 +276,7 @@ class RangeElement(Extensible):
         self.abbrev_items: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -329,7 +329,7 @@ class Range13(LIFTUtilsBase):
         self.label_items: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -382,7 +382,7 @@ class Range(Extensible):
         self.label_items: Optional[List[Multitext]] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -421,7 +421,7 @@ class Ranges(LIFTUtilsBase):
             self.range_items: List[Range] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def _get_properties(self):
         return get_properties(self.__class__, config.LIFT_VERSION)
@@ -474,7 +474,7 @@ class Header(LIFTUtilsBase):
             self.fields: Optional[Fields] = None
 
         if xml_tree is not None:
-            self._update_from_xml(xml_tree)
+            self._from_xml_tree(xml_tree)
 
     def __str__(self):
         s = "Header"
