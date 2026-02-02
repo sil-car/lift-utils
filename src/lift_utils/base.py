@@ -18,6 +18,42 @@ class LIFTUtilsBase:
     """
 
     XML_TAG = None
+    XML_PY_NAMES = {
+        # keys are LIFT XML tags; values are Python object properties
+        "abbrev": "abbrev_items",
+        "annotation": "annotation_items",
+        "class": "class_",
+        "dateCreated": "date_created",
+        "dateDeleted": "date_deleted",
+        "dateModified": "date_modified",
+        "description": "description_items",
+        "entry": "entry_items",
+        "etymology": "etymology_items",
+        "example": "example_items",
+        "field": "field_items",
+        "form": "form_items",
+        "gloss": "gloss_items",
+        "grammatical-info": "grammatical_info",
+        "illustration": "illustration_items",
+        "label": "label_items",
+        "lexical-unit": "lexical_unit",
+        "media": "media_items",
+        "note": "note_items",
+        "option-range": "option_range",
+        "pronunciation": "pronunciation_items",
+        "range-element": "range_element_items",
+        "range": "range_items",
+        "relation": "relation_items",
+        "reversal": "reversal_items",
+        "sense": "sense_items",
+        "span": "span_items",
+        "subsense": "subsense_items",
+        "trait": "trait_items",
+        "translation": "translation_items",
+        "usage": "usage_items",
+        "variant": "variant_items",
+        "writing-system": "writing_system",
+    }
 
     def __init__(self, parent=None, xml_tree: etree._Element = None):
         # Store names of required and optional attributes and elements for this
@@ -28,7 +64,9 @@ class LIFTUtilsBase:
         self._attributes_optional = set()
         self._elements_required = set()
         self._elements_optional = set()
-        # Store a cumulative dict of "tag name": "Python class".
+        # Store a cumulative dict of key="tag name," value="Python class". This
+        # can't be defined declaratively because classes must be defined first,
+        # but this also needs to be referred to before all classes are defined.
         self.tag_classes = {"tail": PCData}
         # Link to parent node for tree traversal.
         self.parent = parent
@@ -68,7 +106,7 @@ class LIFTUtilsBase:
                 # dict should not be used.
                 name = xml_name
         if name is None:
-            name = config.XML_PY_NAMES.get(xml_name, xml_name)
+            name = self.XML_PY_NAMES.get(xml_name, xml_name)
         if config.LIFT_VERSION == "0.13":
             if self.__class__.__name__ == "Field" and name == "name":
                 name = "type"
@@ -120,11 +158,7 @@ class LIFTUtilsBase:
                     setattr(self, py_name, py_cls(xml_tree.tail))
                 continue
 
-            if xml_name in config.MULTIPLE_ITEM_TAGS:
-                multiple = True
-            else:
-                multiple = False
-
+            # Handle child elements.
             for c in xml_tree.getchildren():
                 if c.tag == xml_name:
                     if py_name.endswith("_items"):  # list-like obj/elem
@@ -134,8 +168,6 @@ class LIFTUtilsBase:
                         getattr(self, py_name).append(py_cls(xml_tree=c, parent=self))
                     else:  # single element
                         setattr(self, py_name, py_cls(xml_tree=c, parent=self))
-                    if not multiple:
-                        break
 
     def _to_xml_tree(self, tag=None):
         # TODO: Why isn't self.XML_TAG sufficient in every case here?
@@ -849,13 +881,6 @@ class Extensible(LIFTUtilsBase):
             value=value,
             trait_id=trait_id,
         )
-
-    def _add_attribs_to_xml_tree(self, xml_tree):
-        for attrib in self.props.attributes:
-            a = attrib.name
-            x = config.PY_XML_NAMES.get(a, a)
-            xml_tree.set(x, self.__dict__.get(a))
-        return xml_tree
 
     def set_date_created(self):
         self.date_created = DateTime()
