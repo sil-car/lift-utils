@@ -32,25 +32,21 @@ Classes
 
 
 
-Functions
-~~~~~~~~~
 
-.. autoapisummary::
-
-   lift_utils.base.get_properties
-
-
-
-.. py:class:: Annotation(name: str = None, value: str = None, who: str = None, when: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Annotation(name: str = None, value: str = None, who: str = None, when: str = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`Multitext`
 
    Provides a mechanism for adding meta-information to almost any element.
-       
+
+   .. py:attribute:: XML_TAG
+      :value: 'annotation'
+
+      
 
 
-.. py:class:: Extensible(xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Extensible(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -66,6 +62,10 @@ Functions
        information.
    :ivar Optional[List[Annotation]] annotation: Adds meta-information
        describing the element.
+
+   .. py:attribute:: XML_TAG
+
+      
 
    .. py:method:: add_annotation(name=None, value=None, who=None, when=None)
 
@@ -83,7 +83,7 @@ Functions
 
 
 
-.. py:class:: Field(field_type: str = None, name: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Field(field_type: str = None, name: str = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`Multitext`
@@ -92,8 +92,13 @@ Functions
    It's for information in a LIFT file that isn't explicitly described in the
    LIFT standard.
 
+   .. py:attribute:: XML_TAG
+      :value: 'field'
 
-.. py:class:: Flag(xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: Flag(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`Trait`
@@ -105,7 +110,7 @@ Functions
        not defined; assumed to be equivalent to ``Trait``.
 
 
-.. py:class:: Form(lang: lift_utils.datatypes.Lang = None, text: Text = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Form(lang: lift_utils.datatypes.Lang = None, text: Text = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -113,8 +118,13 @@ Functions
    A representation of a string in a particular language and script.
    This is specified by the ``lang`` attribute.
 
+   .. py:attribute:: XML_TAG
+      :value: 'form'
 
-.. py:class:: Gloss(lang: str = None, text: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: Gloss(lang: str = None, text: str = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`Form`
@@ -123,20 +133,39 @@ Functions
    It's given in a particular language and script as specified by the ``lang``
    attribute.
 
+   .. py:attribute:: XML_TAG
+      :value: 'gloss'
+
+      
+
    .. py:method:: set_trait_items(trait_dict)
 
 
 
-.. py:class:: LIFTUtilsBase(xml_tree: lxml.etree._Element = None)
+.. py:class:: LIFTUtilsBase(parent_item=None, xml_tree: lxml.etree._Element = None)
 
 
-   This is a base class for all LIFT-related objects in this package.
+   This is a base class for all LIFT nodes.
 
-   :ivar etree._Element xml_tree: The object's current data.
+   :ivar etree._Element xml_tree: The node's current data.
+
+   .. py:attribute:: XML_PY_NAMES
+
+      
+
+   .. py:attribute:: XML_TAG
+
+      
 
    .. py:method:: print(_format='xml')
 
-      Print the object's data to stdout; as XML by default.
+      Print the node's data to stdout; as XML by default.
+
+
+   .. py:method:: prop_name_from_xml_name(xml_name)
+
+      Return the object property name from the given XML attribute or
+      element name.
 
 
    .. py:method:: show()
@@ -145,13 +174,17 @@ Functions
 
 
 
-.. py:class:: Multitext(form_dict: dict = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Multitext(form_dict: dict = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`Text`
 
    Allows for different representations of the same information.
    It can be in a given language, or in multiple languages.
+
+   .. py:attribute:: XML_TAG
+
+      
 
    .. py:method:: get_form_by_lang(lang)
 
@@ -164,25 +197,33 @@ Functions
 
 
 
-.. py:class:: Span(text: str = None, tail: str = None, lang: str = None, href: str = None, span_class: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Span(text: str = None, tail: str = None, lang: str = None, href: str = None, span_class: str = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
 
    A Unicode string marked with language and formatting information.
-       
+
+   .. py:attribute:: XML_TAG
+      :value: 'span'
+
+      
 
 
-.. py:class:: Text(text: str = None, xml_tree: Optional[lxml.etree._Element] = None, subinit=False)
+.. py:class:: Text(text: str = None, xml_tree: Optional[lxml.etree._Element] = None, subinit=False, **kwargs)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
 
    Contains textual data mixed with ``span`` elements only.
-       
+
+   .. py:attribute:: XML_TAG
+      :value: 'text'
+
+      
 
 
-.. py:class:: Trait(name: str = None, value: str = None, trait_id: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Trait(name: str = None, value: str = None, trait_id: str = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
@@ -190,19 +231,25 @@ Functions
    An important mechanism for giving type information to an object.
    It can also be used for adding binary constraints.
 
+   .. py:attribute:: XML_TAG
+      :value: 'trait'
 
-.. py:class:: URLRef(href: str = None, label: dict = None, xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: URLRef(href: str = None, label: dict = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`LIFTUtilsBase`
 
    This is a URL with a caption.
-       
+
+   .. py:attribute:: XML_TAG
+      :value: 'urlref'
+
+      
 
    .. py:method:: set_label(label_dict)
 
-
-
-.. py:function:: get_properties(class_, lift_version)
 
 

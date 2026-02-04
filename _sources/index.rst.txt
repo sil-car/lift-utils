@@ -43,7 +43,7 @@ zûu (sg)                zûu_137d7f37-ceff-464a-9d7f-00febbcfd439
 >>> type(item)
 <class 'lift_utils.lexicon.Entry'>
 >>> item.show()
-_xml_tag: entry
+xml_tag: entry
 date_created: 2017-02-25T11:03:30Z
 date_modified: 2022-05-07T14:15:56Z
 field_items: None
@@ -166,7 +166,7 @@ Compare data across multiple lexicons:
 ...         lexical_unit = None
 ...         item = lex.find(cawl, field='CAWL', match_type='exact')
 ...         if item and item.id:
-...             parent = lex.get_item_parent_by_id(item.id)
+...             parent = item.parent_item
 ...             if parent:
 ...                 lexical_unit = parent.lexical_unit
 ...         lexical_units.append(lexical_unit)

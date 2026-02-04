@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>lift_utils.lexicon &#8212; LIFT Utils 0.3 documentation</title>
+    <title>lift_utils.lexicon &#8212; LIFT Utils 0.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=d31ea6cb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=73b1e7da"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=b8387717"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -18,7 +18,7 @@
     <link rel="prev" title="lift_utils.header" href="../header/index.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>LIFT Utils 0.3 documentation</span></a></h1>
+          <span>LIFT Utils 0.4 documentation</span></a></h1>
         <h2 class="heading"><span>lift_utils.lexicon</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -82,19 +82,9 @@
 </tr>
 </tbody>
 </table>
-</section>
-<section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#lift_utils.lexicon.get_properties" title="lift_utils.lexicon.get_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_properties</span></code></a>(class_, lift_version)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Entry">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Entry" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>This is the core of a lexicon. A lexicon is made up of a set of entries.</p>
 <dl class="field-list simple">
@@ -124,6 +114,11 @@ relation in that it has no referent in the lexicon.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Entry.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'entry'</span></em><a class="headerlink" href="#lift_utils.lexicon.Entry.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Entry.add_etymology">
 <span class="sig-name descname"><span class="pre">add_etymology</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.lexicon.Etymology" title="lift_utils.lexicon.Etymology"><span class="pre">Etymology</span></a></span></span><a class="headerlink" href="#lift_utils.lexicon.Entry.add_etymology" title="Permalink to this definition">¶</a></dt>
@@ -200,7 +195,7 @@ values are text descriptions of the <code class="docutils literal notranslate"><
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Etymology">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Etymology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">etym_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.Key" title="lift_utils.datatypes.Key"><span class="pre">lift_utils.datatypes.Key</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Etymology" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Etymology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">etym_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.Key" title="lift_utils.datatypes.Key"><span class="pre">lift_utils.datatypes.Key</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Etymology" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>For describing lexical relations with a word not in the lexicon.</p>
 <dl class="field-list simple">
@@ -216,6 +211,11 @@ etymological relationship is with.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Etymology.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'etymology'</span></em><a class="headerlink" href="#lift_utils.lexicon.Etymology.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Etymology.add_gloss">
 <span class="sig-name descname"><span class="pre">add_gloss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lang</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Etymology.add_gloss" title="Permalink to this definition">¶</a></dt>
@@ -230,7 +230,7 @@ etymological relationship is with.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Example">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Example" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Example" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Multitext" title="lift_utils.base.Multitext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Multitext</span></code></a>, <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>Gives an example sentence or phrase.
 It is given in the language and glosses of that example in other languages.</p>
@@ -246,11 +246,16 @@ the example into different languages.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Example.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'example'</span></em><a class="headerlink" href="#lift_utils.lexicon.Example.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.GrammaticalInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">GrammaticalInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.GrammaticalInfo" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">GrammaticalInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.Key" title="lift_utils.datatypes.Key"><span class="pre">lift_utils.datatypes.Key</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.GrammaticalInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
 <p>A reference to a <code class="docutils literal notranslate"><span class="pre">range-element</span></code> in the <code class="docutils literal notranslate"><span class="pre">grammatical-info</span></code> range.</p>
 <dl class="field-list simple">
@@ -264,11 +269,16 @@ given by the <code class="docutils literal notranslate"><span class="pre">value<
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.GrammaticalInfo.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grammatical-info'</span></em><a class="headerlink" href="#lift_utils.lexicon.GrammaticalInfo.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Lexicon">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Lexicon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Lexicon" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Lexicon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Lexicon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.LIFTUtilsBase" title="lift_utils.base.LIFTUtilsBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.LIFTUtilsBase</span></code></a></p>
 <p>This is the main class of the lexicon.
 It contains the header and all the entries in the database.</p>
@@ -286,6 +296,11 @@ lexicon.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Lexicon.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lift'</span></em><a class="headerlink" href="#lift_utils.lexicon.Lexicon.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Lexicon.add_entry">
 <span class="sig-name descname"><span class="pre">add_entry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.lexicon.Entry" title="lift_utils.lexicon.Entry"><span class="pre">Entry</span></a></span></span><a class="headerlink" href="#lift_utils.lexicon.Lexicon.add_entry" title="Permalink to this definition">¶</a></dt>
@@ -347,17 +362,6 @@ the field’s data. Possible values are “contains” [default],
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lift_utils.lexicon.Lexicon.get_item_parent_by_id">
-<span class="sig-name descname"><span class="pre">get_item_parent_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.lexicon.Entry" title="lift_utils.lexicon.Entry"><span class="pre">Entry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lift_utils.lexicon.Sense" title="lift_utils.lexicon.Sense"><span class="pre">Sense</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lift_utils.lexicon.Lexicon.get_item_parent_by_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an sense’s parent item by the sense’s <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>refid</strong> (<em>str</em>) – The <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute of the entry or sense.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Lexicon.get_range_elements">
 <span class="sig-name descname"><span class="pre">get_range_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">range_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Lexicon.get_range_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a generator object that lists all the names defined in the
@@ -399,7 +403,7 @@ as the LIFT file.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Note">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Note</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Note" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Note</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Note" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Multitext" title="lift_utils.base.Multitext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Multitext</span></code></a>, <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>For storing descriptive information of many kinds.
 It can include comments, bibliographic information and domain specific
@@ -410,11 +414,16 @@ notes.</p>
 <code class="docutils literal notranslate"><span class="pre">range-element</span></code> in the <code class="docutils literal notranslate"><span class="pre">note-type</span></code> range.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Note.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'note'</span></em><a class="headerlink" href="#lift_utils.lexicon.Note.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Phonetic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Phonetic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Phonetic" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Phonetic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Phonetic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Multitext" title="lift_utils.base.Multitext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Multitext</span></code></a>, <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>This represents a single pronunciation in phonetic form.</p>
 <dl class="field-list simple">
@@ -428,6 +437,11 @@ Americanist, etc.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Phonetic.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pronunciation'</span></em><a class="headerlink" href="#lift_utils.lexicon.Phonetic.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Phonetic.add_form">
 <span class="sig-name descname"><span class="pre">add_form</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lang</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Phonetic.add_form" title="Permalink to this definition">¶</a></dt>
@@ -442,7 +456,7 @@ Americanist, etc.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Relation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Relation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rel_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.Key" title="lift_utils.datatypes.Key"><span class="pre">lift_utils.datatypes.Key</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.RefId" title="lift_utils.datatypes.RefId"><span class="pre">lift_utils.datatypes.RefId</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Relation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Relation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rel_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.Key" title="lift_utils.datatypes.Key"><span class="pre">lift_utils.datatypes.Key</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.RefId" title="lift_utils.datatypes.RefId"><span class="pre">lift_utils.datatypes.RefId</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Relation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>This element is used for lexical relations.</p>
 <dl class="field-list simple">
@@ -458,11 +472,16 @@ languages or writing systems.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Relation.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'relation'</span></em><a class="headerlink" href="#lift_utils.lexicon.Relation.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Reversal">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Reversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Reversal" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Reversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Reversal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Multitext" title="lift_utils.base.Multitext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Multitext</span></code></a></p>
 <p>Enables a wider use of a dictionary.</p>
 <dl class="field-list simple">
@@ -478,11 +497,16 @@ language.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Reversal.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reversal'</span></em><a class="headerlink" href="#lift_utils.lexicon.Reversal.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Sense">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Sense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Sense" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Sense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Sense" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p>An <code class="docutils literal notranslate"><span class="pre">entry</span></code> is made up of a number of <code class="docutils literal notranslate"><span class="pre">sense</span></code> elements.</p>
 <dl class="field-list simple">
@@ -512,6 +536,11 @@ to be static.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Sense.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sense'</span></em><a class="headerlink" href="#lift_utils.lexicon.Sense.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Sense.add_example">
 <span class="sig-name descname"><span class="pre">add_example</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lift_utils.lexicon.Example" title="lift_utils.lexicon.Example"><span class="pre">Example</span></a></span></span><a class="headerlink" href="#lift_utils.lexicon.Sense.add_example" title="Permalink to this definition">¶</a></dt>
@@ -616,7 +645,7 @@ range.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Translation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Translation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Translation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Translation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Translation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Multitext" title="lift_utils.base.Multitext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Multitext</span></code></a></p>
 <p>A <code class="docutils literal notranslate"><span class="pre">Multitext</span></code> with an optional translation <code class="docutils literal notranslate"><span class="pre">type</span></code> attribute.</p>
 <dl class="field-list simple">
@@ -624,11 +653,16 @@ range.</p>
 <dd class="field-odd"><p><strong>type</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="../datatypes/index.html#lift_utils.datatypes.Key" title="lift_utils.datatypes.Key"><em>Key</em></a><em>]</em>) – Gives the type of the translation.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Translation.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'translation'</span></em><a class="headerlink" href="#lift_utils.lexicon.Translation.XML_TAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lift_utils.lexicon.Variant">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Variant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Variant" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">Variant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">lxml.etree._Element</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.Variant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base/index.html#lift_utils.base.Multitext" title="lift_utils.base.Multitext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Multitext</span></code></a>, <a class="reference internal" href="../base/index.html#lift_utils.base.Extensible" title="lift_utils.base.Extensible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lift_utils.base.Extensible</span></code></a></p>
 <p><code class="docutils literal notranslate"><span class="pre">Variant</span></code> elements are used for all sorts of variation.</p>
 <dl class="field-list simple">
@@ -646,12 +680,12 @@ relationship with other senses or entries in the lexicon.</p></li>
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="lift_utils.lexicon.get_properties">
-<span class="sig-prename descclassname"><span class="pre">lift_utils.lexicon.</span></span><span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lift_version</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lift_utils.lexicon.get_properties" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lift_utils.lexicon.Variant.XML_TAG">
+<span class="sig-name descname"><span class="pre">XML_TAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'variant'</span></em><a class="headerlink" href="#lift_utils.lexicon.Variant.XML_TAG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
 
 </section>
 </section>

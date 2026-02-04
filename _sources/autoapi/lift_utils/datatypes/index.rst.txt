@@ -21,8 +21,6 @@ Classes
    lift_utils.datatypes.Key
    lift_utils.datatypes.Lang
    lift_utils.datatypes.PCData
-   lift_utils.datatypes.Prop
-   lift_utils.datatypes.Props
    lift_utils.datatypes.RefId
    lift_utils.datatypes.URL
 
@@ -95,17 +93,6 @@ Classes
    or repr(object).
    encoding defaults to sys.getdefaultencoding().
    errors defaults to 'strict'.
-
-
-.. py:class:: Prop(name: str = None, required: bool = False, prop_type=None, item_type=None)
-
-
-
-.. py:class:: Props(attributes: List[Prop] = None, elements: List[Prop] = None)
-
-
-   .. py:method:: add_to(prop_group_name, prop_obj)
-
 
 
 .. py:class:: RefId

@@ -32,16 +32,8 @@ Classes
 
 
 
-Functions
-~~~~~~~~~
 
-.. autoapisummary::
-
-   lift_utils.lexicon.get_properties
-
-
-
-.. py:class:: Entry(xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Entry(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -69,6 +61,11 @@ Functions
        between this entry and another ``entry`` or ``sense``.
    :ivar Optional[List[Etymology]] etymology_items: Differs from a lexical
        relation in that it has no referent in the lexicon.
+
+   .. py:attribute:: XML_TAG
+      :value: 'entry'
+
+      
 
    .. py:method:: add_etymology() -> Etymology
 
@@ -128,7 +125,7 @@ Functions
 
 
 
-.. py:class:: Etymology(etym_type: lift_utils.datatypes.Key = None, source: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Etymology(etym_type: lift_utils.datatypes.Key = None, source: str = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -143,6 +140,11 @@ Functions
        etymological relationship is with.
    :ivar Optional[Form] form: Holds the form of the etymological reference.
 
+   .. py:attribute:: XML_TAG
+      :value: 'etymology'
+
+      
+
    .. py:method:: add_gloss(lang, text)
 
 
@@ -150,7 +152,7 @@ Functions
 
 
 
-.. py:class:: Example(xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Example(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
@@ -165,8 +167,13 @@ Functions
        the example into different languages.
    :ivar Optional[List[Note]] note_items: Holds notes on this example.
 
+   .. py:attribute:: XML_TAG
+      :value: 'example'
 
-.. py:class:: GrammaticalInfo(value: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: GrammaticalInfo(value: lift_utils.datatypes.Key = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -179,8 +186,13 @@ Functions
        for a given sense to have more information than just the part of speech
        given by the ``value`` attribute.
 
+   .. py:attribute:: XML_TAG
+      :value: 'grammatical-info'
 
-.. py:class:: Lexicon(path: Optional[Union[pathlib.Path, str]] = None, version: str = None, xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: Lexicon(path: Optional[Union[pathlib.Path, str]] = None, version: str = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.LIFTUtilsBase`
@@ -196,6 +208,11 @@ Functions
    :ivar Optional[List[Entry]] entry_items: Each of the entries in the
        lexicon.
    :ivar Optional[Path] path: File path to a LIFT file to import.
+
+   .. py:attribute:: XML_TAG
+      :value: 'lift'
+
+      
 
    .. py:method:: add_entry() -> Entry
 
@@ -240,13 +257,6 @@ Functions
       :var str refid: The ``id`` attribute of the entry or sense.
 
 
-   .. py:method:: get_item_parent_by_id(refid: str) -> Union[Entry, Sense, None]
-
-      Return an sense's parent item by the sense's ``id`` attribute.
-
-      :var str refid: The ``id`` attribute of the entry or sense.
-
-
    .. py:method:: get_range_elements(range_name)
 
       Returns a generator object that lists all the names defined in the
@@ -276,7 +286,7 @@ Functions
 
 
 
-.. py:class:: Note(xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Note(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
@@ -288,8 +298,13 @@ Functions
    :ivar Optional[Key] type: Gives the type of note by reference to a
        ``range-element`` in the ``note-type`` range.
 
+   .. py:attribute:: XML_TAG
+      :value: 'note'
 
-.. py:class:: Phonetic(xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: Phonetic(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
@@ -302,6 +317,11 @@ Functions
        Stores the phonetic representation using whichever writing system: IPA,
        Americanist, etc.
 
+   .. py:attribute:: XML_TAG
+      :value: 'pronunciation'
+
+      
+
    .. py:method:: add_form(lang, text)
 
 
@@ -309,7 +329,7 @@ Functions
 
 
 
-.. py:class:: Relation(rel_type: lift_utils.datatypes.Key = None, ref: lift_utils.datatypes.RefId = None, xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Relation(rel_type: lift_utils.datatypes.Key = None, ref: lift_utils.datatypes.RefId = None, xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -324,8 +344,13 @@ Functions
    :ivar Optional[Multitext] usage: Gives information on usage in one or more
        languages or writing systems.
 
+   .. py:attribute:: XML_TAG
+      :value: 'relation'
 
-.. py:class:: Reversal(xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: Reversal(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`
@@ -340,8 +365,13 @@ Functions
        relation to specify what the grammatical information is in the reversal
        language.
 
+   .. py:attribute:: XML_TAG
+      :value: 'reversal'
 
-.. py:class:: Sense(xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: Sense(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Extensible`
@@ -369,6 +399,11 @@ Functions
    :ivar Optional[List[URLRef]] illustration_items: The picture doesn't have
        to be static.
    :ivar Optional[List[Sense]] subsense_items: Senses can form a hierarchy.
+
+   .. py:attribute:: XML_TAG
+      :value: 'sense'
+
+      
 
    .. py:method:: add_example() -> Example
 
@@ -424,7 +459,6 @@ Functions
    .. py:method:: get_grammatical_info() -> GrammaticalInfo
 
       Return the grammatical-info part of speech value.
-              
 
 
    .. py:method:: get_id() -> lift_utils.datatypes.RefId
@@ -449,7 +483,7 @@ Functions
 
 
 
-.. py:class:: Translation(xml_tree: Optional[lxml.etree._Element] = None)
+.. py:class:: Translation(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`
@@ -458,8 +492,13 @@ Functions
 
    :ivar Optional[Key] type: Gives the type of the translation.
 
+   .. py:attribute:: XML_TAG
+      :value: 'translation'
 
-.. py:class:: Variant(xml_tree: Optional[lxml.etree._Element] = None)
+      
+
+
+.. py:class:: Variant(xml_tree: Optional[lxml.etree._Element] = None, **kwargs)
 
 
    Bases: :py:obj:`lift_utils.base.Multitext`, :py:obj:`lift_utils.base.Extensible`
@@ -476,7 +515,9 @@ Functions
    :ivar Optional[List[Relation]] relation_items: Some variants have a lexical
        relationship with other senses or entries in the lexicon.
 
+   .. py:attribute:: XML_TAG
+      :value: 'variant'
 
-.. py:function:: get_properties(class_, lift_version)
+      
 
 
