@@ -27,7 +27,7 @@ class FieldDefn(Multitext):
         self._attributes_optional = set()
         self._elements_required = set()
         self._elements_optional = set(("form", "pcdata", "span", "trait"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "tag": Key,
             }
@@ -60,7 +60,7 @@ class FieldDefinition(LIFTUtilsBase):
         )
         self._elements_required = set()
         self._elements_optional = set(("label", "description"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "name": Key,
                 "class": str,
@@ -103,7 +103,7 @@ class FieldDefns(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set()
         self._elements_optional = set(("field",))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "field": FieldDefn,
             }
@@ -128,7 +128,7 @@ class Fields(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set()
         self._elements_optional = set(("field",))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "field": FieldDefinition,
             }
@@ -160,7 +160,7 @@ class RangeElement13(LIFTUtilsBase):
                 "label",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "id": Key,
                 "guid": str,
@@ -211,7 +211,7 @@ class RangeElement(Extensible):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "id": Key,
                 "guid": str,
@@ -257,7 +257,7 @@ class Range13(LIFTUtilsBase):
                 "label",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "id": Key,
                 "guid": str,
@@ -301,7 +301,7 @@ class Range(Extensible):
         self._elements_optional = set(
             ("abbrev", "annotation", "description", "field", "label", "trait")
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "id": Key,
                 "guid": str,
@@ -338,7 +338,7 @@ class Ranges(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set(("range",))
         self._elements_optional = set()
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "range": Range,
             }
@@ -346,7 +346,7 @@ class Ranges(LIFTUtilsBase):
 
         # elements
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
-            self.tag_classes["range"] = Range13
+            config.TAG_CLASSES["range"] = Range13
             self.range_items: List[Range13] = None
         else:
             self.range_items: List[Range] = None
@@ -376,7 +376,7 @@ class Header(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set(("description", "fields", "ranges"))
         self._elements_optional = set()
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "description": Multitext,
                 "fields": Fields,
@@ -388,7 +388,7 @@ class Header(LIFTUtilsBase):
         self.description: Optional[Multitext] = None
         self.ranges: Optional[Ranges] = None
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
-            self.tag_classes["fields"] = FieldDefns
+            config.TAG_CLASSES["fields"] = FieldDefns
             self.fields: Optional[FieldDefns] = None
         else:
             self.fields: Optional[Fields] = None

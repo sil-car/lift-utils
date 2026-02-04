@@ -60,7 +60,7 @@ class Note(Multitext, Extensible):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "type": Key,
             }
@@ -110,7 +110,7 @@ class Phonetic(Multitext, Extensible):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "media": URLRef,
             }
@@ -195,7 +195,7 @@ class Etymology(Extensible):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "type": Key,
                 "source": str,
@@ -244,7 +244,7 @@ class GrammaticalInfo(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set()
         self._elements_optional = set(("trait",))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "value": Key,
                 "trait": Trait,
@@ -297,7 +297,7 @@ class Reversal(Multitext):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "type": Key,
                 "grammatical-info": GrammaticalInfo,
@@ -336,7 +336,7 @@ class Translation(Multitext):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "type": Key,
             }
@@ -390,7 +390,7 @@ class Example(Multitext, Extensible):
         )
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self._elements_optional.discard("note")
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "source": Key,
                 "translation": Translation,
@@ -451,7 +451,7 @@ class Relation(Extensible):
                 "usage",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "type": Key,
                 "ref": RefId,
@@ -514,7 +514,7 @@ class Variant(Multitext, Extensible):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "ref": RefId,
                 "pronunciation": Phonetic,
@@ -591,7 +591,7 @@ class Sense(Extensible):
                 "trait",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "id": RefId,
                 "order": int,
@@ -614,7 +614,7 @@ class Sense(Extensible):
         self.definition: Optional[Multitext] = None
         self.example_items: Optional[List[Example]] = None
         if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
-            self.tag_classes["gloss"] = Form
+            config.TAG_CLASSES["gloss"] = Form
             self.gloss_items: Optional[List[Form]] = None
         else:
             self.gloss_items: Optional[List[Gloss]] = None
@@ -787,7 +787,7 @@ class Entry(Extensible):
                 "variant",
             )
         )
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "guid": str,
                 "id": RefId,
@@ -937,7 +937,7 @@ class Lexicon(LIFTUtilsBase):
         self._attributes_optional = set(("producer",))
         self._elements_required = set()
         self._elements_optional = set(("entry", "header"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "version": str,
                 "producer": str,

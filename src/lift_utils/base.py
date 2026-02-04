@@ -64,7 +64,7 @@ class LIFTUtilsBase:
         # Store a cumulative dict of key="tag name," value="Python class". This
         # can't be defined declaratively because classes must be defined first,
         # but this also needs to be referred to before all classes are defined.
-        self.tag_classes = {"tail": PCData}
+        config.TAG_CLASSES.update({"tail": PCData})
         # Link to parent node for tree traversal.
         self.parent_item = parent_item
 
@@ -132,7 +132,7 @@ class LIFTUtilsBase:
         attribs.extend([a for a in self._attributes_optional])
         for xml_name in attribs:
             py_name = self.prop_name_from_xml_name(xml_name)
-            py_cls = self.tag_classes.get(xml_name)
+            py_cls = config.TAG_CLASSES.get(xml_name)
             if xml_name in xml_tree.attrib.keys():
                 setattr(
                     self,
@@ -145,7 +145,7 @@ class LIFTUtilsBase:
         elems.extend([e for e in self._elements_optional])
         for xml_name in elems:
             py_name = self.prop_name_from_xml_name(xml_name)
-            py_cls = self.tag_classes.get(xml_name)
+            py_cls = config.TAG_CLASSES.get(xml_name)
             if xml_name == "pcdata":
                 if xml_tree.text:
                     setattr(self, py_name, py_cls(xml_tree.text))
@@ -211,11 +211,6 @@ class LIFTUtilsBase:
             xml_tree = self._to_xml_tree()
         return etree_to_xmlstring(xml_tree)
 
-    def _update_attribs_and_elems(self):
-        for prop_type, prop_data in self._properties.items():
-            for importance, values in prop_data.items():
-                getattr(self, f"_{prop_type}_{importance}").update(values)
-
 
 class Span(LIFTUtilsBase):
     """A Unicode string marked with language and formatting information."""
@@ -237,7 +232,7 @@ class Span(LIFTUtilsBase):
         self._attributes_optional = set(("class", "href", "lang"))
         self._elements_required = set(("pcdata",))
         self._elements_optional = set(("span", "tail"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "lang": Lang,
                 "href": URL,
@@ -302,7 +297,7 @@ class Trait(LIFTUtilsBase):
         self._attributes_optional = set(("id",))
         self._elements_required = set()
         self._elements_optional = set(("annotation",))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "name": Key,
                 "value": Key,
@@ -361,7 +356,7 @@ class Text(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set(("pcdata",))
         self._elements_optional = set(("span",))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "pcdata": PCData,
                 "span": Span,
@@ -408,7 +403,7 @@ class Form(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set(("text",))
         self._elements_optional = set(("annotation",))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "lang": Lang,
                 "text": Text,
@@ -453,7 +448,7 @@ class URLRef(LIFTUtilsBase):
         self._attributes_optional = set()
         self._elements_required = set()
         self._elements_optional = set(("label",))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "href": URL,
                 "label": Multitext,
@@ -509,7 +504,7 @@ class Multitext(Text):
         self._attributes_optional = set()
         self._elements_required = set()
         self._elements_optional = set(("form", "pcdata", "span", "trait"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "form": Form,
                 "trait": Trait,
@@ -572,7 +567,7 @@ class Gloss(Form):
         self._attributes_optional = set()
         self._elements_required = set(("text",))
         self._elements_optional = set(("annotation", "trait"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "trait": Trait,
             }
@@ -619,7 +614,7 @@ class Annotation(Multitext):
         self._attributes_optional = set(("when", "who"))
         self._elements_required = set()
         self._elements_optional = set(("form", "pcdata", "span", "trait"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "name": Key,
                 "value": Key,
@@ -669,7 +664,7 @@ class Field(Multitext):
         self._attributes_optional = set(("dateCreated", "dateModified"))
         self._elements_required = set()
         self._elements_optional = set(("annotation", "form", "pcdata", "span", "trait"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "type": Key,
                 "name": Key,
@@ -742,7 +737,7 @@ class Extensible(LIFTUtilsBase):
         self._attributes_optional = set(("dateCreated", "dateModified"))
         self._elements_required = set()
         self._elements_optional = set(("annotation", "field", "trait"))
-        self.tag_classes.update(
+        config.TAG_CLASSES.update(
             {
                 "dateCreated": DateTime,
                 "dateModified": DateTime,
