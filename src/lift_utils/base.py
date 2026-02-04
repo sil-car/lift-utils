@@ -56,9 +56,6 @@ class LIFTUtilsBase:
     }
 
     def __init__(self, parent_item=None, xml_tree: etree._Element = None):
-        # Store names of required and optional attributes and elements for this
-        # node for later verification.
-        self._properties = dict()
         # Initialize property values.
         self._attributes_required = set()
         self._attributes_optional = set()
@@ -236,18 +233,10 @@ class Span(LIFTUtilsBase):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("lang", "href", "class")),
-            },
-            "elements": {
-                "required": set(("pcdata",)),
-                "optional": set(("tail", "span")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(("class", "href", "lang"))
+        self._elements_required = set(("pcdata",))
+        self._elements_optional = set(("span", "tail"))
         self.tag_classes.update(
             {
                 "lang": Lang,
@@ -309,18 +298,10 @@ class Trait(LIFTUtilsBase):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("name", "value")),
-                "optional": set(("id",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("annotation",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("name", "value"))
+        self._attributes_optional = set(("id",))
+        self._elements_required = set()
+        self._elements_optional = set(("annotation",))
         self.tag_classes.update(
             {
                 "name": Key,
@@ -376,18 +357,10 @@ class Text(LIFTUtilsBase):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(("pcdata",)),
-                "optional": set(("span",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set()
+        self._elements_required = set(("pcdata",))
+        self._elements_optional = set(("span",))
         self.tag_classes.update(
             {
                 "pcdata": PCData,
@@ -431,18 +404,10 @@ class Form(LIFTUtilsBase):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("lang",)),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(("text",)),
-                "optional": set(("annotation",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("lang",))
+        self._attributes_optional = set()
+        self._elements_required = set(("text",))
+        self._elements_optional = set(("annotation",))
         self.tag_classes.update(
             {
                 "lang": Lang,
@@ -484,18 +449,10 @@ class URLRef(LIFTUtilsBase):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("href",)),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("label",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("href",))
+        self._attributes_optional = set()
+        self._elements_required = set()
+        self._elements_optional = set(("label",))
         self.tag_classes.update(
             {
                 "href": URL,
@@ -548,25 +505,10 @@ class Multitext(Text):
             xml_tree=False,
             **kwargs,
         )
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("form", "span", "trait")),
-            },
-        }
-        # NOTE: The "pcdata" element is required by Text class, which is
-        # inherited by Multitext. However, the Text class itself is optional,
-        # so "pcdata" is removed from self._elements_required and added to
-        # self._elements_optional.
-        tag = "pcdata"
-        self._elements_required.discard(tag)
-        self._elements_optional.add(tag)
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set()
+        self._elements_required = set()
+        self._elements_optional = set(("form", "pcdata", "span", "trait"))
         self.tag_classes.update(
             {
                 "form": Form,
@@ -626,18 +568,10 @@ class Gloss(Form):
         **kwargs,
     ):
         super().__init__(xml_tree=False, **kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("trait",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("lang",))
+        self._attributes_optional = set()
+        self._elements_required = set(("text",))
+        self._elements_optional = set(("annotation", "trait"))
         self.tag_classes.update(
             {
                 "trait": Trait,
@@ -681,18 +615,10 @@ class Annotation(Multitext):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("name", "value")),
-                "optional": set(("who", "when")),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("name", "value"))
+        self._attributes_optional = set(("when", "who"))
+        self._elements_required = set()
+        self._elements_optional = set(("form", "pcdata", "span", "trait"))
         self.tag_classes.update(
             {
                 "name": Key,
@@ -737,20 +663,12 @@ class Field(Multitext):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("name",)),
-                "optional": set(("dateCreated", "dateModified")),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("annotation", "trait")),
-            },
-        }
-        if config.LIFT_VERSION == "0.13":
-            self._properties.get("attributes")["required"] = set(("type",))
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("name",))
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
+            self._attributes_required = set(("type",))
+        self._attributes_optional = set(("dateCreated", "dateModified"))
+        self._elements_required = set()
+        self._elements_optional = set(("annotation", "form", "pcdata", "span", "trait"))
         self.tag_classes.update(
             {
                 "type": Key,
@@ -820,18 +738,10 @@ class Extensible(LIFTUtilsBase):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("dateCreated", "dateModified")),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("annotation", "field", "trait")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(("dateCreated", "dateModified"))
+        self._elements_required = set()
+        self._elements_optional = set(("annotation", "field", "trait"))
         self.tag_classes.update(
             {
                 "dateCreated": DateTime,

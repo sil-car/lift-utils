@@ -41,18 +41,25 @@ class Note(Multitext, Extensible):
         # TODO: Can we just use super().__init__() here and elsewhere?
         Extensible.__init__(self, **kwargs)
         Multitext.__init__(self, **kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("type",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(
+            (
+                "dateCreated",
+                "dateModified",
+                "type",
+            )
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "field",
+                "form",
+                "pcdata",
+                "span",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "type": Key,
@@ -84,18 +91,25 @@ class Phonetic(Multitext, Extensible):
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         Extensible.__init__(self, **kwargs)
         Multitext.__init__(self, **kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("media",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(
+            (
+                "dateCreated",
+                "dateModified",
+            )
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "field",
+                "form",
+                "media",
+                "pcdata",
+                "span",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "media": URLRef,
@@ -169,18 +183,18 @@ class Etymology(Extensible):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("source", "type")),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("form", "gloss")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("source", "type"))
+        self._attributes_optional = set(("dateCreated", "dateModified"))
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "field",
+                "form",
+                "gloss",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "type": Key,
@@ -226,18 +240,10 @@ class GrammaticalInfo(LIFTUtilsBase):
         self, value: Key = None, xml_tree: Optional[etree._Element] = None, **kwargs
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("value",)),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("trait",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("value",))
+        self._attributes_optional = set()
+        self._elements_required = set()
+        self._elements_optional = set(("trait",))
         self.tag_classes.update(
             {
                 "value": Key,
@@ -278,18 +284,19 @@ class Reversal(Multitext):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("type",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("grammatical-info", "main")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(("type",))
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "form",
+                "grammatical-info",
+                "main",
+                "pcdata",
+                "span",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "type": Key,
@@ -318,18 +325,17 @@ class Translation(Multitext):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("type",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(("type",))
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "form",
+                "pcdata",
+                "span",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "type": Key,
@@ -361,20 +367,29 @@ class Example(Multitext, Extensible):
         # TODO: Consider replacing these two __inits__ with super().__init__.
         Extensible.__init__(self, **kwargs)
         Multitext.__init__(self, **kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("source",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("translation", "note")),
-            },
-        }
+        self._attributes_required = set()
+        self._attributes_optional = set(
+            (
+                "dateCreated",
+                "dateModified",
+                "source",
+            )
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "field",
+                "form",
+                "note",
+                "pcdata",
+                "span",
+                "trait",
+                "translation",
+            )
+        )
         if config.LIFT_VERSION == "0.13":
-            self._properties.get("elements")["optional"] = set(("translation",))
-        self._update_attribs_and_elems()
+            self._elements_optional.discard("note")
         self.tag_classes.update(
             {
                 "source": Key,
@@ -419,18 +434,23 @@ class Relation(Extensible):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("type", "ref")),
-                "optional": set(("order",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("usage",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("ref", "type"))
+        self._attributes_optional = set(
+            (
+                "dateCreated",
+                "dateModified",
+                "order",
+            )
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "field",
+                "trait",
+                "usage",
+            )
+        )
         self.tag_classes.update(
             {
                 "type": Key,
@@ -473,18 +493,27 @@ class Variant(Multitext, Extensible):
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         Extensible.__init__(self, **kwargs)
         Multitext.__init__(self, **kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("ref",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("pronunciation", "relation")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(
+            (
+                "dateCreated",
+                "dateModified",
+                "ref",
+            )
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "field",
+                "form",
+                "pcdata",
+                "pronunciation",
+                "relation",
+                "span",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "ref": RefId,
@@ -536,30 +565,32 @@ class Sense(Extensible):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(("id", "order")),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(
-                    (
-                        "definition",
-                        "example",
-                        "gloss",
-                        "grammatical-info",
-                        "illustration",
-                        "note",
-                        "relation",
-                        "reversal",
-                        "subsense",
-                    )
-                ),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(
+            (
+                "dateCreated",
+                "dateModified",
+                "id",
+                "order",
+            )
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "definition",
+                "example",
+                "field",
+                "gloss",
+                "grammatical-info",
+                "illustration",
+                "note",
+                "relation",
+                "reversal",
+                "subsense",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "id": RefId,
@@ -736,36 +767,26 @@ class Entry(Extensible):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(
-                    (
-                        "guid",
-                        "id",
-                        "dateDeleted",
-                        "order",
-                    )
-                ),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(
-                    (
-                        "citation",
-                        "etymology",
-                        "lexical-unit",
-                        "note",
-                        "pronunciation",
-                        "relation",
-                        "sense",
-                        "variant",
-                    )
-                ),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set(
+            ("dateCreated", "dateDeleted", "dateModified", "guid", "id", "order")
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "citation",
+                "etymology",
+                "field",
+                "lexical-unit",
+                "note",
+                "pronunciation",
+                "relation",
+                "sense",
+                "trait",
+                "variant",
+            )
+        )
         self.tag_classes.update(
             {
                 "guid": str,
@@ -912,18 +933,10 @@ class Lexicon(LIFTUtilsBase):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("version",)),
-                "optional": set(("producer",)),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("entry", "header")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("version",))
+        self._attributes_optional = set(("producer",))
+        self._elements_required = set()
+        self._elements_optional = set(("entry", "header"))
         self.tag_classes.update(
             {
                 "version": str,
@@ -1010,13 +1023,6 @@ class Lexicon(LIFTUtilsBase):
         :var str refid: The ``id`` attribute of the entry or sense.
         """
         return self._item_from_id(refid, item_type="self")
-
-    # def get_item_parent_by_id(self, refid: str) -> Union[Entry, Sense, None]:
-    #     """Return an sense's parent item by the sense's ``id`` attribute.
-
-    #     :var str refid: The ``id`` attribute of the entry or sense.
-    #     """
-    #     return self._item_from_id(refid, item_type="parent")
 
     def get_range_elements(self, range_name):
         """Returns a generator object that lists all the names defined in the

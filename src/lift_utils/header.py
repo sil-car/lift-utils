@@ -23,18 +23,10 @@ class FieldDefn(Multitext):
         self, tag: Key = None, xml_tree: Optional[etree._Element] = None, **kwargs
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("tag",)),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("tag",))
+        self._attributes_optional = set()
+        self._elements_required = set()
+        self._elements_optional = set(("form", "pcdata", "span", "trait"))
         self.tag_classes.update(
             {
                 "tag": Key,
@@ -62,18 +54,12 @@ class FieldDefinition(LIFTUtilsBase):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("name",)),
-                "optional": set(("class", "option-range", "type", "writing-system")),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("label", "description")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("name",))
+        self._attributes_optional = set(
+            ("class", "option-range", "type", "writing-system")
+        )
+        self._elements_required = set()
+        self._elements_optional = set(("label", "description"))
         self.tag_classes.update(
             {
                 "name": Key,
@@ -113,18 +99,10 @@ class FieldDefns(LIFTUtilsBase):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("field",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set()
+        self._elements_required = set()
+        self._elements_optional = set(("field",))
         self.tag_classes.update(
             {
                 "field": FieldDefn,
@@ -146,18 +124,10 @@ class Fields(LIFTUtilsBase):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("field",)),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set()
+        self._elements_required = set()
+        self._elements_optional = set(("field",))
         self.tag_classes.update(
             {
                 "field": FieldDefinition,
@@ -180,18 +150,16 @@ class RangeElement13(LIFTUtilsBase):
         self, elem_id: Key = None, xml_tree: Optional[etree._Element] = None, **kwargs
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("id",)),
-                "optional": set(("parent", "guid")),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("abbrev", "description", "label")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("id",))
+        self._attributes_optional = set(("guid", "parent"))
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "abbrev",
+                "description",
+                "label",
+            )
+        )
         self.tag_classes.update(
             {
                 "id": Key,
@@ -228,18 +196,21 @@ class RangeElement(Extensible):
         self, elem_id: Key = None, xml_tree: Optional[etree._Element] = None, **kwargs
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("id",)),
-                "optional": set(("parent", "guid")),
-            },
-            "elements": {
-                "required": set(),
-                "optional": set(("abbrev", "description", "label")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("id",))
+        self._attributes_optional = set(
+            ("dateCreated", "dateModified", "guid", "parent")
+        )
+        self._elements_required = set()
+        self._elements_optional = set(
+            (
+                "annotation",
+                "abbrev",
+                "description",
+                "field",
+                "label",
+                "trait",
+            )
+        )
         self.tag_classes.update(
             {
                 "id": Key,
@@ -276,18 +247,16 @@ class Range13(LIFTUtilsBase):
         self, range_id: Key = None, xml_tree: Optional[etree._Element] = None, **kwargs
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("id",)),
-                "optional": set(("guid", "href")),
-            },
-            "elements": {
-                "required": set(("range-element",)),
-                "optional": set(("abbrev", "description", "label")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("id",))
+        self._attributes_optional = set(("guid", "href"))
+        self._elements_required = set(("range-element",))
+        self._elements_optional = set(
+            (
+                "abbrev",
+                "description",
+                "label",
+            )
+        )
         self.tag_classes.update(
             {
                 "id": Key,
@@ -326,18 +295,12 @@ class Range(Extensible):
         self, range_id: Key = None, xml_tree: Optional[etree._Element] = None, **kwargs
     ):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(("id",)),
-                "optional": set(("guid", "href")),
-            },
-            "elements": {
-                "required": set(("range-element",)),
-                "optional": set(("abbrev", "description", "label")),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set(("id",))
+        self._attributes_optional = set(("dateCreated", "dateModified", "guid", "href"))
+        self._elements_required = set(("range-element",))
+        self._elements_optional = set(
+            ("abbrev", "annotation", "description", "field", "label", "trait")
+        )
         self.tag_classes.update(
             {
                 "id": Key,
@@ -371,18 +334,10 @@ class Ranges(LIFTUtilsBase):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(("range",)),
-                "optional": set(),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set()
+        self._elements_required = set(("range",))
+        self._elements_optional = set()
         self.tag_classes.update(
             {
                 "range": Range,
@@ -417,18 +372,10 @@ class Header(LIFTUtilsBase):
 
     def __init__(self, xml_tree: Optional[etree._Element] = None, **kwargs):
         super().__init__(**kwargs)
-        # Define new properties.
-        self._properties = {
-            "attributes": {
-                "required": set(),
-                "optional": set(),
-            },
-            "elements": {
-                "required": set(("description", "fields", "ranges")),
-                "optional": set(),
-            },
-        }
-        self._update_attribs_and_elems()
+        self._attributes_required = set()
+        self._attributes_optional = set()
+        self._elements_required = set(("description", "fields", "ranges"))
+        self._elements_optional = set()
         self.tag_classes.update(
             {
                 "description": Multitext,
