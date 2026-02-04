@@ -104,7 +104,7 @@ class LIFTUtilsBase:
                 name = xml_name
         if name is None:
             name = self.XML_PY_NAMES.get(xml_name, xml_name)
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             if self.__class__.__name__ == "Field" and name == "name":
                 name = "type"
         else:
@@ -681,14 +681,14 @@ class Field(Multitext):
         )
 
         # attributes
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self.type: Key = None
         else:
             self.name: Key = None
         self.date_created: Optional[DateTime] = None
         self.date_modified: Optional[DateTime] = None
         # elements
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             # self.trait_items: Optional[List[Flag]] = None
             self.trait_items: Optional[List[Trait]] = None
             # NOTE: I think there must be a typo in the docs. I think the
@@ -703,7 +703,7 @@ class Field(Multitext):
             self._from_xml_tree(xml_tree)
 
         missing_required_attrib = None
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             if field_type is not None:
                 self.type = Key(field_type)
             elif xml_tree is None:
@@ -757,7 +757,7 @@ class Extensible(LIFTUtilsBase):
         self.date_modified: Optional[DateTime] = None
         # elements
         self.field_items: Optional[List[Field]] = None
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             # TODO: Find definition of "Flag" in v0.13?
             # self.trait_items: Optional[List[Flag]] = None
             self.trait_items: Optional[List[Trait]] = None
@@ -779,7 +779,7 @@ class Extensible(LIFTUtilsBase):
         )
 
     def add_field(self, name=None):
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             kwargs = {"field_type": name}
         else:
             kwargs = {"name": name}

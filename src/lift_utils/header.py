@@ -345,7 +345,7 @@ class Ranges(LIFTUtilsBase):
         )
 
         # elements
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self.tag_classes["range"] = Range13
             self.range_items: List[Range13] = None
         else:
@@ -387,7 +387,7 @@ class Header(LIFTUtilsBase):
         # elements
         self.description: Optional[Multitext] = None
         self.ranges: Optional[Ranges] = None
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self.tag_classes["fields"] = FieldDefns
             self.fields: Optional[FieldDefns] = None
         else:

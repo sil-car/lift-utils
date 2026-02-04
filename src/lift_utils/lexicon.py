@@ -388,7 +388,7 @@ class Example(Multitext, Extensible):
                 "translation",
             )
         )
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self._elements_optional.discard("note")
         self.tag_classes.update(
             {
@@ -402,7 +402,7 @@ class Example(Multitext, Extensible):
         self.source: Optional[Key] = None
         # elements
         self.translation_items: Optional[List[Translation]] = None
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             if hasattr(self, "note_items"):
                 del self.note_items
         else:
@@ -613,7 +613,7 @@ class Sense(Extensible):
         # elements
         self.definition: Optional[Multitext] = None
         self.example_items: Optional[List[Example]] = None
-        if config.LIFT_VERSION == "0.13":
+        if config.LIFT_VERSION == config.LIFT_VERSION_FIELDWORKS:
             self.tag_classes["gloss"] = Form
             self.gloss_items: Optional[List[Form]] = None
         else:
@@ -1180,7 +1180,7 @@ class Lexicon(LIFTUtilsBase):
         for _range in xml_tree.getchildren():
             for i, r in enumerate(self.header.ranges.range_items[:]):
                 if _range.attrib.get("id") == r.id:
-                    if self.version == "0.13":
+                    if self.version == config.LIFT_VERSION_FIELDWORKS:
                         self.header.ranges.range_items[i] = Range13(xml_tree=_range)  # noqa: E501
                     else:
                         self.header.ranges.range_items[i] = Range(xml_tree=_range)  # noqa: E501
