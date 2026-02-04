@@ -55,21 +55,15 @@ def sort_xml_elements(xml_tree):
 
 def xmlfile_to_etree(filepath):
     xml_tree = etree.parse(str(filepath), config.XML_PARSER).getroot()
-    # Sort attributes & elements alphabetically for deterministic behavior.
-    sort_xml(xml_tree)
     return xml_tree
 
 
 def xmlstring_to_etree(xmlstring):
     xml_tree = etree.fromstring(xmlstring, config.XML_PARSER)
-    # Sort attributes & elements alphabetically for deterministic behavior.
-    sort_xml(xml_tree)
     return xml_tree
 
 
 def etree_to_xmlstring(xml_tree):
-    # Sort attributes alphabetically for deterministic behavior.
-    sort_xml(xml_tree)
     return (
         etree.tostring(
             xml_tree, encoding="UTF-8", pretty_print=True, xml_declaration=True

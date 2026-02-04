@@ -29,10 +29,13 @@ class TestFieldDefn(unittest.TestCase):
             </form>
         </field>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -54,10 +57,13 @@ class TestFieldDefns(unittest.TestCase):
             <field/>
         </fields>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -98,10 +104,13 @@ class TestHeader(unittest.TestCase):
             </fields>
         </header>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
-        # compare_xml_trees(obj.xml_tree, xml_tree)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj.xml_tree), utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -124,10 +133,13 @@ class TestRange(unittest.TestCase):
             <range-element/>
         </range>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
-        # compare_xml_trees(obj.xml_tree, xml_tree)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj.xml_tree), utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -147,10 +159,13 @@ class TestRangeElement(unittest.TestCase):
             <label/>
         </range-element>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -172,10 +187,13 @@ class TestRanges(unittest.TestCase):
             <range/>
         </ranges>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
-        # compare_xml_trees(self.obj.xml_tree, xml_tree)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj.xml_tree), utils.etree_to_xmlstring(xml_tree)
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):

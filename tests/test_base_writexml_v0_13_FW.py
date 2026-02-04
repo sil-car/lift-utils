@@ -21,10 +21,13 @@ class TestAnnotation(unittest.TestCase):
         xml = f"""
         <annotation name="{name}" value="{value}" who="{who}" when="{when}"/>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -72,10 +75,13 @@ class TestField(unittest.TestCase):
             <trait name="" value=""/>
         </field>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -106,10 +112,13 @@ class TestForm(unittest.TestCase):
             <text/>
         </form>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -134,10 +143,13 @@ class TestGloss(unittest.TestCase):
             <trait name="" value=""/>
         </gloss>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -160,11 +172,14 @@ class TestSpan(unittest.TestCase):
         <xml>
         <span class="{obj.class_}" href="{obj.href}" lang="{obj.lang}" >{text}</span>{obj.tail}</xml>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
-        xml_tree = xml_tree.getchildren()[0]
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_control = xml_tree_control.getchildren()[0]
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -185,10 +200,13 @@ class TestText(unittest.TestCase):
         xml = """
         <text>Test text<span/><span/></text>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -213,10 +231,13 @@ class TestTrait(unittest.TestCase):
             <annotation name="" value=""/>
         </trait>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
@@ -236,10 +257,13 @@ class TestURLRef(unittest.TestCase):
             <label/>
         </urlref>
         """
-        xml_tree = utils.xmlstring_to_etree(xml)
+        xml_tree_control = utils.xmlstring_to_etree(xml)
+        xml_tree_gen = obj._to_xml_tree()
+        for tree in (xml_tree_control, xml_tree_gen):
+            utils.sort_xml(tree)
         self.assertEqual(
-            utils.etree_to_xmlstring(obj._to_xml_tree()),
-            utils.etree_to_xmlstring(xml_tree),
+            utils.etree_to_xmlstring(xml_tree_gen),
+            utils.etree_to_xmlstring(xml_tree_control),
         )
 
     def tearDown(self):
