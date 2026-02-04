@@ -25,7 +25,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.optional-dependencies]
-dev = ["tabulate"]
+dev = ["build", "tabulate", "twine"]
 
 [project.urls]
 Documentation = "https://sil-car.github.io/lift-utils"
