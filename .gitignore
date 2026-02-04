@@ -1,5 +1,6 @@
 # Specific files
 sango_out.lift
+sango_out.lift-ranges
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

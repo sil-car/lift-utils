@@ -1,8 +1,9 @@
 """Various utility functions."""
+
 import re
+from datetime import datetime, timezone
+
 import unidecode
-from datetime import datetime
-from datetime import timezone
 from lxml import etree
 
 from . import config
@@ -15,113 +16,66 @@ def ellipsize(string, length):
     return string
 
 
-def etree_to_obj_attributes(xml_tree, obj, props):
-    prop_attribs = props.get('attributes')
-    if prop_attribs:
-        for name, values in prop_attribs.items():
-            key = config.XML_NAMES.get(name, name)
-            if key in xml_tree.attrib.keys():
-                obj.__dict__[name] = values[0](xml_tree.attrib.get(key))
-
-    prop_elems = props.get('elements')
-    if prop_elems:
-        for name, values in prop_elems.items():
-            if name == 'pcdata':
-                if xml_tree.text:
-                    obj.__dict__[name] = values[0](xml_tree.text)
-                continue
-            elif name == 'tail':
-                if xml_tree.tail:
-                    obj.__dict__[name] = values[0](xml_tree.tail)
-                continue
-
-            tag = config.XML_NAMES.get(name, name)
-            if tag in config.MULTIPLE_ITEM_TAGS:
-                multiple = True
-            else:
-                multiple = False
-
-            for c in xml_tree.getchildren():
-                if c.tag == tag:
-                    if hasattr(values[0], 'append'):  # list-like obj/elem
-                        if not obj.__dict__.get(name):
-                            # Instantiate list-like object.
-                            obj.__dict__[name] = values[0]()
-                        obj.__dict__[name].append(values[1](xml_tree=c))
-                    else:  # single element
-                        obj.__dict__[name] = values[0](xml_tree=c)
-                    if not multiple:
-                        break
-
-
-def obj_attributes_to_etree(obj, root_tag, props):
-    xml_tree = etree.Element(root_tag)
-
-    prop_attribs = props.get('attributes')
-    if prop_attribs:
-        for name, values in prop_attribs.items():
-            val = obj.__dict__.get(name)
-            if val is not None:
-                xml_tree.set(config.XML_NAMES.get(name, name), str(val))
-
-    prop_elems = props.get('elements')
-    if prop_elems:
-        for name, values in prop_elems.items():
-            val = obj.__dict__.get(name)
-            if not val:
-                continue
-            xname = config.XML_NAMES.get(name, name)
-            if hasattr(val, 'append'):  # list-like element
-                for o in obj.__dict__.get(name):
-                    xml_tree.append(
-                        obj_attributes_to_etree(o, xname, o._get_properties())
-                    )
-            elif name == 'pcdata':
-                xml_tree.text = val
-            elif name == 'tail':
-                xml_tree.tail = val
-            else:  # single element
-                o = obj.__dict__.get(name)
-                xml_tree.append(
-                    obj_attributes_to_etree(o, xname, o._get_properties())
-                )
-    return xml_tree
-
-
 def unicode_sort(in_list):
     def fmt(string):
         return unidecode.unidecode(string.lower())
+
     return sorted(in_list, key=fmt)
 
 
+def sort_xml(xml_tree):
+    sort_xml_attributes(xml_tree)
+    sort_xml_elements(xml_tree)
+
+
+def sort_xml_attributes(xml_tree):
+    for el in xml_tree.iter():
+        attrib = el.attrib
+        if len(attrib) > 1:
+            attributes = sorted(attrib.items())
+            attrib.clear()
+            attrib.update(attributes)
+
+
+def get_sort_value(xml_elem):
+    tag = xml_elem.tag
+    if isinstance(tag, str):
+        return tag
+    else:
+        # Some tags are Comment objects and can't be sorted as strings.
+        return "0"
+
+
+def sort_xml_elements(xml_tree):
+    for el in xml_tree.iter():
+        if len(el.getchildren()) > 1:
+            sorted_children = sorted(el, key=get_sort_value)
+            el[:] = sorted_children
+
+
 def xmlfile_to_etree(filepath):
-    return etree.parse(str(filepath), config.XML_PARSER).getroot()
+    xml_tree = etree.parse(str(filepath), config.XML_PARSER).getroot()
+    return xml_tree
 
 
 def xmlstring_to_etree(xmlstring):
-    return etree.fromstring(xmlstring, config.XML_PARSER)
+    xml_tree = etree.fromstring(xmlstring, config.XML_PARSER)
+    return xml_tree
 
 
 def etree_to_xmlstring(xml_tree):
-    return etree.tostring(
-        xml_tree,
-        encoding='UTF-8',
-        pretty_print=True,
-        xml_declaration=True
-    ).decode().rstrip()
+    return (
+        etree.tostring(
+            xml_tree, encoding="UTF-8", pretty_print=True, xml_declaration=True
+        )
+        .decode()
+        .rstrip()
+    )
 
 
-def search_entry(
-    entry,
-    text,
-    field,
-    target_groups,
-    header_fields,
-    match_type,
-    get_all
-):
+def search_entry(entry, text, field, target_groups, header_fields, match_type, get_all):
     items = []
-    if 'senses' in target_groups:
+    if "senses" in target_groups:
         if not entry.sense_items:
             if not get_all:
                 return
@@ -129,13 +83,7 @@ def search_entry(
                 return items
         for sense in entry.sense_items:
             result = search_sense(
-                sense,
-                text,
-                field,
-                target_groups,
-                header_fields,
-                match_type,
-                get_all
+                sense, text, field, target_groups, header_fields, match_type, get_all
             )
             if result is not None:
                 if not get_all:
@@ -153,7 +101,7 @@ def search_entry(
                     target_groups,
                     header_fields,
                     match_type,
-                    get_all
+                    get_all,
                 )
                 if result is not None:
                     if not get_all:
@@ -161,23 +109,19 @@ def search_entry(
                     else:
                         items.extend(result)
 
-    if 'entries' in target_groups:
-        if field == 'lexical-unit':
+    if "entries" in target_groups:
+        if field == "lexical-unit":
             if not entry.lexical_unit or not entry.lexical_unit.form_items:
                 if not get_all:
                     return
                 else:
                     return items
-            if form_items_has_match(
-                entry.lexical_unit.form_items,
-                text,
-                match_type
-            ):
+            if form_items_has_match(entry.lexical_unit.form_items, text, match_type):
                 if not get_all:
                     return entry
                 else:
                     items.append(entry)
-        elif field == 'variant':
+        elif field == "variant":
             if not entry.variant_items:
                 if not get_all:
                     return
@@ -199,11 +143,7 @@ def search_entry(
                     return items
             for field_item in entry.field_items:
                 if field_item.type == field and field_item.form_items:
-                    if form_items_has_match(
-                        field_item.form_items,
-                        text,
-                        match_type
-                    ):
+                    if form_items_has_match(field_item.form_items, text, match_type):
                         if not get_all:
                             return entry
                         else:
@@ -212,17 +152,9 @@ def search_entry(
         return items
 
 
-def search_sense(
-    sense,
-    text,
-    field,
-    target_groups,
-    header_fields,
-    match_type,
-    get_all
-):
+def search_sense(sense, text, field, target_groups, header_fields, match_type, get_all):
     items = []
-    if field == 'gloss':
+    if field == "gloss":
         if not sense.gloss_items:
             if not get_all:
                 return
@@ -234,7 +166,7 @@ def search_sense(
                     return sense
                 else:
                     items.append(sense)
-    elif field == 'definition':
+    elif field == "definition":
         if not sense.definition or not sense.definition.form_items:  # noqa: E501
             if not get_all:
                 return
@@ -245,7 +177,7 @@ def search_sense(
                 return sense
             else:
                 items.append(sense)
-    elif field == 'grammatical-info':
+    elif field == "grammatical-info":
         if not sense.grammatical_info:
             if not get_all:
                 return
@@ -264,11 +196,7 @@ def search_sense(
                 return items
         for field_item in sense.field_items:
             if field_item.type == field and field_item.form_items:
-                if form_items_has_match(
-                    field_item.form_items,
-                    text,
-                    match_type
-                ):
+                if form_items_has_match(field_item.form_items, text, match_type):
                     if not get_all:
                         return sense
                     else:
@@ -279,57 +207,57 @@ def search_sense(
 
 def form_items_has_match(form_items, text, match_type):
     for form in form_items:
-        if form.__class__.__name__ == 'Span':
-            value = ''
+        if form.__class__.__name__ == "Span":
+            value = ""
             if form.pcdata:
                 value += str(form.pcdata)
             if form.tail:
                 value += str(form.tail)
         else:
             value = str(form.text)
-        if match_type == 'contains':
+        if match_type == "contains":
             if text in value:
                 return True
-        elif match_type == 'exact':
+        elif match_type == "exact":
             if text == value:
                 return True
-        elif match_type == 'regex':
+        elif match_type == "regex":
             if re.match(text, value):
                 return True
 
 
 def get_current_timestamp():
-    return datetime.strftime(datetime.now(timezone.utc), '%Y-%m-%dT%H:%M:%SZ')
+    return datetime.strftime(datetime.now(timezone.utc), "%Y-%m-%dT%H:%M:%SZ")
 
 
 def get_writing_systems_from_entry(entry) -> dict:
-    ws = {'vernacular': [], 'analysis': []}
-    ws['analysis'].extend(get_ws_from_field_items(entry.field_items))
+    ws = {"vernacular": [], "analysis": []}
+    ws["analysis"].extend(get_ws_from_field_items(entry.field_items))
     if entry.etymology_items:
         for y in entry.etymology_items:
-            ws['analysis'].extend(get_ws_from_field_items(y.field_items))
+            ws["analysis"].extend(get_ws_from_field_items(y.field_items))
     if entry.lexical_unit and entry.lexical_unit.form_items:
         for f in entry.lexical_unit.form_items:
-            ws['vernacular'].append(f.lang)
+            ws["vernacular"].append(f.lang)
     if entry.note_items:
         for n in entry.note_items:
-            ws['analysis'].extend(get_ws_from_field_items(n.field_items))
+            ws["analysis"].extend(get_ws_from_field_items(n.field_items))
     if entry.pronunciation_items:
         for p in entry.pronunciation_items:
             if p.form_items:
                 for f in p.form_items:
-                    ws['vernacular'].append(f.lang)
-            ws['analysis'].extend(get_ws_from_field_items(p.field_items))
+                    ws["vernacular"].append(f.lang)
+            ws["analysis"].extend(get_ws_from_field_items(p.field_items))
     if entry.variant_items:
         for v in entry.variant_items:
-            ws['analysis'].extend(get_ws_from_field_items(v.field_items))
+            ws["analysis"].extend(get_ws_from_field_items(v.field_items))
     if entry.sense_items:
         for s in entry.sense_items:
-            ws['analysis'].extend(get_ws_from_sense(s))
+            ws["analysis"].extend(get_ws_from_sense(s))
 
     # Remove repeated elements.
-    ws['vernacular'] = list(set(ws.get('vernacular')))
-    ws['analysis'] = list(set(ws.get('analysis')))
+    ws["vernacular"] = list(set(ws.get("vernacular")))
+    ws["analysis"] = list(set(ws.get("analysis")))
     return ws
 
 

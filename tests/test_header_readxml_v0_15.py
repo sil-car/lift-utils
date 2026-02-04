@@ -1,136 +1,121 @@
 import unittest
+
 from lxml import etree
 
-from . import DATA_PATH
-from .utils import get_props
-from .utils import test_attribs
-from .utils import test_elems
+from lift_utils import config, header
 
-from lift_utils import config
-from lift_utils import header
+from . import DATA_PATH
+from .utils import test_class_properties, test_properties
 
 HEADER_LIFT_GOOD = str(DATA_PATH / "header_good_v0.15.lift")
-LIFT_VERSION = '0.15'
+LIFT_VERSION = config.LIFT_VERSION_LATEST
 
 
 class TestFieldDefinition(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//field')  # noqa: E501
+        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//field")  # noqa: E501
         self.obj = header.FieldDefinition(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.FieldDefinition, config.LIFT_VERSION)  # noqa: E501
 
-    def test_attribs(self):
-        required = get_props(self.props, prop_type='attributes')
-        test_attribs(self, self.obj, required)
-        optional = get_props(self.props, prop_type='attributes', optional=True)
-        test_attribs(self, self.obj, optional)
+    def test_properties(self):
+        test_class_properties(self)
 
-    def test_elems(self):
-        required = get_props(self.props, prop_type='elements')
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type='elements', optional=True)
-        test_elems(self, self.obj, optional)
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestFields(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//fields')  # noqa: E501
+        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//fields")  # noqa: E501
         self.obj = header.Fields(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Fields, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        pass  # no attributes to test
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type='elements')
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type='elements', optional=True)
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        test_class_properties(self)
 
     def test_items(self):
         self.assertTrue(len(self.obj.field_items) > 1)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestHeader(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//header')  # noqa: E501
+        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//header")  # noqa: E501
         self.obj = header.Header(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Header, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        pass  # no attributes to test
+    def test_properties(self):
+        test_class_properties(self)
 
-    def test_elems(self):
-        required = get_props(self.props, prop_type='elements')
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type='elements', optional=True)
-        test_elems(self, self.obj, optional)
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRanges(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//ranges')  # noqa: E501
+        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//ranges")  # noqa: E501
         self.obj = header.Ranges(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Ranges, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        pass  # no attributes
-
-    def test_elems(self):
-        required = get_props(self.props, prop_type='elements')
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type='elements', optional=True)
-        test_elems(self, self.obj, optional)
+    def test_properties(self):
+        test_class_properties(self)
 
     def test_items(self):
         self.assertTrue(len(self.obj.range_items) > 1)
+
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRange(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//range')  # noqa: E501
+        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//range")  # noqa: E501
         self.obj = header.Range(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.Range, config.LIFT_VERSION)
 
-    def test_attribs(self):
-        required = get_props(self.props, prop_type='attributes')
-        test_attribs(self, self.obj, required)
-        optional = get_props(self.props, prop_type='attributes', optional=True)
-        test_attribs(self, self.obj, optional)
+    def test_properties(self):
+        for group in (
+            self.obj._attributes_required,
+            self.obj._elements_required,
+        ):
+            test_properties(self, group, optional=False)
+        elem_optional = self.obj._elements_optional.copy()
+        elem_optional.discard("annotation")
+        elem_optional.discard("field")
+        elem_optional.discard("trait")
+        for group in (
+            self.obj._attributes_optional,
+            elem_optional,
+        ):
+            test_properties(self, group, optional=True)
 
-    def test_elems(self):
-        required = get_props(self.props, prop_type='elements')
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type='elements', optional=True)
-        optional.remove('annotation_items')
-        optional.remove('field_items')
-        optional.remove('trait_items')
-        test_elems(self, self.obj, optional)
+    def tearDown(self):
+        config.LIFT_VERSION = None
 
 
 class TestRangeElement(unittest.TestCase):
     def setUp(self):
         config.LIFT_VERSION = LIFT_VERSION
-        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find('.//range-element')  # noqa: E501
+        self.xml_tree = etree.parse(HEADER_LIFT_GOOD).getroot().find(".//range-element")  # noqa: E501
         self.obj = header.RangeElement(xml_tree=self.xml_tree)
-        self.props = header.get_properties(header.RangeElement, config.LIFT_VERSION)  # noqa: E501
 
-    def test_attribs(self):
-        required = get_props(self.props, prop_type='attributes')
-        test_attribs(self, self.obj, required)
-        optional = get_props(self.props, prop_type='attributes', optional=True)
-        test_attribs(self, self.obj, optional)
+    def test_properties(self):
+        for group in (
+            self.obj._attributes_required,
+            self.obj._elements_required,
+        ):
+            test_properties(self, group, optional=False)
+        elem_optional = self.obj._elements_optional.copy()
+        elem_optional.discard("annotation")
+        elem_optional.discard("field")
+        elem_optional.discard("trait")
+        for group in (
+            self.obj._attributes_optional,
+            elem_optional,
+        ):
+            test_properties(self, group, optional=True)
 
-    def test_elems(self):
-        required = get_props(self.props, prop_type='elements')
-        test_elems(self, self.obj, required)
-        optional = get_props(self.props, prop_type='elements', optional=True)
-        optional.remove('annotation_items')
-        optional.remove('field_items')
-        optional.remove('trait_items')
-        test_elems(self, self.obj, optional)
+    def tearDown(self):
+        config.LIFT_VERSION = None
